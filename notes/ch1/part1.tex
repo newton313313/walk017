@@ -1,0 +1,625 @@
+\input{ch1/figs}
+
+\section{技巧入門：最簡單的隨機漫步（第 1 章）}
+
+\begin{keybox}[先看這裡]
+這一章只研究一種漫步：\textbf{一維、每步長 $l$、向左向右的機率各 $\tfrac12$、每一步和以前無關}。作者說這是全書的「序曲」：
+後面要用的工具在這裡先各露一次臉——
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+數路線 & 二項式係數、奇偶性（1.1 節）\\
+平均與動差 & 系綜平均、$\avg{x^2}=Nl^2$、用生成函數「微分」出所有動差（1.2 節）\\
+大 $N$ 的近似 & Stirling 公式、二項分布 → 高斯（1.3 節）\\
+連續極限 & 遞迴關係、Pascal 三角形、擴散方程（1.4 節）\\
+生成函數 & 傅立葉表示、$g(z,q)=1/(1-z\chi(q))$、Cauchy 積分、奇點（1.5 節）\\
+漸近分析 & 最陡下降法（鞍點法）（1.6 節）
+\end{tabular}
+\end{center}
+\textbf{記號}：步長 $l$（例子裡都取 $l=1$）；步數 $N$；$N$ 步裡向右（正面）的步數 $n$（書上有時寫 $m$）；
+終點離起點的距離 $d$（向右為正）；第 $j$ 步的位移 $\Delta_j=\pm l$；上橫線 $\avg{\,\cdot\,}$ 表示對所有可能的走法取平均。
+
+\textbf{全章的主例}：擲十次硬幣得到 \coinH\coinT\coinH\coinH\coinT\coinH\coinT\coinT\coinH\coinH（6 正 4 反）。
+\end{keybox}
+
+% =====================================================================
+\subsection{最簡單的漫步：擲硬幣決定方向}
+\bk{pp.~1--5}\anim{W101、W102}
+
+\paragraph{直觀。}
+一個人站在一條直線上。每一步之前擲一枚硬幣：正面就向右走一步，反面就向左走一步，步長都是 $l$。
+因為硬幣公正，向左向右一樣可能——這叫\textbf{無偏}（unbiased）漫步。
+書上提了三個「真實世界」的例子：分子在細管裡因熱運動而擴散；一條高分子鏈，每一節只有兩種取向；
+以及擲硬幣的賭局（de Moivre 解「賭徒破產問題」時就用到了這個模型）。
+
+\paragraph{主例。}
+擲十次得到 \coinH\coinT\coinH\coinH\coinT\coinH\coinT\coinT\coinH\coinH，每一步之後的位置依序是
+$0,1,0,1,2,1,2,1,0,1,2$（圖 \ref{fig:mainwalk}）。最後停在 $d=2$。
+
+\begin{figure}[H]
+\centering
+\FigMainWalk
+\caption{主例：十次擲幣的走法圖。橫軸是步數、縱軸是位置；上面一排是每一步擲出的硬幣。}
+\label{fig:mainwalk}
+\end{figure}
+
+\paragraph{終點和正面數。}
+如果 $N$ 次裡有 $n$ 次正面、$N-n$ 次反面，那麼向右 $n$ 步、向左 $N-n$ 步，終點是
+\begin{equation}
+d=nl-(N-n)l=l(2n-N). \tag{1.1}
+\end{equation}
+反過來，由終點可以讀出正面數與反面數：
+\begin{equation}
+n=\frac12\Big(\frac dl+N\Big),\qquad N-n=\frac12\Big(N-\frac dl\Big). \tag{1.2--1.3}
+\end{equation}
+\textbf{例}：主例 $N=10$、$n=6$，$d=1\cdot(12-10)=2$；反過來 $n=\frac12(2+10)=6$。\par
+\textbf{奇偶性}：$d/l=2n-N$ 和 $N$ 同奇偶。走 10 步只能停在偶數位置；走 3 步只能停在奇數位置。這個看似無聊的事實，到 1.3 節與 1.5 節會變成一個「因子 2」。
+
+\paragraph{一條指定路線的機率。}
+每次擲幣都和之前無關（獨立），每次的機率都是 $\tfrac12$，所以一條\emph{指定}的正反序列（例如主例）出現的機率是
+$(\tfrac12)^N$。$N=10$ 時是 $1/1024$。\emph{每一條}路線都一樣可能——不一樣的是「有幾條路線通往同一個終點」。
+
+\paragraph{數路線：二項式係數。}
+$N$ 次裡恰好 $n$ 次正面的序列有幾個？先看 $N=3$（表 \ref{tab:threecoins}）：
+
+\begin{table}[H]
+\centering
+\TabThreeCoins
+\caption{$N=3$ 的全部 $2^3=8$ 個序列，依正面數分組。書上 Fig.~1.2 畫的就是第二列的三個。}
+\label{tab:threecoins}
+\end{table}
+
+書上的「洗牌論證」\bk{p.~3}：把書上 Fig.~1.1 的三枚硬幣「正反正」排成一列，標成 正$_1$、反、正$_2$。
+三枚不同的硬幣排成一列有 $3!=6$ 種排法；但兩個正面互換看起來一樣，所以每個「看得見的序列」被數了 $2!$ 次，
+真正不同的只有 $3!/2!=3$ 種。一般地，把 $n$ 個正面、$N-n$ 個反面排成一列的方法數是
+\begin{equation}
+\binom Nn=\frac{N!}{n!\,(N-n)!}, \tag{1.4}
+\end{equation}
+所以恰好 $n$ 次正面的機率是
+\begin{equation}
+\frac1{2^N}\,\frac{N!}{n!\,(N-n)!}. \tag{1.5}
+\end{equation}
+把 (1.2) 代進去，換成終點 $d$ 的語言：走 $N$ 步停在 $d$ 的走法數與機率是
+\begin{equation}
+C(N,d)=\frac{N!}{\big(\frac{N+d/l}{2}\big)!\,\big(\frac{N-d/l}{2}\big)!},\qquad
+P(N,d)=\frac{1}{2^N}C(N,d). \tag{1.6--1.7}
+\end{equation}
+$P(N,d)$ 叫做\textbf{二項分布}。$d$ 和 $N$ 不同奇偶時 $C(N,d)=0$。
+
+\textbf{例（$N=4$）}：$d=-4,-2,0,2,4$ 的走法數是 $1,4,6,4,1$，加起來 $16=2^4$；停在原點的機率 $6/16$。\par
+\textbf{例（主例 $N=10$）}：停在原點的走法 $C(10,0)=\frac{10!}{5!\,5!}=252$ 種，機率 $252/1024=63/256\approx0.2461$；
+主例的終點 $d=2$ 有 $C(10,2)=210$ 種走法。完整的分布見表 \ref{tab:tendist}（$d<0$ 的一半對稱）。
+
+\begin{table}[H]
+\centering
+\small
+\TabTenDist
+\caption{$N=10$ 的終點分布（只列 $d\ge0$）。最後一列是 1.3 節的高斯近似（含奇偶性的因子 2）。}
+\label{tab:tendist}
+\end{table}
+
+\paragraph{練習。}
+\begin{enumerate}[label=(\alph*)]
+\item 走 5 步停在 $d=1$ 的走法有幾種？機率多少？\\
+  \textbf{答}：$n=\frac12(1+5)=3$，$C(5,1)=\binom53=10$，機率 $10/32=5/16$。
+\item 走 6 步，最可能停在哪裡？機率多少？\\
+  \textbf{答}：分布是 $1,6,15,20,15,6,1$（$d=-6,\dots,6$），最可能是 $d=0$，機率 $20/64=5/16$。
+\item （書上練習 1.1）如果硬幣不公正，正面的機率是 $p\ne\tfrac12$（每次都一樣），(1.5) 要怎麼改？\\
+  \textbf{答}：一條有 $n$ 個正面的指定序列機率是 $p^n(1-p)^{N-n}$，所以 $P(n)=\binom Nn p^n(1-p)^{N-n}$。
+  例：$N=3$、$p=\tfrac23$，$n=0,1,2,3$ 的機率是 $\tfrac1{27},\tfrac6{27},\tfrac{12}{27},\tfrac8{27}$（加起來 1）；
+  $N=10$、$p=\tfrac23$ 時最可能 $n=7$，機率 $\binom{10}{7}\frac{2^7}{3^{10}}\approx0.2601$。這就是第 5 章「有偏向的漫步」。
+\item 走 10 步能不能停在 $d=3$？\\
+  \textbf{答}：不能。$d$ 必須和 $N$ 同奇偶，$C(10,3)=0$。
+\end{enumerate}
+
+% =====================================================================
+\subsection{平均位置與均方位移}
+\bk{pp.~5--10}\anim{W103、W104、W105}
+
+\subsubsection*{平均位置是 0}
+想像 $M$ 個人同時出發、「鎖步」前進（每個人各擲自己的硬幣）。第 $i$ 個人停在 $x_i$，平均位置
+\begin{equation}
+\bar x=\frac1M\sum_{i=1}^Mx_i=\frac1M\sum_x x\,w(x), \tag{1.8--1.9}
+\end{equation}
+其中 $w(x)$ 是停在 $x$ 的人數。因為向左向右一樣可能，「平均來說」停在 $x$ 和停在 $-x$ 的人一樣多，$x\,w(x)$ 與 $-x\,w(-x)$ 抵消。
+
+\textbf{例（有限的系綜）}：讓 20 個人各走 10 步（動畫 W103 用固定的亂數種子），終點加起來是 2，所以 $\bar x=2/20=0.1$——
+不是剛好 0，因為 20 個人太少，抵消得不完美。書上說要做「超級平均」：對很多很多組系綜再平均，
+等於直接對精確的分布平均：$\sum_dd\,C(10,d)=0$（分布左右對稱），所以 $\bar x=0$。
+
+\subsubsection*{均方位移與 $\sqrt N$ 定律}
+平均位置是 0，並不表示每個人都留在原地——上面那 20 個人的終點平方平均是 $63/5=12.6$，一點也不小。
+所以改看\textbf{均方位移} $\avg{x^2}$。令第 $j$ 步的位移為 $\Delta_j=\pm l$，則
+\begin{equation}
+x=\sum_{j=1}^N\Delta_j,\qquad x^2=\Big(\sum_{j=1}^N\Delta_j\Big)^2. \tag{1.11, 1.10}
+\end{equation}
+把平方展開成 $N\times N$ 個乘積 $\Delta_j\Delta_k$（圖 \ref{fig:deltagrid}）：
+\begin{equation}
+\avg{x^2}=\sum_j\avg{\Delta_j^2}+\sum_{j\ne k}\avg{\Delta_j\Delta_k}
+=\sum_j\avg{\Delta_j^2}+\sum_{j\ne k}\avg{\Delta_j}\times\avg{\Delta_k}. \tag{1.12}
+\end{equation}
+對角線上的 $N$ 格：$\Delta_j^2=l^2$，不管往哪走都一樣。對角線外的 $N(N-1)$ 格：兩步互相獨立，乘積的平均等於平均的乘積，而 $\avg{\Delta_j}=0$，
+所以全部是 0。結論：
+\begin{equation}
+\avg{x^2}=Nl^2,\qquad \sqrt{\avg{x^2}}=l\sqrt N. \tag{1.13--1.14}
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\FigDeltaGrid
+\caption{$N=4$：$x^2=(\Delta_1+\cdots+\Delta_4)^2$ 展開成 16 格。黃色的對角格永遠是 $l^2$；灰色的 12 格平均是 0。}
+\label{fig:deltagrid}
+\end{figure}
+
+\begin{errbox}[p.~6，(1.13) 前]
+書上說「每一步位移的平方等於一個固定的數，我們叫它 $l$」；應該是 $l^2$（步長是 $l$）。
+\end{errbox}
+
+\textbf{例（直接核對）}：$N=4$ 的 16 條路線，終點平方加起來 $1\cdot16+4\cdot4+6\cdot0+4\cdot4+1\cdot16=64$，平均 $64/16=4=N$。\par
+\textbf{$\sqrt N$ 定律}：走 100 步，平均只離家 $\sqrt{100}=10$ 步；走一萬步也只離家 100 步。動畫 W104 讓 2000 個人各走 100 步，
+第 100 步時的樣本均方是 $98.922$（$\sqrt{\phantom{x}}\approx9.946$），和理論值 100 很接近。
+距離是步數的\textbf{分數次方} $N^{1/2}$——書上說這種冪次律會貫穿全書（第 8--12 章的「標度」）。
+
+\subsubsection*{例題：用生成函數算所有動差 \bk{pp.~7--9}}
+\textbf{問題}：求 $\avg{x^n}$ 的一般公式。
+
+\textbf{直接寫}：正面數為 $m$ 時位置是 $(2m-N)l$，機率是 (1.5)，所以
+\begin{equation}
+\avg{x^n}=\frac1{2^N}\sum_{m=0}^N\big((2m-N)l\big)^n\frac{N!}{m!\,(N-m)!}. \tag{1.15}
+\end{equation}
+要算 $\avg{x^4}$ 可以把 $(\sum\Delta_j)^4$ 展開（練習 1.3），但有更聰明的辦法——\textbf{生成函數}（generating function）。
+二項式定理 $(1+w)^N=\sum_m\binom Nm w^m$（(1.16)）裡令 $w=e^y$、再除以 $2^N$：
+\begin{equation}
+g(y)\equiv\frac1{2^N}\left(1+e^y\right)^N=\frac1{2^N}\sum_{m=0}^N\frac{N!}{m!\,(N-m)!}e^{my}. \tag{1.17}
+\end{equation}
+$g(0)=1$（機率加起來是 1）。每對 $y$ 微分一次，右邊每一項就多乘一個 $m$：
+\begin{equation}
+g'(0)=\frac1{2^N}\sum_m\binom Nm m=\bar m,\qquad \avg{m^n}=g^{(n)}(0). \tag{1.18--1.19}
+\end{equation}
+\textbf{例}：$g'(y)=Ne^y(1+e^y)^{N-1}/2^N$，所以 $\bar m=N\cdot2^{N-1}/2^N=N/2$——平均一半是正面，理所當然。
+
+要的是 $x=(2m-N)l$ 的動差，不是 $m$ 的。技巧：把 $g$ 寫成
+\begin{equation}
+g(y)=e^{Ny/2}\left(\frac{e^{y/2}+e^{-y/2}}{2}\right)^N=e^{Ny/2}\cosh(y/2)^N, \tag{1.21}
+\end{equation}
+「乘上 $N-2m$」等於對 $g$ 做運算子 $N-2\frac d{dy}$，而這個運算子作用在 $e^{Ny/2}F(y)$ 上剛好把 $e^{Ny/2}$ 吃掉：
+$\big(N-2\frac d{dy}\big)\big(e^{Ny/2}F\big)=-2e^{Ny/2}F'$。反覆用 $n$ 次（練習 1.2），在 $y=0$ 取值，得到
+\begin{equation}
+\avg{x^n}=(-2l)^n\left.\frac{d^n}{dy^n}\cosh(y/2)^N\right|_{y=0}. \tag{1.24}
+\end{equation}
+（$x=-l(N-2m)$，多出來的 $(-1)^n$ 只影響奇數次動差，而它們都是 0。）
+
+\begin{errbox}[p.~8--9，(1.22)(1.23)]
+書上 $\big(N-2\frac d{dy}\big)^ng(y)=(-2)^n\frac{d^n}{dy^n}\cosh(y/2)^N$ 的右邊漏了因子 $e^{Ny/2}$；在 $y=0$ 它等於 1，所以 (1.24) 是對的。
+另外 (1.20) 前「$x=N-2m$」應為 $x=l(2m-N)$。
+\end{errbox}
+
+$\cosh(y/2)=1+\frac{y^2}{8}+\frac{y^4}{384}+\cdots$，所以 $\cosh(y/2)^N=1+\frac{N}{8}y^2+\big(\frac{N}{384}+\binom N2\frac1{64}\big)y^4+\cdots$。
+二階、四階導數在 0 的值是 $2!\cdot\frac N8=\frac N4$ 與 $4!\big(\frac{N}{384}+\frac{N(N-1)}{128}\big)=\frac{3N^2-2N}{16}$，乘上 $(-2l)^2=4l^2$、$(-2l)^4=16l^4$：
+\begin{equation}
+\avg{x^2}=Nl^2,\qquad \avg{x^4}=l^4N(3N-2). \tag{1.25--1.26}
+\end{equation}
+表 \ref{tab:moments} 列出小 $N$ 的值（$l=1$），每一格都用三種方法核對過：直接對分布加總、上面的公式、$\cosh$ 的冪級數。
+主例 $N=10$：$\avg{x^2}=10$、$\avg{x^4}=280$、$\avg{x^6}=12160$。
+
+\begin{table}[H]
+\centering
+\small
+\TabMoments
+\caption{前幾個偶數次動差（$l=1$；奇數次動差都是 0）。}
+\label{tab:moments}
+\end{table}
+
+\paragraph{比值 → 3。}
+$\avg{x^4}/(\avg{x^2})^2=3-2/N$，$N$ 很大時趨近 3（(1.27)，圖 \ref{fig:kurtosis}）。3 正是高斯分布的這個比值——下一節會看到，大 $N$ 時分布真的變成高斯。
+
+\begin{figure}[H]
+\centering
+\FigKurtosis
+\caption{$\avg{x^4}/(\avg{x^2})^2=3-2/N$：$N=1,\dots,10$ 依序是 $1,2,\tfrac73,\tfrac52,\tfrac{13}5,\tfrac83,\tfrac{19}7,\tfrac{11}4,\tfrac{25}9,\tfrac{14}5$。}
+\label{fig:kurtosis}
+\end{figure}
+
+\paragraph{練習。}
+\begin{enumerate}[label=(\alph*)]
+\item （書上練習 1.2）用歸納法證明 $\big(N-2\frac d{dy}\big)^ng(y)=(-2)^ne^{Ny/2}\frac{d^n}{dy^n}\cosh(y/2)^N$。\\
+  \textbf{答}：$n=0$ 是 (1.21)。設 $n$ 時成立，令 $F=\frac{d^n}{dy^n}\cosh(y/2)^N$，則
+  $\big(N-2\frac d{dy}\big)\big[(-2)^ne^{Ny/2}F\big]=(-2)^n\big[Ne^{Ny/2}F-2\cdot\tfrac N2e^{Ny/2}F-2e^{Ny/2}F'\big]=(-2)^{n+1}e^{Ny/2}F'$。
+\item （書上練習 1.3）直接用 $x=\sum_j\Delta_j$ 算 $\avg{x^3}$ 與 $\avg{x^4}$。\\
+  \textbf{答}：$\avg{x^3}=\sum_{i,j,k}\avg{\Delta_i\Delta_j\Delta_k}$。不同的步獨立、$\avg{\Delta^{\text{奇數}}}=0$，所以只有「每個指標都出現偶數次」的項不為 0；
+  三個指標做不到，$\avg{x^3}=0$。$\avg{x^4}$：四個指標全相同（$N$ 項，各為 $l^4$），或兩兩成對——配對方式 3 種、兩個不同的指標 $N(N-1)$ 種（$3N(N-1)$ 項，各為 $l^4$）。
+  合計 $l^4(3N^2-2N)$，和 (1.26) 相同。例：$N=2$ 時 $2+6=8$。
+\item 求 $\avg{x^6}$。\\
+  \textbf{答}：同樣的數法（六個相同；四加二；三對）得 $l^6(15N^3-30N^2+16N)$；$N=1,2,3$ 時是 $1,32,183$，$N=10$ 時 12160。
+\end{enumerate}
+
+% =====================================================================
+\subsection{Stirling 公式與高斯分布}
+\bk{pp.~10--13}\anim{W106、W107}
+
+公式 (1.6) 完全正確，但 $N$ 很大時不好用：$100!$ 有 158 位數。這一節用 \textbf{Stirling 公式}把階乘換成好算的函數。
+\begin{equation}
+\ln n!\approx n\ln\frac ne+\frac12\ln(2\pi n),\qquad\text{即}\quad n!\approx\sqrt{2\pi n}\,n^ne^{-n}. \tag{1.28}
+\end{equation}
+
+\subsubsection*{推導：階乘是一個積分 \bk{1.3.1 節}}
+Gamma 函數 $\Gamma(x)=\int_0^\infty w^{x-1}e^{-w}dw$ 滿足 $N!=\Gamma(N+1)$（分部積分即可證），所以
+\begin{equation}
+N!=\int_0^\infty w^Ne^{-w}\,dw. \tag{1.29--1.31}
+\end{equation}
+被積函數 $w^Ne^{-w}$ 在 $w=N$ 有一個尖尖的峰（圖 \ref{fig:gamma}，$N=10$ 時峰高 $10^{10}e^{-10}\approx453\,999$）。令 $w=N+\delta$，把被積函數寫成 $e^{\text{指數}}$，指數在峰頂附近展開：
+\begin{equation}
+N\ln(N+\delta)-(N+\delta)=(N\ln N-N)-\frac{\delta^2}{2N}+O(\delta^3). \tag{1.33}
+\end{equation}
+所以被積函數 $\approx N^Ne^{-N}\,e^{-(w-N)^2/2N}$，一條高斯曲線（圖中虛線）。高斯曲線的面積是 $\sqrt{2\pi N}$ 乘上峰高：
+\begin{equation}
+N!\approx\sqrt{2\pi N}\,\exp\left[N\ln N-N\right]. \tag{1.34}
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\FigGamma
+\caption{書上 Fig.~1.3 的重現：$w^{10}e^{-w}$（實線，面積 $10!=3\,628\,800$）與近似它的高斯 $\exp[10\ln10-10-(w-10)^2/20]$（虛線，面積 $3\,598\,696$）。}
+\label{fig:gamma}
+\end{figure}
+
+\begin{errbox}[p.~11，(1.34)(1.36)]
+書上寫成 $\exp[N(\ln N-N)]$，應為 $\exp[N\ln N-N]=\exp[N(\ln N-1)]$。書上的數值 15.0961 是用正確的式子算的。
+\end{errbox}
+
+\textbf{例（書上 (1.35)(1.36)）}：$\ln10!=15.1044$，$\ln\big(\sqrt{20\pi}\,10^{10}e^{-10}\big)=15.0961$，相對誤差約 $5.5\times10^{-4}$；
+$N=100$ 時相對誤差只剩約 $2.3\times10^{-6}$。表 \ref{tab:stirling} 直接比較 $n!$ 與 Stirling：比值大約是 $1+\frac1{12n}$，$n$ 越大越準。
+
+\begin{table}[H]
+\centering
+\small
+\TabStirling
+\caption{$n!$ 與 Stirling 公式。}
+\label{tab:stirling}
+\end{table}
+
+\subsubsection*{二項分布 → 高斯分布}
+把 Stirling 公式代進 (1.4)。三個階乘各換一次：
+\begin{equation}
+\binom Nn\approx\exp\Big[N\ln\frac Ne+\tfrac12\ln(2\pi N)-n\ln\frac ne-\tfrac12\ln(2\pi n)-(N-n)\ln\frac{N-n}e-\tfrac12\ln\big(2\pi(N-n)\big)\Big]. \tag{1.37}
+\end{equation}
+令 $n=\frac N2+m$（$m\ll N$），用 $\ln\big(\frac N2+m\big)=\ln\frac N2+\frac{2m}N-\frac12\big(\frac{2m}N\big)^2+\cdots$（(1.38)）展開，整理後
+\begin{equation}
+\ln\binom Nn\approx N\ln2-\frac{(2m)^2}{2N}-\frac12\ln\frac{\pi N}{2},\qquad
+\binom Nn\approx 2^N\sqrt{\frac2{\pi N}}\,e^{-(2m)^2/2N}. \tag{1.39--1.40}
+\end{equation}
+而 $2m=2n-N=d/l$。除以 $2^N$：
+\[
+P(N,d)\approx\frac{2}{\sqrt{2\pi N}}\exp\Big(-\frac{d^2}{2Nl^2}\Big)\quad(d\text{ 與 }N\text{ 同奇偶}).
+\]
+
+\begin{errbox}[p.~12，(1.37)--(1.40)]
+(1.37) 後兩個 $\tfrac12\ln$ 項書上是「$+$」，應為「$-$」（它們來自分母的 $n!$ 與 $(N-n)!$）。(1.38) 第三項書上是 $+\frac12(2m/N)^2$，應為 $-$。
+(1.39)(1.40) 書上把 $2m$ 寫成 $n$，常數項寫成 $-\frac12\ln2\pi N$、前因子寫成 $2^N/\sqrt{2\pi N}$——少了一個因子 2（見下面的「因子 2」）。
+\end{errbox}
+
+\paragraph{因子 2 從哪裡來？（奇偶性）}
+書上的 (1.41) 是
+\begin{equation}
+\frac1{\sqrt{2\pi N}}\exp\Big(-\frac{d^2}{2Nl^2}\Big), \tag{1.41}
+\end{equation}
+它是 $u=d/l$ 的\textbf{機率密度}（$\int du=1$）。但 $d/l$ 只能取和 $N$ 同奇偶的值——每隔一格才有一根柱子，
+每根柱子「代表」寬度為 2 的一段，所以柱高（真正的機率）＝ 2 × 密度。圖 \ref{fig:binomgauss} 與表 \ref{tab:tendist}：
+$P(10,0)=0.2461$ 對 $2\times0.12616=0.2523$；$P(10,4)=0.1172$ 對 $0.1134$。即使只有 10 步，高斯已經很準。
+
+\begin{figure}[H]
+\centering
+\FigBinomGauss
+\caption{$N=10$ 的二項分布（柱子）與 $\frac{2}{\sqrt{20\pi}}e^{-d^2/20}$（曲線）。奇數位置沒有柱子。}
+\label{fig:binomgauss}
+\end{figure}
+
+\textbf{例（$N=100$）}：$\ln\binom{100}{50}=66.7838$，近似式 (1.39) 給 $66.7863$；$\binom{100}{50}=1.0089\times10^{29}$，
+近似 $2^{100}\sqrt{2/(100\pi)}=1.0114\times10^{29}$，只高估約 $0.25\%$。
+
+這就是\textbf{中央極限定理}在漫步上的樣子：很多個獨立的小步加起來，分布趨近高斯，寬度 $\propto\sqrt N$、高度 $\propto1/\sqrt N$。
+細節（步長的分布、格子的形狀）只影響寬度的係數——這是第 2 章「普適性」的起點。
+
+\paragraph{練習。}
+\begin{enumerate}[label=(\alph*)]
+\item （書上練習 1.4）$N$ 很大時，$\frac{d}{dN}\ln N!\approx\frac{\ln N!-\ln(N-1)!}{N-(N-1)}$。用它導出 Stirling 公式的第一項。\\
+  \textbf{答}：右邊 $=\ln\frac{N!}{(N-1)!}=\ln N$。積分 $\int\ln N\,dN=N\ln N-N$，所以 $\ln N!\approx N\ln N-N$，就是 (1.28) 的 $n\ln(n/e)$。
+\item 用 Stirling 公式估 $20!$。\\
+  \textbf{答}：$20!=2\,432\,902\,008\,176\,640\,000\approx2.4329\times10^{18}$，Stirling 給 $2.4228\times10^{18}$，比值約 $1.0042$（$\approx1+\frac1{240}$）。
+\end{enumerate}
+
+% =====================================================================
+\subsection{遞迴關係與擴散方程}
+\bk{pp.~13--14}\anim{W108、W109}
+
+\subsubsection*{遞迴：最後一步一定來自鄰居}
+令 $C(N;x,y)$ 為從 $x$ 出發、走 $N$ 步到 $y$ 的走法數。最後一步之前，人一定在 $y-l$ 或 $y+l$：
+\begin{equation}
+C(N;x,y)=C(N-1;x,y-l)+C(N-1;x,y+l). \tag{1.42}
+\end{equation}
+這反映漫步是\textbf{一階 Markov 過程}：下一步只看現在在哪裡，不管之前怎麼走到這裡。（第 5 章的 persistent 漫步會記得上一步，就不是一階了。）
+
+用 (1.4) 的寫法，(1.42) 就是大家熟悉的 Pascal 恆等式
+\begin{equation}
+\frac{N!}{n!\,(N-n)!}=\frac{(N-1)!}{(n-1)!\,(N-n)!}+\frac{(N-1)!}{n!\,(N-n-1)!}. \tag{1.43}
+\end{equation}
+把 $C(N;0,y)$ 按 $(y,N)$ 排在格子上，就是 Pascal 三角形（圖 \ref{fig:pascal}）。\textbf{例}：第 6 列中間 $20=10+10$，即 $\binom63=\binom52+\binom53$。
+每一列的和是 $2^N$（每一格把自己的數同時傳給左下與右下），第 10 列和 1024。
+
+\begin{figure}[H]
+\centering
+\FigPascal
+\caption{走法表：第 $N$ 列、位置 $y$ 的數是 $C(N;0,y)$。紅色的 20 由上一列的兩個 10 相加而得。}
+\label{fig:pascal}
+\end{figure}
+
+\subsubsection*{格子變細：擴散方程}
+$N$ 很大時，$C$ 隨 $y$ 變化得很平緩。把 (1.42)（寫成從 $N$ 到 $N+1$）加減 $2C(N;x,y)$：
+\begin{equation}
+\begin{aligned}
+C(N+1;x,y)&=l^2\,\frac{C(N;x,y-l)+C(N;x,y+l)-2C(N;x,y)}{l^2}+2C(N;x,y)\\
+&\approx l^2\frac{\partial^2C(N;x,y)}{\partial y^2}+2C(N;x,y).
+\end{aligned} \tag{1.44}
+\end{equation}
+關鍵是\textbf{二階差分} $f(y-l)+f(y+l)-2f(y)\approx l^2f''(y)$。\textbf{例}（$l=1$）：$f(y)=y^2$ 時左邊剛好是 2（$=f''$）；
+$f=y^3$ 時是 $6y$（$=f''$）；$f=y^4$ 時是 $12y^2+2$，比 $f''=12y^2$ 多了 2——這是下一項 $\frac{l^4}{12}f''''$，格子越細越小。
+
+把 $C=2^NP$（$P$ 是機率）代入 (1.45)：
+\begin{equation}
+P(N+1;x,y)-P(N;x,y)=\frac{l^2}{2}\frac{\partial^2P}{\partial y^2}
+\quad\Longrightarrow\quad
+\frac{\partial P(N;x,y)}{\partial N}=\frac{l^2}{2}\frac{\partial^2P(N;x,y)}{\partial y^2}. \tag{1.46--1.47}
+\end{equation}
+這就是\textbf{擴散方程}（熱方程），每一步的擴散係數 $D=l^2/2$。它的解（從 $x$ 出發的「熱核」）是
+\begin{equation}
+P(N;x,y)=\frac{\alpha}{\sqrt N}\exp\Big(-\frac{(x-y)^2}{2l^2N}\Big),\qquad\alpha=\frac{1}{\sqrt{2\pi l^2}}. \tag{1.48}
+\end{equation}
+
+\begin{errbox}[p.~14，(1.48)]
+書上的指數漏了負號，寫成 $\exp\big((x-y)^2/2l^2N\big)$——那會隨 $|x-y|$ 爆掉。$\alpha$ 是歸一化常數；把 $P$ 當成 $y$ 的密度時 $\alpha=1/\sqrt{2\pi l^2}$。
+\end{errbox}
+
+\textbf{例（$N=30$）}：讓機率從 $y=0$ 出發，按 $P(N+1,y)=\frac12[P(N,y-1)+P(N,y+1)]$ 擴散 30 步（圖 \ref{fig:diffusion}）。
+變異數 $\sum_yy^2P(30,y)=30$（每步加 $l^2$）；中間的柱子 $P(30,0)=0.1445$，曲線 $2\times\frac1{\sqrt{60\pi}}=0.1457$（因子 2 同 1.3 節）。
+
+\begin{figure}[H]
+\centering
+\FigDiffusion
+\caption{30 步後的分布（柱子，只有偶數位置）與擴散方程的解 $2\times\frac{1}{\sqrt{60\pi}}e^{-y^2/60}$（曲線）。}
+\label{fig:diffusion}
+\end{figure}
+
+\paragraph{練習。}
+\begin{enumerate}[label=(\alph*)]
+\item （書上練習 1.5）直接代入，驗證 (1.48) 滿足 (1.47)。\\
+  \textbf{答}（$l=1$，$x=0$）：$P=(2\pi N)^{-1/2}e^{-y^2/2N}$。$\frac{\partial P}{\partial N}=\big(-\frac1{2N}+\frac{y^2}{2N^2}\big)P$；
+  $\frac{\partial^2P}{\partial y^2}=\big(\frac{y^2}{N^2}-\frac1N\big)P$，乘 $\frac12$ 正好相等。若用書上漏了負號的式子，兩邊不相等。
+\item 證明 $\sum_yy^2P(N,y)$ 每走一步加 $l^2$。\\
+  \textbf{答}：$\sum_yy^2\cdot\frac12[P(y-l)+P(y+l)]=\frac12\sum_y[(y+l)^2+(y-l)^2]P(y)=\sum_y(y^2+l^2)P(y)$。
+\end{enumerate}
+
+% =====================================================================
+\subsection{傅立葉表示與生成函數}
+\bk{pp.~15--20}\anim{W110、W111}
+
+作者稱這一節是「倒著走回生成函數」：答案 (1.6) 早就有了，這裡把它「藏」進積分與冪級數裡。看起來是繞遠路，但這套語言能推廣到第 2 章以後所有更複雜的漫步。
+
+\subsubsection*{走法數是傅立葉係數}
+令 $\chi(q)=e^{iql}+e^{-iql}=2\cos ql$（書上叫「結構函數」，每一步的兩種選擇各貢獻一項）。展開 $\chi(q)^N$，每一項對應一條路線，
+$e^{iql}$ 的指數加起來就是終點：
+\begin{equation}
+\big(e^{iql}+e^{-iql}\big)^N\equiv\chi(q)^N=\sum_dC(N,d)\,e^{iqd}. \tag{1.50}
+\end{equation}
+\textbf{例（$N=3$，$l=1$）}：$(e^{iq}+e^{-iq})^3=e^{3iq}+3e^{iq}+3e^{-iq}+e^{-3iq}$，係數 $1,3,3,1$ 正是 $C(3,d)$（$d=3,1,-1,-3$）。
+
+要取出 $e^{iqd}$ 的係數，用正交性 $\frac1{2\pi}\int_{-\pi}^{\pi}e^{-iqd}e^{iqk}dq=1$（$k=d$）或 $0$（$k\ne d$）：
+\begin{equation}
+C(N,d)=\frac{l}{2\pi}\int_{-\pi/l}^{\pi/l}e^{-iqd}\chi(q)^N\,dq. \tag{1.51}
+\end{equation}
+\textbf{例}：$N=10$、$d=2$ 時這個積分等於 210；$d=3$ 時等於 0（數值積分核對過）。
+
+\subsubsection*{小 $q$ 展開與「兩個鞍點」}
+$\chi(q)=2\cos ql=2e^{\ln\cos ql}=2e^{-q^2l^2/2+O(q^4)}$（(1.52)），所以在 $q=0$ 附近 $\chi(q)^N\approx2^Ne^{-Nq^2l^2/2}$（(1.53)）。代入 (1.51)、上下限換成 $\pm\infty$，用高斯積分
+$\int e^{-aq^2-iqd}dq=\sqrt{\pi/a}\,e^{-d^2/4a}$：
+\begin{equation}
+\frac{l}{2\pi}\int e^{-iqd}\,2^Ne^{-Nq^2l^2/2}\,dq\approx\frac{2^N}{\sqrt{2\pi N}}e^{-d^2/2Nl^2}. \tag{1.54}
+\end{equation}
+這和 (1.41) 同一個形狀。\textbf{但數一數}：$N=10$、$d=2$ 時 (1.54) 給 $105.8$，精確值是 210——只有一半！
+
+原因看圖 \ref{fig:chipower}：$|\cos q|^N$ 不只在 $q=0$ 有峰，在 $q=\pm\pi/l$（$\cos=-1$）也有同樣高的峰。在那裡
+$\chi(q)^N=(-1)^N2^N\cos^N(q\mp\pi/l)$、$e^{-iqd}=(-1)^{d/l}e^{-i(q\mp\pi/l)d}$，貢獻和 $q=0$ 一樣、只多了相位 $(-1)^{N+d/l}$。兩個峰合起來：
+\[
+C(N,d)\approx\frac{2^N}{\sqrt{2\pi N}}e^{-d^2/2Nl^2}\big(1+(-1)^{N+d/l}\big)=
+\begin{cases}2\times\frac{2^N}{\sqrt{2\pi N}}e^{-d^2/2Nl^2}&(d/l\text{ 與 }N\text{ 同奇偶})\\0&(\text{不同奇偶})\end{cases}
+\]
+$N=10$、$d=2$：$211.5$（精確 210）；$d=3$：0（精確 0）；$d=0$：$258.4$（精確 252）。這正是 1.3 節的因子 2——同一件事的兩種說法。
+
+\begin{figure}[H]
+\centering
+\FigChiPower
+\caption{$\cos^{10}q=(2\cos q)^{10}/1024$（實線）與兩端的高斯近似 $e^{-5q^2}$、$e^{-5(q\mp\pi)^2}$（虛線）。$q=\pm\pi$ 的兩個半峰合起來是一個完整的峰。}
+\label{fig:chipower}
+\end{figure}
+
+\begin{errbox}[p.~16，(1.54) 後]
+書上說「把積分上下限換成 $\pm\infty$ 的誤差可以忽略」。對連續化的密度 (1.41) 是這樣；但對離散的走法數 $C(N,d)$，
+$q=\pm\pi/l$ 的峰一點也不能忽略：它給出因子 2（同奇偶）或把答案消成 0（不同奇偶）。
+\end{errbox}
+
+\subsubsection*{再對 $N$ 加總：生成函數}
+把 $\chi(q)^N$ 乘上 $z^N$ 對 $N$ 加總（等比級數）：
+\begin{equation}
+g(z,q)=\sum_{N=0}^\infty\chi(q)^Nz^N=\frac1{1-z\chi(q)}. \tag{1.55}
+\end{equation}
+這種「把一串數 $a_0,a_1,a_2,\dots$ 包成一個函數 $\sum a_Nz^N$」的東西叫\textbf{生成函數}。$q$ 小時 $\chi(q)\approx2(1-q^2l^2/2)$（(1.56)），所以
+$g\approx\frac{1}{1-2z+zq^2l^2}$（(1.57)）。
+
+\paragraph{取出係數：Cauchy 積分。}
+$f(z)=\sum C_Nz^N$ 的係數可以用繞原點一圈的圍道積分取出：
+\begin{equation}
+C_N=\frac1{2\pi i}\oint_c\frac{f(z)}{z^{N+1}}\,dz, \tag{1.58}
+\end{equation}
+圍道裡面不能有 $f$ 的奇點（圖 \ref{fig:contour}）。\textbf{例}：$f(z)=\frac1{1-2z}$、圍道取 $|z|=\frac14$（極點 $z=\frac12$ 在圈外），數值積分得 $C_{10}=1024=2^{10}$。
+也可以把圍道往外推、改繞極點 $z=1/\chi(q)$，用留數直接得到 $\chi(q)^N$。
+
+\begin{figure}[H]
+\centering
+\FigContour
+\caption{書上 Fig.~1.4 的意思：繞原點的小圓周，極點在 $z=1/\chi(q)$（$q=0$ 時是 $\tfrac12$）。}
+\label{fig:contour}
+\end{figure}
+
+\begin{errbox}[p.~17，(1.58) 後]
+書上說 (1.58) 是「$N!\,d^N f/dz^N|_{z=0}$ 的 Cauchy 公式」，應為 $\frac{1}{N!}\frac{d^Nf}{dz^N}\big|_{z=0}$（Taylor 係數）。同頁的「$z=1/\chi(k)$」的 $k$ 就是 $q$。
+\end{errbox}
+
+\paragraph{大 $N$：預告鞍點法。}
+\bk{pp.~17--18} 把 (1.58) 的被積函數寫成 $\exp[-(N+1)\ln z-\ln(1-2z+zq^2l^2)]$（(1.59)），找指數的極值點：
+$-\frac{N+1}{z}+\frac{2-q^2l^2}{1-2z+zq^2l^2}=0$（(1.60)），解在 $z\approx\frac1{2-q^2l^2}$（精確解 $\frac{N+1}{(N+2)(2-q^2l^2)}$）。代回去，主要的因子是
+$(2-q^2l^2)^{N+1}\approx2^Ne^{-Nq^2l^2/2}$（(1.61)(1.62)），又回到 (1.53)。詳細的方法在 1.6 節。
+
+\subsubsection*{1.5.1　生成函數的解析結構：奇點告訴你走法怎麼長大}
+對 (1.55) 做傅立葉反變換，得到「固定終點」的生成函數
+\begin{equation}
+G(z,d)=\frac{l}{2\pi}\int_{-\pi/l}^{\pi/l}e^{iqd}g(z,q)\,dq=\sum_{N=0}^\infty C(N;d)z^N. \tag{1.63}
+\end{equation}
+對所有 $d$ 加總（等於取 $q=0$）就得到總走法數 $\Gamma(N)=2^N$ 的生成函數：
+\begin{equation}
+g(z,0)=\sum_{N=0}^\infty\Gamma(N)z^N=1+2z+4z^2+8z^3+\cdots=\frac{1}{1-2z}. \tag{1.64--1.65}
+\end{equation}
+它在 $z_c=\frac12$ 爆掉。$z_c$ 的意義：$\Gamma(N)$ 像 $z_c^{-N}=2^N$ 那樣指數成長，$z_c$ 就是收斂半徑。一般的漫步（例如第 7 章以後二、三維的自迴避漫步）
+總走法數不再剛好是「每步的選擇數」的 $N$ 次方，$z_c$ 要另外求，而且在 $z_c$ 附近
+\begin{equation}
+g(z,0)\sim(z_c-z)^{-\gamma}, \tag{1.66}
+\end{equation}
+這裡 $\gamma=1$；二、三維的自迴避漫步 $\gamma$ 變成非整數——就像磁鐵在臨界點附近的行為（第 8--9 章）。
+
+\subsubsection*{1.5.2　從生成函數讀出動差}
+把 (1.55) 寫成 $g(z,q)=\sum_N\sum_dC(N,d)e^{iqd}z^N$（(1.67)），對 $q$ 微分兩次會把每一項乘上 $(id)^2=-d^2$：
+\begin{equation}
+-\left.\frac{\partial^2g}{\partial q^2}\right|_{q=0}=\sum_{N=0}^\infty\Big(\sum_dd^2C(N,d)\Big)z^N,\qquad
+\sum_dd^2C(N,d)=-\frac{1}{2\pi i}\oint\frac{(\partial_q^2g)_{q=0}}{z^{N+1}}dz. \tag{1.68--1.70}
+\end{equation}
+（書上把 $\sum_dd^2C(N,d)$ 也寫成 $\avg{d^2}$；它還沒有除以總數 $2^N$。）
+
+\textbf{例（練習 1.6，$l=1$）}：$g=\frac1{1-2z\cos q}$，$-\partial_q^2g|_{q=0}=\frac{2z}{(1-2z)^2}=2z+8z^2+24z^3+64z^4+\cdots$，$z^N$ 的係數是 $N\cdot2^N$。
+除以 $2^N$：平均 $\avg{d^2}=N$——不必「$N$ 很大」，對每個 $N$ 都精確成立。$N=10$：$10240/1024=10$。\par
+\textbf{例（練習 1.7）}：$\partial_q^4g|_{q=0}$ 的 $z^N$ 係數是 $2^N(3N^2-2N)$，平均 $\avg{d^4}=3N^2-2N$；$N=10$：$286720/1024=280$。
+所以 $\avg{d^4}\approx3(\avg{d^2})^2$ 只在 $N$ 很大時成立。
+
+作者特別強調 (1.70) 很一般：即使漫步有限制（例如不能走回頭路），只要寫得出生成函數，均方位移就這樣算；換到高維也一樣。
+
+\paragraph{練習。}
+\begin{enumerate}[label=(\alph*)]
+\item 回到原點的生成函數 $G(z,0)=\sum_NC(N;0)z^N$ 是什麼？\\
+  \textbf{答}：由 (1.63)，$G(z,0)=\frac1{2\pi}\int_{-\pi}^{\pi}\frac{dq}{1-2z\cos q}=\frac{1}{\sqrt{1-4z^2}}$（標準積分），
+  展開 $=1+2z^2+6z^4+20z^6+70z^8+252z^{10}+\cdots$，係數正是 $\binom{2k}{k}$（例：$C(10;0)=252$）。第 3 章討論「回不回得了家」時會再用到它。
+\item 為什麼 $g(z,0)$ 的奇點在 $z_c=\frac1{2}$，而在 $d$ 維的立方格子上會在 $z_c=\frac{1}{2d}$？\\
+  \textbf{答}：每一步有 $2d$ 種選擇，總走法數 $(2d)^N$，$g(z,0)=\frac{1}{1-2dz}$。
+\end{enumerate}
+
+% =====================================================================
+\subsection{補充：最陡下降法（鞍點法）}
+\bk{pp.~20--23}\anim{W112}
+
+\paragraph{問題。}
+$f(z)=\sum C_Nz^N$ 在 $z=0$ 附近沒有奇點，想知道 $N$ 很大時 $C_N$ 長什麼樣。從 Cauchy 公式出發，把被積函數寫成指數：
+\begin{equation}
+C_N=\frac1{2\pi i}\oint\frac{f(z)}{z^{N+1}}dz=\frac1{2\pi i}\oint e^{\ln f(z)-(N+1)\ln z}\,dz. \tag{1:S-2, 1:S-3}
+\end{equation}
+一般寫成 $\frac1{2\pi i}\oint h(z)e^{Np(z)}dz$，$N\gg1$（(1:S-4)）。
+
+\paragraph{想法。}
+$N$ 很大時，$e^{Np(z)}$ 的大小差異被放大到極端：積分幾乎只由 $\operatorname{Re}p$ 最大的地方決定。但在複平面上，解析函數的實部沒有真正的最大值——
+$p'(z^*)=0$ 的點是\textbf{鞍點}（書上 Fig.~1.5 的馬鞍面）：沿一個方向是谷底、沿垂直的方向是山頂。
+把圍道變形成「從一個谷、翻過鞍點、到另一個谷」，而且在鞍點沿著\textbf{最陡下降}的方向走（書上 Fig.~1.6），積分就只剩鞍點附近的一小段。在那裡
+\begin{equation}
+p(z)\approx p(z^*)+\frac12p''(z^*)(z-z^*)^2,\qquad h(z)\approx h(z^*), \tag{1:S-5, 1:S-6}
+\end{equation}
+剩下一個高斯積分。令 $p''(z^*)=-|p''|e^{2i(\beta-\pi/2)}$（(1:S-8)），沿新變數 $\chi=(z-z^*)e^{i(\beta-\pi/2)}$ 的實軸積分（(1:S-10)(1:S-11)），得
+\begin{equation}
+\frac1{2\pi i}\oint h(z)e^{Np(z)}dz\sim\frac{h(z^*)}{2\pi i}e^{Np(z^*)}\sqrt{\frac{2\pi}{N|p''(z^*)|}}\,e^{i(\pi/2-\beta)}. \tag{1:S-12}
+\end{equation}
+
+\begin{errbox}[p.~21，(1:S-9)]
+書上寫 $\exp\big(N|p''(z^*)|e^{2i(\beta-\pi/2)}(z-z^*)^2\big)$，漏了 $-\frac12$：應為 $\exp\big(-\frac N2|p''(z^*)|e^{2i(\beta-\pi/2)}(z-z^*)^2\big)$。
+\end{errbox}
+
+\paragraph{例：$f(z)=(z_c-z)^{-\alpha}$。}
+這時 $h=1$、$p(z)=-\alpha\ln(z_c-z)-(N+1)\ln z$（這裡把 $N$ 吸進 $p$ 裡）。鞍點方程
+\begin{equation}
+\frac{dp}{dz}=0=\frac{\alpha}{z_c-z}-\frac{N+1}{z}\quad\Longrightarrow\quad z^*=\frac{(N+1)z_c}{N+1+\alpha}\approx z_c-\frac{\alpha z_c}{N+1}. \tag{1:S-13}
+\end{equation}
+鞍點在實軸上、緊貼著奇點 $z_c$ 的左邊。代回去（書上 (1:S-14)）$e^{p(z^*)}\approx(N+1)^\alpha z_c^{-N-\alpha-1}\alpha^{-\alpha}e^\alpha$，
+又 $p''(z^*)\approx\frac{(N+1)^2}{\alpha z_c^2}$。實軸方向 $p''>0$（谷），所以最陡下降方向是垂直的（$dz=i\,dy$）。代入 (1:S-12)：
+\begin{equation}
+[z^N](z_c-z)^{-\alpha}\approx\frac{1}{\sqrt{2\pi}}\,\alpha^{-\alpha+1/2}e^\alpha(N+1)^{\alpha-1}z_c^{-N-\alpha}. \tag{1:S-15}
+\end{equation}
+
+\begin{errbox}[p.~23，(1:S-15)]
+書上的前因子印成 $\frac1{2\pi}$，應為 $\frac1{\sqrt{2\pi}}$（(1:S-12) 的 $\frac{1}{2\pi}$ 乘上高斯積分的 $\sqrt{2\pi}$）。照印的式子算，下面的例子只會得到 4.57。
+\end{errbox}
+
+\textbf{例（$\alpha=2$、$z_c=1$、$N=10$）}：精確值 $(1-z)^{-2}=\sum(N+1)z^N$，係數 11。
+\begin{itemize}[nosep]
+\item 鞍點 $z^*=\frac{11}{13}\approx0.846$（書上的近似 $1-\frac{2}{11}\approx0.818$），$e^{p(z^*)}\approx265$。圖 \ref{fig:saddle}：沿實軸是谷、沿垂直方向是峰。
+\item 用精確鞍點直接做高斯積分：$\frac{e^{p(z^*)}}{\sqrt{2\pi p''(z^*)}}\approx10.59$。
+\item 公式 (1:S-15)：$11.46=1.0422\times11$；照書上印的 $\frac1{2\pi}$：$4.57$。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\FigSaddle
+\caption{$|e^{p(z)}|$，$p(z)=-2\ln(1-z)-11\ln z$：左，沿實軸（谷，最低點在 $z^*=\tfrac{11}{13}$）；右，沿通過 $z^*$ 的垂直線（峰）。紅點是同一個鞍點。}
+\label{fig:saddle}
+\end{figure}
+
+\paragraph{1.0422 是哪來的？}
+它就是表 \ref{tab:stirling} 裡的 $2!/\text{Stirling}(2)$！精確的係數是
+$\frac{\Gamma(N+\alpha)}{\Gamma(\alpha)\,N!}z_c^{-N-\alpha}\approx\frac{N^{\alpha-1}}{\Gamma(\alpha)}z_c^{-N-\alpha}$，而 (1:S-15) 的
+$\frac1{\sqrt{2\pi}}\alpha^{-\alpha+1/2}e^{\alpha}$ 正好是把 $\frac1{\Gamma(\alpha)}$ 換成它的 Stirling 近似。$\alpha=2$ 時 $(N+1)^{\alpha-1}=N+1$ 剛好精確，
+所以不論 $N$ 多大，誤差永遠是 $1.0422$。原因是鞍點離奇點只有 $\alpha z_c/(N+1)$，和高斯的寬度同一個數量級，二次近似不夠好。
+書上說「這和第 2.4 節要導的精確結果很接近」——2.4 節用貼著奇點的圍道（Hankel 圍道）就能得到精確的 $1/\Gamma(\alpha)$。
+
+\paragraph{練習。}
+\begin{enumerate}[label=(\alph*)]
+\item $\alpha=\tfrac12$、$z_c=1$、$N=10$ 時精確係數是 $\binom{20}{10}/4^{10}$，(1:S-15) 給多少？\\
+  \textbf{答}：精確 $0.1762$，(1:S-15) 給 $0.1983$。
+\item $\alpha=3$、$z_c=1$、$N=10$？\\
+  \textbf{答}：精確 $\binom{12}{2}=66$，(1:S-15) 給 $62.20$（比值 $0.9424$）；$N\to\infty$ 時比值趨近 $3!/\text{Stirling}(3)\approx1.0281$。
+\end{enumerate}
+
+% =====================================================================
+\subsection{本章筆誤總表與動畫對照}
+
+下表是第 1 章（2004 年版）找到的筆誤，逐式校對見 \texttt{ref/md/ch01\_formulas.md}。都不影響書上的結論，但照抄會算錯。
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\TabErrata
+\caption{第 1 章筆誤一覽。}
+\end{table}
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+動畫 & 主題 & 本講義\\
+\midrule
+W101 & 擲硬幣走路 & 1.1\\
+W102 & 數路線：二項式係數（含練習 1.1） & 1.1\\
+W103 & 平均位置是 0 & 1.2\\
+W104 & 均方位移與 $\sqrt N$ 定律 & 1.2\\
+W105 & 用生成函數算所有動差（練習 1.2、1.3） & 1.2\\
+W106 & Stirling 公式（練習 1.4） & 1.3\\
+W107 & 二項分布變成高斯 & 1.3\\
+W108 & 遞迴關係與 Pascal 三角形 & 1.4\\
+W109 & 從遞迴到擴散方程（練習 1.5） & 1.4\\
+W110 & 傅立葉：用積分數走法 & 1.5\\
+W111 & 生成函數的奇點與動差（練習 1.6、1.7） & 1.5\\
+W112 & 最陡下降法＋第 1 章回顧 & 1.6\\
+\bottomrule
+\end{tabular}
+\end{center}

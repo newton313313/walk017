@@ -1,0 +1,124 @@
+% !TEX program = xelatex
+% 編譯方式： xelatex walk_導讀.tex   （在 notes/ 裡執行，跑兩次以產生目錄與交互參照）
+% 內文在 ch1/part1.tex；圖與表由 ch1/make_figs.py 產生（ch1/figs.tex，含數字檢查）。先 python ch1/make_figs.py 再編譯。
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xeCJK}
+\setCJKmainfont[BoldFont={Microsoft JhengHei Bold},ItalicFont={DFKai-SB}]{Microsoft JhengHei}
+\setCJKsansfont[BoldFont={Microsoft JhengHei Bold}]{Microsoft JhengHei}
+\setCJKmonofont{Microsoft JhengHei}
+\linespread{1.28}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows.meta,positioning,decorations.markings}
+\usepackage[most]{tcolorbox}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\setlist{itemsep=0.15em,topsep=0.3em}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,labelsep=quad}
+\renewcommand{\figurename}{圖}
+\renewcommand{\tablename}{表}
+\renewcommand{\contentsname}{目錄}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% ---------- 顏色（與 manim 動畫 W101--W112 一致） ----------
+\definecolor{cHead}{HTML}{D9A21B}      % 正面／向右（動畫：金）
+\definecolor{cTail}{HTML}{4F7FA8}      % 反面／向左（動畫：藍灰）
+\colorlet{cWalk}{orange!85!black}      % 主例路線（動畫：黃）
+\colorlet{cBar}{blue!60!black}         % 精確值的長條
+\colorlet{cGauss}{orange!90!black}     % 高斯近似
+\colorlet{cExact}{green!45!black}      % 精確值、更正
+\colorlet{cWrong}{red!80!black}        % 書上的筆誤
+
+% ---------- 盒子 ----------
+\newtcolorbox{keybox}[1][]{enhanced,breakable,colback=blue!4,colframe=blue!45!black,
+  boxrule=0.7pt,arc=2pt,left=8pt,right=8pt,top=5pt,bottom=5pt,fonttitle=\bfseries,title={#1}}
+\newtcolorbox{thmbox}[1][]{enhanced,breakable,colback=orange!7,colframe=orange!75!black,
+  boxrule=0.8pt,arc=2pt,left=8pt,right=8pt,top=5pt,bottom=5pt,fonttitle=\bfseries,title={#1}}
+\newtcolorbox{notebox}[1][]{enhanced,breakable,colback=gray!7,colframe=gray!60,
+  boxrule=0.5pt,arc=2pt,left=8pt,right=8pt,top=5pt,bottom=5pt,fonttitle=\bfseries,title={#1}}
+\newtcolorbox{errbox}[1][]{enhanced,breakable,colback=red!3,colframe=cWrong,
+  boxrule=0.6pt,arc=2pt,left=8pt,right=8pt,top=4pt,bottom=4pt,fonttitle=\bfseries,title={書上筆誤　#1}}
+
+\newcommand{\bk}[1]{{\small\color{gray!70!black}〔書 #1〕}}           % 書上的頁碼
+\newcommand{\anim}[1]{{\small\color{cBar}〔動畫 #1〕}}                % 對應的 manim 動畫
+\newcommand{\coinH}{\tikz[baseline=-0.65ex]\node[circle,fill=cHead!75,draw=cHead!60!black,inner sep=0.6pt,font=\scriptsize]{正};}
+\newcommand{\coinT}{\tikz[baseline=-0.65ex]\node[circle,fill=cTail!45,draw=cTail!80!black,inner sep=0.6pt,font=\scriptsize]{反};}
+\newcommand{\avg}[1]{\overline{#1}}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries 隨機漫步導讀}\\[4pt]
+J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1 章（配合 manim 動畫 W101--W112）\\[8pt]
+{\small 原文：Joseph Rudnick and George Gaspari, \emph{Elements of the Random Walk: An Introduction for Advanced
+Students and Researchers}, Cambridge University Press, 2004.}
+\end{center}
+
+\begin{keybox}[全書地圖（目前完成：第 1 章）]
+\small
+\begin{tabular}{@{}rp{0.93\linewidth}@{}}
+1 & 技巧入門：一維最簡單的漫步——數路線、動差、Stirling 與高斯、擴散方程、生成函數、鞍點法（序曲）\\
+2 & 生成函數 I：生成函數到底是什麼、格子上的漫步、長路線的漸近行為、普適性、連續極限與擴散\\
+3 & 生成函數 II：回不回得了家（Pólya 的常返性）、維度的角色、走過幾個格點\\
+4 & 邊界條件、穩定態與靜電類比：吸收牆、限制在區間或球裡、Fick 定律、電容的類比\\
+5 & 漫步的變化形：有偏向的漫步、有慣性（persistent）的漫步、連續時間漫步\\
+6 & 漫步的形狀：迴轉半徑張量、非球度、高維的 $1/d$ 展開\\
+7 & 路徑積分與自迴避：把漫步寫成路徑積分、微擾展開、平均場、Flory 論證\\
+8 & 標度入門：普適性、非高斯行為、維度與 Flory 指數\\
+9 & 標度與臨界現象：$O(n)$ 模型、Ginzburg--Landau--Wilson 有效 Hamiltonian、自迴避漫步＝$n\to0$ 的磁鐵\\
+10 & $O(n)$ 模型的平均場與自旋波；關聯洞\\
+11 & 標度、碎形與重整化群：實空間方法、遞迴關係、固定點與臨界指數\\
+12 & 重整化群（續）：動量殼方法、圖解法、兩點關聯函數
+\end{tabular}
+
+作者在前言說：前五章講「沒有記憶」的漫步，但刻意用生成函數的語言來講；第 7--12 章用同一套語言處理「不能走回頭路」的自迴避漫步，
+並把它對應到磁性系統的臨界現象。所以第 1 章雖然簡單，每一個技巧後面都會再用到。
+\end{keybox}
+
+\begin{keybox}[第 1 章一頁看懂]
+一個人每次擲硬幣：正面向右走一步、反面向左走一步（步長 $l$）。走了 $N$ 步之後——
+\begin{enumerate}[nosep]
+\item \textbf{停在哪裡？} 終點 $d$ 的走法數是二項式係數 $C(N,d)=\binom{N}{(N+d/l)/2}$，機率 $P(N,d)=C(N,d)/2^N$。
+\item \textbf{平均離家多遠？} 平均位置 $0$，但均方位移 $\avg{x^2}=Nl^2$：距離只長成 $\sqrt N$。所有動差都能用生成函數「微分一下」算出。
+\item \textbf{$N$ 很大時長什麼樣？} 用 Stirling 公式 $N!\approx\sqrt{2\pi N}\,N^Ne^{-N}$，二項分布變成高斯分布（中央極限定理）。
+\item \textbf{換個角度：} 走法數滿足遞迴 $C(N)=C(N-1,\text{左鄰})+C(N-1,\text{右鄰})$（Pascal 三角形）；格子變細就是擴散方程
+      $\partial P/\partial N=\frac{l^2}{2}\partial^2P/\partial y^2$。
+\item \textbf{全書的主角：生成函數。} $C(N,d)$ 是 $(2\cos ql)^N$ 的傅立葉係數；再對 $N$ 加總得 $g(z,q)=1/(1-z\cdot2\cos ql)$。
+      係數用 Cauchy 積分取出，$N$ 很大時用鞍點法（最陡下降法）估計。
+\end{enumerate}
+\end{keybox}
+
+\setcounter{tocdepth}{2}
+\begingroup
+\setlength{\parskip}{0pt}
+\tableofcontents
+\endgroup
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+1.1 & 擲硬幣走路、數路線 & W101--W102 & 1.4 & 遞迴與擴散方程 & W108--W109\\
+1.2 & 平均、均方、動差 & W103--W105 & 1.5 & 傅立葉與生成函數 & W110--W111\\
+1.3 & Stirling 公式與高斯 & W106--W107 & 1.6 & 最陡下降法 & W112\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent 以〔書 p.~5〕標示書上的頁碼，式號 (1.6) 等與書上相同。內文寫到的每一個數字都由程式（\texttt{codes/utils/walk1d.py}）重算，
+圖表由 \texttt{ch1/make\_figs.py} 產生並先做數字檢查（路徑相對於 \texttt{C:\textbackslash mypython\textbackslash manim\textbackslash projects\textbackslash walk017}）。
+書上有十幾處筆誤，在文中用紅框標出，總表在 1.7 節；逐式校對見 \texttt{ref/md/ch01\_formulas.md}。連續播放：\texttt{Ch1Demo}（W101--W112）。
+
+\input{ch1/part1}
+
+\end{document}
