@@ -1,0 +1,19 @@
+# Rendered videos (large; regenerate with codes/render_all.bat)
+codes/renders/
+*_temp.mp4
+# ManimGL LaTeX working files
+codes/latex_cache/
+# Python
+__pycache__/
+*.pyc
+# Page images made by ref/page_png.py (regenerable)
+ref/png/
+# LaTeX build by-products (the PDFs are kept)
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.xdv
