@@ -1,7 +1,7 @@
 % !TEX program = xelatex
 % 編譯方式： xelatex walk_導讀.tex   （在 notes/ 裡執行，跑兩次以產生目錄與交互參照）
-% 內文在 ch1/part1.tex、ch2/part2.tex、ch3/part3.tex；圖與表由 chN/make_figs.py 產生（chN/figs.tex，含數字檢查）。
-% 先 python ch1/make_figs.py、python ch2/make_figs.py、python ch3/make_figs.py 再編譯。
+% 內文在 ch1/part1.tex、ch2/part2.tex、ch3/part3.tex、ch4/part4.tex；圖與表由 chN/make_figs.py 產生（chN/figs.tex，含數字檢查）。
+% 先 python ch1/make_figs.py、python ch2/make_figs.py、python ch3/make_figs.py、python ch4/make_figs.py 再編譯。
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[margin=2.2cm]{geometry}
@@ -59,12 +59,12 @@
 
 \begin{center}
 {\Large\bfseries 隨機漫步導讀}\\[4pt]
-J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1--3 章（配合 manim 動畫 W101--W112、W201--W212、W301--W308）\\[8pt]
+J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1--4 章（配合 manim 動畫 W101--W112、W201--W212、W301--W308、W401--W408）\\[8pt]
 {\small 原文：Joseph Rudnick and George Gaspari, \emph{Elements of the Random Walk: An Introduction for Advanced
 Students and Researchers}, Cambridge University Press, 2004.}
 \end{center}
 
-\begin{keybox}[全書地圖（目前完成：第 1--3 章）]
+\begin{keybox}[全書地圖（目前完成到第 4 章）]
 \small
 \begin{tabular}{@{}rp{0.93\linewidth}@{}}
 1 & 技巧入門：一維最簡單的漫步——數路線、動差、Stirling 與高斯、擴散方程、生成函數、鞍點法（序曲）\\
@@ -113,6 +113,9 @@ Students and Researchers}, Cambridge University Press, 2004.}
 1.1 & 擲硬幣走路、數路線 & W101--W102 & 1.4 & 遞迴與擴散方程 & W108--W109\\
 1.2 & 平均、均方、動差 & W103--W105 & 1.5 & 傅立葉與生成函數 & W110--W111\\
 1.3 & Stirling 公式與高斯 & W106--W107 & 1.6 & 最陡下降法 & W112\\
+\midrule
+4.1 & 吸收牆：鏡像、正弦模態 & W401--W402 & 4.2 & 穩定態、Poisson、點源 & W405--W406\\
+4.1 & 長短時間、球與立方體 & W403--W404 & 4.2--4.3 & 吸收球、受器、吸收邊界 & W407--W408\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -121,15 +124,18 @@ Students and Researchers}, Cambridge University Press, 2004.}
 \begin{itemize}[nosep]
 \item 第 1 章：數學 \texttt{codes/utils/walk1d.py}，圖表 \texttt{notes/ch1/make\_figs.py}，逐式校對 \texttt{ref/md/ch01\_formulas.md}，連續播放 \texttt{Ch1Demo}（W101--W112）；
 \item 第 2 章：數學 \texttt{codes/utils/walk\_gf.py}，圖表 \texttt{notes/ch2/make\_figs.py}，逐式校對 \texttt{ref/md/ch02\_formulas.md}，連續播放 \texttt{Ch2Demo}（W201--W212）；
-\item 第 3 章：數學 \texttt{codes/utils/walk\_rec.py}，圖表 \texttt{notes/ch3/make\_figs.py}，逐式校對 \texttt{ref/md/ch03\_formulas.md}，連續播放 \texttt{Ch3Demo}（W301--W308）。
+\item 第 3 章：數學 \texttt{codes/utils/walk\_rec.py}，圖表 \texttt{notes/ch3/make\_figs.py}，逐式校對 \texttt{ref/md/ch03\_formulas.md}，連續播放 \texttt{Ch3Demo}（W301--W308）；
+\item 第 4 章：數學 \texttt{codes/utils/walk\_bc.py}，圖表 \texttt{notes/ch4/make\_figs.py}，逐式校對 \texttt{ref/md/ch04\_formulas.md}，連續播放 \texttt{Ch4Demo}（W401--W408）。
 \end{itemize}
 路徑都相對於 \texttt{C:\textbackslash mypython\textbackslash manim\textbackslash projects\textbackslash walk017}。
-書上的筆誤在文中用紅框標出，總表在 1.7 節、2.5 節與 3.9 節。上表是第 1 章各節與動畫的對應；第 2、3 章的對應表在各節開頭。
+書上的筆誤在文中用紅框標出，總表在 1.7 節、2.5 節、3.9 節與 4.5 節。上表是第 1 章與第 4 章各節與動畫的對應（第 4 章的細表在 4 節開頭）；第 2、3 章的對應表在各節開頭。
 
 \input{ch1/part1}
 \clearpage
 \input{ch2/part2}
 \clearpage
 \input{ch3/part3}
+\clearpage
+\input{ch4/part4}
 
 \end{document}

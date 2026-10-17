@@ -1,0 +1,196 @@
+% figs.tex —— 由 ch4/make_figs.py 產生，請勿手動修改。
+% 重新產生：python ch4/make_figs.py（第 4 章，動畫 W401–W408）
+
+\newcommand{\FourFigMirror}{%
+\begin{tikzpicture}[x=1.1cm,y=0.48cm,>=Stealth,dot/.style={circle,inner sep=1.2pt}]
+\begin{scope}[xshift=0.0cm]
+\draw[gray!25] (0,-2) grid (4,3);
+\draw[cWrong,very thick] (0,0) -- (4.25,0) node[right,font=\scriptsize] {懸崖 $0$};
+\foreach \y in {-2,-1,0,1,2,3} \node[left,font=\scriptsize] at (0,\y) {$\y$};
+\foreach \k in {0,...,4} \node[below,font=\scriptsize] at (\k,-2) {$\k$};
+\node[font=\scriptsize] at (2,-3.3) {步數 $k$};
+\node[font=\scriptsize] at (2,3.7) {$1\to0\to1\to2\to3\ \leftrightarrow\ -1\to0\to1\to2\to3$};
+\draw[cTail,very thick,dashed] (0,-1) -- (1,0);
+\draw[cWalk,very thick] (0,1) -- (1,0);
+\draw[cWalk,very thick] (1,0) -- (2,1) -- (3,2) -- (4,3);
+\draw[cTail,thick,densely dashed] (1,0) -- (2,1) -- (3,2) -- (4,3);
+\node[dot,fill=cWalk] at (0,1) {};
+\node[dot,fill=cWalk] at (1,0) {};
+\node[dot,fill=cWalk] at (2,1) {};
+\node[dot,fill=cWalk] at (3,2) {};
+\node[dot,fill=cWalk] at (4,3) {};
+\node[dot,fill=cTail] at (0,-1) {};
+\node[above right,font=\scriptsize,cWalk] at (0.06,1) {起點 $x_0=1$};
+\node[below right,font=\scriptsize,cTail] at (0.06,-1) {鏡像點 $-x_0=-1$};
+\node[circle,draw=cWrong,thick,inner sep=2.6pt] at (1,0) {};
+\node[below right,font=\scriptsize,cWrong] at (1,0) {第一次碰牆};
+\end{scope}
+\begin{scope}[xshift=7.4cm]
+\draw[gray!25] (0,-2) grid (4,3);
+\draw[cWrong,very thick] (0,0) -- (4.25,0) node[right,font=\scriptsize] {懸崖 $0$};
+\foreach \y in {-2,-1,0,1,2,3} \node[left,font=\scriptsize] at (0,\y) {$\y$};
+\foreach \k in {0,...,4} \node[below,font=\scriptsize] at (\k,-2) {$\k$};
+\node[font=\scriptsize] at (2,-3.3) {步數 $k$};
+\node[font=\scriptsize] at (2,3.7) {$1\to2\to1\to0\to1\ \leftrightarrow\ -1\to-2\to-1\to0\to1$};
+\draw[cTail,very thick,dashed] (0,-1) -- (1,-2) -- (2,-1) -- (3,0);
+\draw[cWalk,very thick] (0,1) -- (1,2) -- (2,1) -- (3,0);
+\draw[cWalk,very thick] (3,0) -- (4,1);
+\draw[cTail,thick,densely dashed] (3,0) -- (4,1);
+\node[dot,fill=cWalk] at (0,1) {};
+\node[dot,fill=cWalk] at (1,2) {};
+\node[dot,fill=cWalk] at (2,1) {};
+\node[dot,fill=cWalk] at (3,0) {};
+\node[dot,fill=cWalk] at (4,1) {};
+\node[dot,fill=cTail] at (0,-1) {};
+\node[dot,fill=cTail] at (1,-2) {};
+\node[dot,fill=cTail] at (2,-1) {};
+\node[anchor=north west,inner sep=1pt,font=\scriptsize,cWalk] at (0.06,0.9) {起點 $x_0=1$};
+\node[anchor=south west,inner sep=1pt,font=\scriptsize,cTail] at (0.06,-0.9) {鏡像點 $-x_0=-1$};
+\node[circle,draw=cWrong,thick,inner sep=2.6pt] at (3,0) {};
+\node[below right,font=\scriptsize,cWrong] at (3,0) {第一次碰牆};
+\end{scope}
+\end{tikzpicture}}
+
+\newcommand{\FourTabSurvive}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+起點 $x_0=3$、牆在 $0$ & $N=10$ & $N=100$ & $N=1000$\\
+\midrule
+一維：精確存活機率 & $21/32=0.65625$ & 0.2356 & 0.07557\\
+一維：$x_0\sqrt{2/\pi N}$ & 0.7569 & 0.2394 & 0.07569\\
+sc 格子、吸收平面：精確 & -- & 0.3958 & 0.1305\\
+三維：$\sqrt{6x_0^2/\pi N}$（(4.5) 後） & -- & 0.4146 & 0.1311\\
+\midrule
+一維 (4.8)：牆吃掉的（$\div2^N$）精確 & $\frac{1067}{512}=2.084$ & 7.499 & \\
+一維 (4.8)：$\sqrt{2N/\pi}$ & 2.523 & 7.979 & \\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\FourFigDecay}{%
+\begin{tikzpicture}[x=0.06cm,y=0.54cm,>=Stealth]
+\draw[->] (0,-6) -- (214,-6) node[right,font=\scriptsize] {$N$};
+\draw[->] (0,-6) -- (0,0.7) node[above,font=\scriptsize] {存活比例（對數刻度）};
+\foreach \n in {0,50,100,150,200} {\draw (\n,-6.06) -- (\n,-5.94); \node[below,font=\scriptsize] at (\n,-6) {$\n$};}
+\foreach \e in {0,-1,-2,-3,-4,-5,-6} {\draw (-1.5,\e) -- (1.5,\e); \node[left,font=\scriptsize] at (-1.5,\e) {$10^{\e}$};}
+\draw[gray!25] (0,-1) -- (200,-1) (0,-2) -- (200,-2) (0,-3) -- (200,-3) (0,-4) -- (200,-4) (0,-5) -- (200,-5);
+\draw[cBar,thick] (0,-0.0526) -- (200.00,-4.4114);
+\draw[cExact,very thick,dashed] (0,-0.0912) -- (200.00,-4.3775);
+\draw[cWrong,thick,dash dot] (0,-0.0912) -- (137.85,-6.0000);
+\fill[cBar] (0,0.0000) circle (1.7pt);
+\fill[cBar] (10,-0.2699) circle (1.7pt);
+\fill[cBar] (20,-0.4882) circle (1.7pt);
+\fill[cBar] (30,-0.7062) circle (1.7pt);
+\fill[cBar] (40,-0.9241) circle (1.7pt);
+\fill[cBar] (50,-1.1420) circle (1.7pt);
+\fill[cBar] (60,-1.3600) circle (1.7pt);
+\fill[cBar] (70,-1.5779) circle (1.7pt);
+\fill[cBar] (80,-1.7959) circle (1.7pt);
+\fill[cBar] (90,-2.0138) circle (1.7pt);
+\fill[cBar] (100,-2.2317) circle (1.7pt);
+\fill[cBar] (110,-2.4497) circle (1.7pt);
+\fill[cBar] (120,-2.6676) circle (1.7pt);
+\fill[cBar] (130,-2.8855) circle (1.7pt);
+\fill[cBar] (140,-3.1035) circle (1.7pt);
+\fill[cBar] (150,-3.3214) circle (1.7pt);
+\fill[cBar] (160,-3.5394) circle (1.7pt);
+\fill[cBar] (170,-3.7573) circle (1.7pt);
+\fill[cBar] (180,-3.9752) circle (1.7pt);
+\fill[cBar] (190,-4.1932) circle (1.7pt);
+\fill[cBar] (200,-4.4111) circle (1.7pt);
+\node[right,font=\scriptsize,cBar] at (88,-0.15) {點：精確計數 $\div 2^N(L-1)$；藍線：格子最低模態 $\propto\cos^N(\pi/L)$};
+\node[right,font=\scriptsize,cExact] at (88,-0.8) {綠虛線：更正 $\frac{8}{\pi^2}e^{-\pi^2N/2L^2}$（和藍線幾乎重合）};
+\node[right,font=\scriptsize,cWrong] at (88,-1.45) {紅點劃線：書上 (4.24) $\frac{8}{\pi^2}e^{-\pi^2N/L^2}$（兩倍陡）};
+\end{tikzpicture}}
+
+\newcommand{\FourTabRates}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+牆距 $L$ & 格子 $-\ln\cos(\pi/L)$ & 更正 $\pi^2/2L^2$ & {\color{cWrong}書上 $\pi^2/L^2$}\\
+\midrule
+10 & 0.05018 & 0.04935 & 0.0987\\
+20 & 0.01239 & 0.01234 & 0.0247\\
+\midrule 牆距加倍，衰減變慢 & 4.05 倍 & 4 倍 & 4 倍\\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\FourTabShapes}{%
+{\small\setlength{\tabcolsep}{4pt}\begin{tabular}{@{}lcccc@{}}
+\toprule
+區域（吸收牆） & 短時間總數 & 長時間總數 & 前因子 $\div$ 體積 & 每步衰減率\\
+\midrule
+線段 $0<x<L$（一維） & $2^NL$ & $2^N\frac{8L}{\pi^2}e^{-\pi^2N/2L^2}$ & $8/\pi^2=0.811$ & $\pi^2/2L^2$\\
+立方體（邊長 $L$，練習 4.5） & $6^NL^3$ & $6^N\frac{512L^3}{\pi^6}e^{-\pi^2N/2L^2}$ & $512/\pi^6=0.533$ & $\pi^2/2L^2$\\
+球（半徑 $R$） & $6^N\cdot\frac43\pi R^3$ & $6^N\frac{8R^3}{\pi}e^{-\pi^2N/6R^2}$ & $6/\pi^2=0.608$ & $\pi^2/6R^2$\\
+\bottomrule
+\end{tabular}}}
+
+\newcommand{\FourFigTent}{%
+\begin{tikzpicture}[x=1.75cm,y=0.8cm,>=Stealth]
+\draw[->] (-0.3,0) -- (5.6,0) node[right,font=\scriptsize] {$x$};
+\foreach \x in {0,...,5} \node[below,font=\scriptsize] at (\x,0) {$\x$};
+\fill[cBar!20,draw=cBar] (0.8,0) rectangle (1.2,1.2000);
+\node[font=\scriptsize,cBar] at (1,0.6000) {$\frac{6}{5}$};
+\fill[cBar!20,draw=cBar] (1.8,0) rectangle (2.2,2.4000);
+\node[font=\scriptsize,cBar] at (2,1.2000) {$\frac{12}{5}$};
+\fill[cBar!20,draw=cBar] (2.8,0) rectangle (3.2,1.6000);
+\node[font=\scriptsize,cBar] at (3,0.8000) {$\frac{8}{5}$};
+\fill[cBar!20,draw=cBar] (3.8,0) rectangle (4.2,0.8000);
+\node[font=\scriptsize,cBar] at (4,0.4000) {$\frac{4}{5}$};
+\draw[cExact,thick] (0,0) -- (2,2.4000) -- (5,0);
+\draw[cWrong,line width=2pt] (0,0) -- (0,2.9) (5,0) -- (5,2.9);
+\node[above,font=\scriptsize,cWrong] at (0,2.9) {吸收牆};
+\node[above,font=\scriptsize,cWrong] at (5,2.9) {吸收牆};
+\draw[->,cWalk,very thick] (2,3.45) -- (2,2.5200);
+\node[above,font=\scriptsize,cWalk] at (2,3.45) {每步在 $x_0=2$ 放 1 人（$s_0=1$）};
+\node[font=\scriptsize,cExact] at (0.5,1.45) {斜率 $\frac65$};
+\node[font=\scriptsize,cExact] at (3.75,1.6) {斜率 $-\frac45$};
+\node[right,font=\scriptsize,cExact] at (2.12,2.7500) {斜率跳 $-s_0/\beta=-2$};
+\draw[->,cWrong,thick] (0.85,-0.75) -- (0.05,-0.75);
+\node[below,font=\scriptsize,cWrong] at (0.45,-0.75) {流進左牆 $w(1)/2=\frac{3}{5}$};
+\draw[->,cWrong,thick] (4.15,-0.75) -- (4.95,-0.75);
+\node[below,font=\scriptsize,cWrong] at (4.55,-0.75) {流進右牆 $w(4)/2=\frac{2}{5}$};
+\end{tikzpicture}}
+
+\newcommand{\FourTabGreen}{%
+{\small\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+$n$（沿 $x$ 軸） & 0 & 1 & 2 & 3 & 4 & 5 & 10 & $\infty$\\
+\midrule
+$w=G(z_c;n\hat x)$ & 1.5164 & 0.5164 & 0.2573 & 0.1653 & 0.1217 & 0.0966 & 0.04787 & $\to0$\\
+$n\,G$ & -- & 0.5164 & 0.5147 & 0.4958 & 0.4869 & 0.4830 & 0.4787 & $\frac{3}{2\pi}=0.4775$\\
+\bottomrule
+\end{tabular}}}
+
+\newcommand{\FourTabBP}{%
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+受器數 $n$（$r_0=1\,\mu$m、$a=1$ nm） & 100 & 1000 & 3142 & $10^4$ & $10^5$\\
+\midrule
+$J/J_{\max}=\frac{na}{na+\pi r_0}$ & 0.031 & 0.241 & 0.500 & 0.761 & 0.970\\
+受器占表面 $\frac{na^2}{4r_0^2}$ & 0.0025\% & 0.025\% & 0.079\% & 0.25\% & 2.5\%\\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\FourTabErrata}{%
+\begin{tabular}{@{}lll@{}}
+\toprule
+位置 & 書上 & 應為\\
+\midrule
+p.~75，(4.12)(4.13) & {\color{cWrong}$\sqrt{2/L}\,\sin qx_1$} & {\color{cExact}$\sqrt{2/L}\,\sin qx_2$}\\
+p.~75，(4.15)〔注〕 & {\color{cWrong}$\sum_{n=0}^{\infty}$} & {\color{cExact}$\sum_{n=1}^{\infty}$（$n=0$ 項為 0）}\\
+p.~75 末行 & {\color{cWrong}$0\le z\le L$} & {\color{cExact}$0\le x\le L$}\\
+p.~77，(4.22) & {\color{cWrong}$\frac14\sum_{k=0}^\infty\frac1{k^2}$、$\frac34\sum_{n=0}^\infty\frac1{n^2}$} & {\color{cExact}和從 1 起（$k=0$ 項發散）}\\
+p.~77，(4.24) & {\color{cWrong}$e^{-\pi^2\Delta^2N/L^2}$} & {\color{cExact}$e^{-\pi^2\Delta^2N/2L^2}$}\\
+p.~80，(4.31) & {\color{cWrong}$\frac{8\pi}{R}\cdots\frac2R\frac{j_0j_0}{1-2z+z\Delta^2k^2}$} & {\color{cExact}$\frac{8\pi}{R}\cdots k_{n_0}^2\frac{j_0j_0}{1-6z+z\Delta^2k^2}$}\\
+p.~81，(4.35) & {\color{cWrong}$e^{-\Delta^2\pi^2N/R^2}$} & {\color{cExact}$e^{-\Delta^2\pi^2n^2N/6R^2}$}\\
+p.~81，(4.37) & {\color{cWrong}$(6e^{-\Delta^2\pi^2/R^2})^N$} & {\color{cExact}$(6e^{-\Delta^2\pi^2/6R^2})^N$}\\
+p.~83，(4.40) & {\color{cWrong}$\frac{a^2}{3}\nabla^2w$} & {\color{cExact}$\frac{a^2}{6}\nabla^2w$}\\
+p.~83，(4.41) & {\color{cWrong}$\frac{3}{a^2}S$} & {\color{cExact}$\frac{6}{a^2}S$}\\
+p.~87，(4.58) 前 & {\color{cWrong}wall in the $x,z$ plane} & {\color{cExact}$y,z$ 平面（$x=0$）}\\
+p.~91，(4.64) 前 & {\color{cWrong}$\rho=-4\pi\nabla^2\phi$} & {\color{cExact}$\nabla^2\phi=-4\pi\rho$}\\
+p.~92 & {\color{cWrong}$na\ll r_0$} & {\color{cExact}$na^2\ll r_0^2$（$a\ll r_0/\sqrt n$）}\\
+p.~93 & {\color{cWrong}$a\ll r/\sqrt n$} & {\color{cExact}$a\ll r_0/\sqrt n$}\\
+p.~93，(4:S-1) 後 & {\color{cWrong}starting at $y$ and ending at $y$} & {\color{cExact}starting at $x$ and ending at $y$}\\
+p.~93，(4:S-2) & {\color{cWrong}$G(z;0,y)=zG(z;x,\Delta)+\delta_{x,\Delta}$} & {\color{cExact}$G(z;x,0)=zG(z;x,\Delta)+\delta_{x,0}$}\\
+\bottomrule
+\end{tabular}}
