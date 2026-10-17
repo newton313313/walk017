@@ -1,0 +1,359 @@
+\input{ch5/figs}
+
+\section{漫步的變化形（第 5 章）}
+
+\begin{keybox}[先看這裡]
+前四章的醉漢最「乾淨」：每一步左右各半、和過去無關、每單位時間走一步。這一章一次改一條規則，看結果怎麼變。
+\textbf{偏向}（硬幣不公正 $\to$ 高斯往前走、寬度乘上 $\sqrt{4p(1-p)}$）；
+\textbf{慣性}（記得上一步 $\to$ 兩個狀態、$2\times2$ 轉移矩陣，走久了步長放大成持續長度 $l_p=\frac{Q}{1-Q}l$；時間變連續就是電報方程，二三維是細菌的「跑一跑、轉個彎」）；
+\textbf{等待}（每一步之前先等一段隨機時間 $\to$ Laplace 轉換把卷積變乘法，$\frac{B}{1-\chi A}$）。
+結論都一樣：走得夠久又是高斯，只是平均、寬度與時間尺度換了樣子。總整理在 5.5 節。
+\textbf{記號}：步長 $l=1$；$p$＝向右的機率；$Q$＝和上一步同方向的機率（第一步左右各半）；$L$、$R$＝最後一步向左／向右的機率；
+速率 $v$、反轉（二三維：轉向）率 $\gamma$，例子都取 $v=\gamma=1$；密度標準歸一化，徑向密度 $P_2=2\pi r\rho$、$P_3=4\pi r^2\rho$。
+
+\textbf{全章的主例}：$p=0.6$ 的硬幣走 10 步，平均 2、變異數 9.6；$Q=\frac34$ 的醉漢走 1000 步，寬度相當於普通醉漢走 3000 步；
+電報走路人 $t=3$ 時還有 $e^{-3}=0.0498$ 沒轉過身；每步前先「等公車」，$t=3$ 之前平均走 3 步或 1.2506 步。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+5.1 & 不公正的硬幣、先推再走 & W501 & 5.2.3 & 電報方程 & W504\\
+5.2.1 & 兩個狀態、轉移矩陣 & W502 & 5.2.4 & 二維、三維：轉個彎 & W505\\
+5.2.2 & 持續長度、二階遞迴 & W503 & 5.3.1--5.3.2 & 等待、高斯極限、會消失 & W506--W507\\
+\bottomrule
+\end{tabular}
+\end{center}
+數字一律由 \texttt{codes/utils/walk\_var.py} 重算，圖表由 \texttt{ch5/make\_figs.py} 產生並先做數字檢查；逐式校對見 \texttt{ref/md/ch05\_formulas.md}。
+連續播放：\texttt{Ch5Demo}（W501--W507）。
+\end{keybox}
+
+% =====================================================================
+\subsection{有偏向的漫步}
+\leavevmode\bk{pp.~95--98}\ \anim{W501}\quad 硬幣不公正，或每一步都被「風」推一下：平均位置開始移動。問題是寬度會不會跟著變。
+
+\textbf{問}：向右的機率 $p=0.6$。醉漢走 10 步，平均到哪裡？分布比公正硬幣寬還是窄？
+
+\textbf{直觀}：一步的位移 $\pm1$，平均 $p-(1-p)=2p-1=0.2$，變異數 $1-(2p-1)^2=4p(1-p)=0.96$（公正硬幣是 1）。步與步獨立，$N$ 步的平均與變異數都乘 $N$：
+平均 $(2p-1)N=2$、變異數 $4Np(1-p)=9.6$。\textbf{揭曉}：偏向讓分布\textbf{變窄}一點——向右的步多了，結果比較「確定」。
+
+\textbf{算到底}：$n$ 步向右、$N-n$ 步向左，終點 $x=2n-N$；也可以一步一步遞迴：
+\[P(N;n,N-n)=\binom Nn p^n(1-p)^{N-n},\qquad P(N+1;x,y)=p\,P(N;x,y-l)+(1-p)\,P(N;x,y+l).\tag{5.1, 5.2}\]
+$x=2$ 要 6 步向右：$P(10;2)=\binom{10}{6}0.6^6\,0.4^4=210\times0.046656\times0.0256=0.2508$；同樣 $P(10;0)=\binom{10}{5}(0.24)^5=0.2007$、$P(10;4)=0.2150$。
+
+\textbf{高斯}：照第 1 章取傅立葉，一步貢獻 $pe^{iql}+(1-p)e^{-iql}$，取對數展開到 $q^2$：
+\begin{gather*}
+P(N;q)=\exp\big[N\,il(2p-1)q-2Nq^2l^2p(1-p)+O(q^3)\big]P(0;q),\tag{5.5c}\\
+P(N;x)\approx\frac{1}{\sqrt{8\pi Np(1-p)l^2}}\exp\Big[-\frac{(x-(2p-1)Nl)^2}{8Nl^2p(1-p)}\Big].\tag{5.7}
+\end{gather*}
+只有和 $N$ 同奇偶的 $x$ 有人，所以格點機率 $\approx2\times$(5.7)：$x=0,2,4$ 是 0.2091、0.2575、0.2091（精確 0.2007、0.2508、0.2150）。
+高斯對平均 2 對稱，精確分布不對稱（$x=4$ 比 $x=0$ 多，差在 $q^3$ 項）。$N$ 加大，高斯往右走、變寬（Fig.~5.1，表 \ref{five-tab-biased}）；
+寬度 $\propto\sqrt{p(1-p)}$，$p\to1$ 時 $\to0$：沒有隨機性了。
+
+\begin{table}[htbp]
+\centering
+\small
+\FiveTabBiased
+\caption{不公正的硬幣 $p=0.6$。左：$N=10$ 的精確值與 $2\times$ 高斯；右：Fig.~5.1 的三組，平均與變異數都和 $N$ 成正比，峰值約除以 $\sqrt2$}\label{five-tab-biased}
+\end{table}
+
+\textbf{擴散方程的版本}：把 (5.2) 對 $y$ 泰勒展開，
+\[P(N+1;x,y)=P(N;x,y)+l(1-2p)\frac{\partial P}{\partial y}+\frac{l^2}{2}\frac{\partial^2P}{\partial y^2}+\cdots\tag{5.3}\]
+\begin{errbox}[p.~96，(5.3)]
+書上一階項寫成 $l(2p-1)\frac{\partial P}{\partial y}$。$pP(y-l)+(1-p)P(y+l)$ 的一階項是 $-pl\,\partial_yP+(1-p)l\,\partial_yP=l(1-2p)\,\partial_yP$：往右偏、峰往右移，前面要是負號。
+取傅立葉（$\int e^{iqy}\partial_yP\,dy=-iqP$）之後才得到 (5.4) 的 $+il(2p-1)q$——(5.4) 是對的。
+\end{errbox}
+
+\textbf{練習 5.1 的陷阱}：把 $P(N+1)-P(N)$ 直接換成 $\partial P/\partial N$，得擴散係數 $D=\frac{l^2}2$、變異數 $Nl^2=10$、寬度 $\sqrt{10}=3.162$——和偏向無關，錯了。
+多保留一項 $\frac12\partial_N^2P$，再用一階的 $\partial_NP\approx-v\,\partial_yP$（$v=(2p-1)l$）把它換成 $\frac{v^2}2\partial_y^2P$，得
+$D=\frac{l^2}{2}-\frac{v^2}{2}=2p(1-p)\,l^2$。$p=0.6$：$D=0.48$、變異數 $2DN=9.6$、寬度 3.098，和精確解一致。兩者的寬度比 $\sqrt{4p(1-p)}$ 在 $p=0.6$ 是 0.9798（差 2\%），$p=0.9$ 是 0.6（差 40\%）：
+擴散方程只在 $p\approx\frac12$ 時可以直接寫。
+
+\textbf{先走一步再亂走}（書 5.1.1 節，pp.~97--98）：另一種偏向是每一步先被固定的位移 $\vec r_B$ 推一下（像水流帶著染料），再照原來的分布亂走。一步的特徵函數只多一個相位：
+\[\chi(\vec q)=\int e^{-i\vec q\cdot\vec r}P(\vec r-\vec r_B)\,d^3r=e^{-i\vec q\cdot\vec r_B}\chi_0(\vec q),\qquad
+\frac{1}{(2\pi)^3}\int d^3q\,\chi(\vec q)^Ne^{i\vec q\cdot\vec r}=P(N;\vec r-N\vec r_B).\tag{5.9, 5.10}\]
+整團分布平移 $N\vec r_B$，\textbf{寬度完全不變}。一維對照（$N=10$）：每步先被吹 $b=0.2$ 再擲公正硬幣，平均 2、變異數 10；不公正硬幣 $p=0.6$，平均 2、變異數 9.6。
+平均一樣，但「不公正」拿掉了一點隨機性，「被吹」沒有。
+
+% =====================================================================
+\subsection{有慣性的漫步}
+\leavevmode\bk{pp.~98--118}\quad 醉漢記得上一步：有 $Q$ 的機率照同一個方向走、$1-Q$ 的機率回頭（$Q=\frac12$ 就是第 1 章）。只看位置已經不是「沒有記憶」的漫步；
+把「最後一步的方向」也記下來，又變回乘矩陣。
+
+\subsubsection{兩個狀態與轉移矩陣}
+\leavevmode\bk{pp.~98--100}\ \anim{W502}\par\nopagebreak
+
+\textbf{問}：$Q=\frac34$。走 4 步之後，變異數比普通醉漢的 4 大還是小？
+
+\textbf{兩個狀態}：$L(N;x,y)$、$R(N;x,y)$＝走了 $N$ 步停在 $y$、最後一步向左／向右的機率。最後一步向左，上一步一定停在 $y+l$：
+\begin{gather*}
+L(N+1;x,y)=Q\,L(N;x,y+l)+(1-Q)\,R(N;x,y+l),\tag{5.11}\\
+R(N+1;x,y)=(1-Q)\,L(N;x,y-l)+Q\,R(N;x,y-l).\tag{5.12}
+\end{gather*}
+\textbf{算到底}（$Q=\frac34$，起點 $L=R=\frac12$）：$N=1$ 是 $x=-1{:}\ (L,R)=(\frac12,0)$、$x=1{:}\ (0,\frac12)$。
+$N=2$：$x=1$ 的 $R=\frac12$ 照同方向（$\times\frac34$）到 $x=2$ 得 $R=\frac38$，回頭（$\times\frac14$）到 $x=0$ 得 $L=\frac18$；對稱地 $x=0$ 也有 $R=\frac18$。
+逐步做下去得表 \ref{five-tab-lr}（和暴力列舉 $2^N$ 條路線一致）。$N=2$ 的變異數是 $2\times\frac38\times4=3$。
+\textbf{揭曉}：$N=1..4$ 的變異數是 $1,\ 3,\ \frac{11}2,\ \frac{33}4$，比普通醉漢的 $1,2,3,4$ 大；$Q=\frac14$（老是回頭）是 $1,\ 1,\ \frac32,\ \frac74$。慣性讓分布變寬。
+
+\begin{table}[htbp]
+\centering
+\FiveTabLR\\[5pt]
+{\small\FiveTabPVar}
+\caption{有慣性的漫步。上：$Q=\frac34$ 的逐步表，每格是 $(L,R)$，兩數相加是停在 $x$ 的機率。
+下左：小 $N$ 的變異數與持續長度 $n$（$Q=\frac12$ 是普通醉漢）；下右：大 $N$ 時精確值 $\to NQ/(1-Q)+$ 常數（5.2.2 節）}\label{five-tab-lr}\label{five-tab-pvar}
+\end{table}
+
+\textbf{轉移矩陣}：對 $y$ 取傅立葉，平移變成相位 $e^{\pm iql}$，$N$ 步就是 $\mathbf T^N$：
+\begin{gather*}
+\begin{pmatrix}L(N+1;q)\\R(N+1;q)\end{pmatrix}=\mathbf T\begin{pmatrix}L(N;q)\\R(N;q)\end{pmatrix},\qquad
+\mathbf T=\begin{pmatrix}Qe^{-iql}&(1-Q)e^{-iql}\\(1-Q)e^{iql}&Qe^{iql}\end{pmatrix},\tag{5.15}\\
+\lambda_{1,2}=Q\cos ql\pm\sqrt{(1-Q)^2-Q^2\sin^2ql}.\tag{5.17, 5.18}
+\end{gather*}
+（$\operatorname{tr}\mathbf T=2Q\cos ql$、$\det\mathbf T=2Q-1$。）$Q=\frac34$、$q=0.1$：$\lambda_1=0.9848$、$\lambda_2=0.5077$；$q=0.5$ 時 $Q|\sin q|>1-Q$，
+兩個特徵值成共軛複數 $0.6582\pm0.2584i$。總數的傅立葉 $\sum_xP(N;x)e^{iqx}$（$q=0.3$）：$N=5$ 是 0.5699、$N=20$ 是 0.0388（三種算法一致）。
+
+\textbf{生成函數}（(5.19)--(5.22)）：$\sum_Nz^N\mathbf T^N=(1-z\mathbf T)^{-1}$＝伴隨矩陣 $/D$，
+\[D=1-2zQ\cos ql+z^2(2Q-1)=(1-z\lambda_1)(1-z\lambda_2),\qquad c_N\equiv[z^N]\frac1D=\frac{\lambda_1^{N+1}-\lambda_2^{N+1}}{\lambda_1-\lambda_2}.\tag{5.22, 5.25}\]
+從 $L=R=\frac12$ 出發，總數的生成函數是 $\frac{1-z(2Q-1)\cos ql}{D}$，所以總數的傅立葉 $=c_N-(2Q-1)\cos ql\,c_{N-1}$。$N$ 大時由最大的 $\lambda_1$ 主導。
+
+\subsubsection{持續長度與二階遞迴}
+\leavevmode\bk{pp.~100--103}\ \anim{W503}\par\nopagebreak
+
+\textbf{問}：$Q=\frac34$ 的醉漢走 1000 步，寬度相當於普通醉漢走幾步？
+
+小 $q$ 展開最大的特徵值，$\lambda_1^N\approx e^{-NQq^2l^2/2(1-Q)}$，反傅立葉又是高斯：
+\begin{gather*}
+\lambda_1=1-\frac{Q}{1-Q}\frac{q^2l^2}{2}+O(q^4)\qquad(q=0.1{:}\ 0.985,\ \text{精確 }0.9848),\tag{5.23}\\
+P(N;x)\approx\sqrt{\frac{1-Q}{2\pi NQl^2}}\exp\Big[-\frac{x^2(1-Q)}{2NQl^2}\Big].\tag{5.27}
+\end{gather*}
+變異數 $N\frac{Q}{1-Q}l^2$。精確值（$r=2Q-1$ 是相鄰兩步的相關，相隔 $k$ 步是 $r^k$）：
+\[\langle x^2\rangle_N=l^2\Big[N\frac{1+r}{1-r}-\frac{2r(1-r^N)}{(1-r)^2}\Big]\ \xrightarrow{N\to\infty}\ N\frac{Q}{1-Q}l^2+\text{常數}.\]
+表 \ref{five-tab-pvar}：精確值與 $NQ/(1-Q)$ 只差一個常數（$Q=\frac34$ 差 $-4$、$Q=\frac14$ 差 $+\frac49$）。$N=100$、$x=0$：精確 0.04587，$2\times$(5.27) 是 0.04607（奇偶性的因子 2）。
+
+\textbf{持續長度}（(5.28)--(5.31)）：(5.27) 就是普通漫步的高斯，只是步長與步數換掉了：
+\[l\to nl,\qquad N\to N/n,\qquad n=\frac{Q}{1-Q},\qquad l_p=nl\ \ \text{（持續長度）}.\tag{5.28--5.30}\]
+$Q=\frac34,\ \frac12,\ \frac14$ 的 $n=3,\ 1,\ \frac13$。\textbf{揭曉}：$Q=\frac34$ 走 1000 步，變異數 $1000\times3=3000$（精確 2996），
+相當於普通醉漢走 3000 步，也相當於步長 3 的醉漢走 333 步。
+
+\textbf{兩個極端}：$Q=1$ 一直往同一邊走，變異數 $N^2$（$N=10$：100），是直線、永遠不是高斯（$n=\infty$）；
+$Q=0$ 每步都回頭，在 0 與 $\pm1$ 之間來回：$N=10$ 的變異數 0、$N=11$ 的變異數 1。
+
+\textbf{二階遞迴}（書 5.2.1 節）：從 (5.11)(5.12) 消去 $L$（(5.34)），只剩 $R$ 的遞迴（程式用逐步遞迴核對，殘差為 0）：
+\[R(N+2;q)=2Q\cos ql\,R(N+1;q)+(1-2Q)\,R(N;q).\tag{5.35}\]
+代入 $R=\lambda^N$ 得特徵方程 $\lambda^2-2Q\cos ql\,\lambda-(1-2Q)=0$（(5.37)），兩個根正是 (5.17)(5.18) 的 $\lambda_{1,2}$（根的乘積 $2Q-1=\det\mathbf T$）。
+\begin{errbox}[p.~103，(5.37)]
+書上印成 $\lambda^2-2Q\cos ql\,\lambda+(1-2Q)=0$。矩陣 (5.36) 的行列式是 $-(1-2Q)$，直接把 $R=\lambda^N$ 代入 (5.35) 也是 $-(1-2Q)$。
+把 $\lambda_1=0.9848$（$q=0.1$、$Q=\frac34$）代入書上的式子，差 1.000（$=2|1-2Q|$）。
+\end{errbox}
+
+\subsubsection{電報方程}
+\leavevmode\bk{pp.~103--109}\ \anim{W504}\par\nopagebreak
+
+\textbf{問}：走路人以速率 $v=1$ 前進，平均每單位時間反轉 $\gamma=1$ 次。$t=3$ 時有沒有人在 $x=3$ 之外？一次都沒轉身的有多少？
+
+\textbf{從格子到連續}（練習 5.3）：時間步 $\delta t$、步長 $l=v\delta t$、每步回頭的機率 $1-Q=\gamma\delta t$。$\delta t\to0$ 時 (5.11)(5.12) 變成
+\[\frac{\partial R}{\partial t}+v\frac{\partial R}{\partial x}=\gamma(L-R),\qquad \frac{\partial L}{\partial t}-v\frac{\partial L}{\partial x}=\gamma(R-L):\tag{5.43, 5.44}\]
+右行者隨波前進，並以速率 $\gamma$ 變成左行者，反之亦然。令 $\Sigma=R+L$（密度）、$\Delta=R-L$（流量 $\div v$），消去 $\Delta$（練習 5.4）：
+\[\partial_t\Sigma+v\,\partial_x\Delta=0,\quad \partial_t\Delta+v\,\partial_x\Sigma=-2\gamma\Delta\quad\Longrightarrow\quad
+\frac{\partial^2\Sigma}{\partial t^2}+2\gamma\frac{\partial\Sigma}{\partial t}=v^2\frac{\partial^2\Sigma}{\partial x^2}.\tag{5.45--5.48}\]
+這就是\textbf{電報方程}：波動方程加上阻尼。格子核對（$t=1$、$x=0$，密度＝機率 $\div2l$）：$\delta t=0.01$ 得 0.3392、$\delta t=0.005$ 得 0.3380，
+外插 $2\times0.3380-0.3392=0.3368$，正是下面公式的值。
+
+\textbf{解}：起點 $\Sigma(x,0)=\delta(x)$、$\Delta=0$。取傅立葉與 Laplace（$t\to\lambda$）：
+\[\big[\lambda^2+2\gamma\lambda+(qv)^2\big]\sigma(q,\lambda)=\lambda+2\gamma,\qquad
+\sigma(q,t)=e^{-\gamma t}\Big[\cosh\omega t+\frac{\gamma}{\omega}\sinh\omega t\Big],\ \ \omega=\sqrt{\gamma^2-q^2v^2}.\tag{5.52}\]
+反傅立葉（書上 (5.53)--(5.60) 用 $I_0$ 的積分表示），更正後是
+\[\Sigma(x,t)=\frac{\gamma e^{-\gamma t}}{2v}\Big[I_0(\gamma s)+\frac{t}{s}I_1(\gamma s)\Big]\Theta(vt-|x|)+\frac{e^{-\gamma t}}{2}\big[\delta(x-vt)+\delta(x+vt)\big],\quad s=\sqrt{t^2-\frac{x^2}{v^2}}.\tag{5.61}\]
+讀法：\textbf{兩個尖峰}是一次都沒轉身的人（各 $\frac12e^{-\gamma t}$），以速率 $v$ 往外跑；\textbf{連續部分}是轉過身的人，全在 $|x|<vt$ 之內——沒有人跑得比 $v$ 快（因果性）。
+\begin{errbox}[p.~107，(5.57) 前、(5.60)(5.61)]
+書上的前因子是 $\frac12\big(2\gamma+\frac{\partial}{\partial t}\big)$，少了 $1/v$（(5.58) 有）：應為 $\frac{1}{2v}\big(2\gamma+\frac{\partial}{\partial t}\big)\big[e^{-\gamma t}I_0(\gamma s)\big]$。
+照書上算，$v=2$、$t=3$ 的總數是 1.9502，不是 1。(5.57) 前的「when $x<t$」應為 $x<vt$。
+〔注〕$\partial_t$ 不作用在 $\Theta$（否則尖峰算兩次）；$\Theta(vt-x)$ 應為 $\Theta(vt-|x|)$；p.~106「Substituting into (5.50)」應為 (5.49)。
+\end{errbox}
+
+\textbf{算到底}（$v=\gamma=1$）：$t=1$、$x=0$ 時 $s=1$，$\Sigma=\frac{e^{-1}}2[I_0(1)+I_1(1)]=0.1839\times(1.2661+0.5652)=0.3368$。
+前緣後方 $s\to0$：$I_0\to1$、$\frac tsI_1(\gamma s)\to\frac{\gamma t}2$，所以 $\Sigma(vt^-,t)=\frac{\gamma e^{-\gamma t}}{2v}(1+\frac{\gamma t}2)$，$t=1$ 是 0.2759。
+守恆：連續部分的總量是 $1-e^{-\gamma t}$，加上兩個尖峰正好是 1（圖 \ref{five-fig-tele}、表 \ref{five-tab-tele}）。
+
+\begin{figure}[htbp]
+\centering
+\FiveFigTele
+\caption{書上 Fig.~5.3 的樣子（$v=\gamma=1$，只畫 $x\ge0$）：$t=1,3,5,8$ 的連續部分，箭頭是 $x=vt$ 的尖峰，標的是重量 $\frac12e^{-t}$。
+灰虛線是 $t=8$ 的高斯（$D=\frac{v^2}{2\gamma}=\frac12$）。前緣以速率 $v$ 往外跑，尖峰越來越小，後面的人慢慢變成高斯}\label{five-fig-tele}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\small
+\FiveTabTele
+\caption{電報方程的數字。$\Sigma(0,t)$ 從下面趨近高斯；變異數 $\to2Dt-\frac12$}\label{five-tab-tele}
+\end{table}
+
+\textbf{揭曉}：$t=3$ 時 $|x|>3$ 沒有人；沒轉過身的 $e^{-3}=0.0498$（在 $x=\pm3$ 的尖峰上；10 萬人的模擬 0.0488，$|x|<1.5$ 的比例 0.6060，公式 0.6051）。
+
+\textbf{大 $t$}（練習 5.5--5.6）：$I_0(z)\approx I_1(z)\approx e^z/\sqrt{2\pi z}$、$s\approx t-\frac{x^2}{2v^2t}$，尖峰消失，剩下擴散係數 $D=\frac{v^2}{2\gamma}=0.5$ 的高斯。精確變異數
+\[\langle x^2\rangle=\frac{v^2}{\gamma}\Big[t-\frac{1-e^{-2\gamma t}}{2\gamma}\Big]\ \xrightarrow{\ t\to\infty\ }\ 2Dt-\frac{v^2}{2\gamma^2}\]
+（$t=1,3,5,8$：0.5677、2.5012、4.5000、7.5000）。持續長度 $l_p=v/\gamma=1$（平均跑多遠才轉身），$D=\frac12vl_p$：
+和 5.2.2 節同一個道理（$Q=1-\gamma\delta t$、$l=v\delta t$ 代入 $N\frac{Q}{1-Q}l^2$ 正是 $\frac{v^2t}{\gamma}$）——慣性把步長放大成 $l_p$。
+
+\subsubsection{二維、三維：跑一跑、轉個彎}
+\leavevmode\bk{pp.~109--118}\ \anim{W505}\par\nopagebreak
+
+\textbf{問}：大腸桿菌以速率 $v$ 游，平均每單位時間翻滾 $\gamma$ 次、換一個完全隨機的方向（$v=\gamma=1$）。$t=3$ 時有多少還在第一條直線上？前緣長什麼樣子？
+
+\textbf{方程}：$f(\vec r,\hat n,t)$＝在 $\vec r$、朝 $\hat n$ 游的密度（二維 $\hat n=(\cos\theta,\sin\theta)$）：
+\[\frac{\partial f}{\partial t}+v\cos\theta\frac{\partial f}{\partial x}+v\sin\theta\frac{\partial f}{\partial y}=-\Gamma f,\qquad \Gamma=\gamma-\gamma|0\rangle\langle0|.\tag{5.65, 5.69}\]
+$|0\rangle$＝各方向均勻：每個方向以速率 $\gamma$ 流失、再平均分給所有方向（一維版就是 (5.43)(5.44)）。傅立葉＋Laplace 之後
+$A=\lambda+iv\vec q\cdot\hat n+\gamma$ 對每個方向只是一個數，$\gamma|0\rangle\langle0|$ 是秩 1，反算子可以直接寫（練習 5.7）：
+\[(A-\gamma|0\rangle\langle0|)^{-1}=A^{-1}+\frac{\gamma A^{-1}|0\rangle\langle0|A^{-1}}{1-\gamma\langle0|A^{-1}|0\rangle}.\tag{5.73--5.75}\]
+（程式把角度離散成 64 格核對，誤差 $<10^{-12}$。）密度的轉換是 $\frac{g}{1-\gamma g}$，只需要角度平均 $g=\langle0|A^{-1}|0\rangle$
+（$\lambda=q=1$ 時是 0.4472、0.4636；二維代入得 (5.78) 的 $\frac{1}{\sqrt{(\lambda+\gamma)^2+q^2v^2}-\gamma}$）：
+\[g_{2D}=\frac{1}{\sqrt{(\lambda+\gamma)^2+q^2v^2}},\qquad g_{3D}=\frac{1}{vq}\arctan\frac{vq}{\lambda+\gamma}.\tag{5.77, 5.93}\]
+
+\textbf{二維的答案}：反 Laplace 有極點與切割兩部分，書上 (5.84)、(5.89) 各算一部分（要相加）。極點給 $\frac{\gamma}{\pi v}e^{-\gamma t}\frac{\cosh(\gamma s/v)}{s}$、
+切割給 $-\frac{\gamma}{2\pi v}e^{-\gamma t}\frac{e^{-\gamma s/v}}{s}$（$s=\sqrt{v^2t^2-r^2}$），$2\cosh-e^{-}=e^{+}$，合起來
+\[\rho_{2D}(r,t)=\frac{e^{-\gamma t}}{2\pi r}\delta(r-vt)+\frac{\gamma}{2\pi v}\frac{e^{-\gamma t+\gamma s/v}}{s}\Theta(vt-r).\]
+第一項是沒翻滾過的人（半徑 $vt$ 的圓環，總量 $e^{-\gamma t}$）；第二項在前緣像 $1/\sqrt{vt-r}$ 發散，但可積。
+$t=3$ 的徑向密度 $P_2=2\pi r\rho$：$r=1,2,2.5,2.9$ 是 0.2978、0.4167、0.3941、0.4052；圓環 0.0498、其餘 0.9502。
+\begin{errbox}[p.~112--113，(5.83)(5.84)(5.88)(5.89)]
+(5.83) 後的對應應為 $b\to i\gamma/v$（書上 $i\gamma$），而且 $J_{-1/2}(z)=\sqrt{2/\pi z}\cos z$ 把 $\sqrt{\pi/2}$ 抵掉：
+(5.84) 的 $2\gamma\sqrt{\pi/2}\,e^{-\gamma t}\cosh(\gamma\sqrt{v^2t^2-r^2})$ 應為 $2\gamma\,e^{-\gamma t}\cosh(\gamma\sqrt{v^2t^2-r^2}/v)$。
+(5.88) 的 $\int_0^\infty qJ_0(qx)J_0(qy)\,dq$ 是 $\frac1x\delta(x-y)$，不是 $\frac{2\pi}{x}\delta(x-y)$，所以 (5.89) 兩項前面的 $2\pi$ 都不該有。
+照書上的係數積分，$t=3$ 得 1.2658，不是 1。
+\end{errbox}
+
+\textbf{三維的答案}（(5.95)--(5.106)，只列結果）：極點在 $\lambda=qv\cot(qv/\gamma)-\gamma$（$0<q<\gamma\pi/2v$），切割兩邊的函數值差在 $\pm\frac\pi2$。
+密度分成三部分：沒翻滾過的球殼 $e^{-\gamma t}$（(5.98)）；極點 (5.101) 加上切割 (5.103) 的第一項；以及 (5.103) 的最後一項——\textbf{只翻滾一次的人}：
+\[\rho_1=\frac{\gamma e^{-\gamma t}}{4\pi v^2rt}\ln\frac{vt+r}{vt-r},\qquad \int\rho_1\,d^3r=\gamma te^{-\gamma t}\qquad\Big(\text{用 }\int_0^1u\ln\frac{1+u}{1-u}\,du=1\Big).\]
+前緣的對數發散就是它造成的。$r>vt$ 時 (5.101) 與 (5.103) 第一項正好抵銷（$t=3$、$r=3.5$：0.0113 與 $-0.0113$）：因果性。
+書上的歸一化是二維 $2\pi\rho$、三維 $2\pi^2\rho$（所以「$r^2\Sigma$ 積分得 $\pi/2$」；Fig.~5.6 的縱軸 $r^2\Sigma=\frac\pi2P_3$）。
+\begin{errbox}[p.~115、p.~117]
+p.~115（(5.96) 前）：切割右邊 $\lambda=-\gamma+\epsilon+ixvq$ 上的函數是 $\frac1{vq}\big(\frac\pi2-\frac i2\ln\frac{1+x}{1-x}\big)$（書上 $\frac1{vq}(\frac\pi2-i\ln((1+x)(1-x)))$），左邊是 $-\frac\pi2$。
+(5.106) 的指數應為 $e^{+\gamma ut\cot u}$（書上 $e^{-\gamma ut\cot u}$）：只有 $+$ 才「正好抵銷 (5.101)」。
+\end{errbox}
+
+\begin{figure}[htbp]
+\centering
+\FiveFigRT
+\caption{書上 Fig.~5.6 重畫（縱軸改成標準歸一化的 $P_3=4\pi r^2\rho$）：$t=1,3,5,8$，畫到 $r=0.99\,vt$（前緣對數發散）；箭頭是沒翻滾過的球殼，標的是重量 $e^{-t}$}\label{five-fig-rt}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\small
+\FiveTabRT\qquad
+\FiveTabDims
+\caption{左：三維的徑向密度 $P_3$（$\int P_3\,dr=1-e^{-t}$）與球殼的重量 $e^{-t}$。右：$t=3$ 時三個維度的比較
+（一維看 $|x|$；模擬 10 萬個、種子 5；最後一列是連續部分在前緣 $r\to vt$ 的行為）}\label{five-tab-rt}
+\end{table}
+
+\textbf{揭曉}（$t=3$）：沒翻滾的 $e^{-3}=0.0498$（球殼），翻一次的 $3e^{-3}=0.1494$，其餘 0.8009。
+維度越高前緣越尖（一維有限、二維 $1/\sqrt{\ }$、三維 $\ln$），但都可積：沒有人跑得比 $v$ 快，也一個都不少。
+
+% =====================================================================
+\subsection{連續時間漫步}
+\leavevmode\bk{pp.~118--125}\quad 前面都是每單位時間走一步。這一節讓走路人每落腳一次，都要等一段隨機的時間才走下一步（像等公車）。
+
+\subsubsection{等一下再走：等待時間}
+\leavevmode\bk{pp.~118--122}\ \anim{W506}\par\nopagebreak
+
+\textbf{問}：$t=3$ 之前走了幾步？「固定速率」和「越等越可能來」哪個走得多？
+
+\textbf{等待}：$q(t)\,dt$＝已經等了 $t$、在接下來 $dt$ 內出發的機率。還在等的機率 $a(\tau)$ 滿足 $a'=-qa$：
+\[a(\tau)=\exp\Big[-\int_0^\tau q(t)\,dt\Big],\qquad \int_0^\infty a(t)q(t)\,dt=1-a(\infty).\tag{5.108, 5.109}\]
+$a(t)q(t)$ 是等待時間的密度。兩個例子（兩者的 $a(\infty)=0$：一定會走）：\textbf{固定速率} $q=p_0=1$：$a=e^{-t}$，$a(3)=e^{-3}=0.0498$；
+\textbf{兩段等待}（像要轉兩班車，每段是速率 1 的指數等待）：等待密度 $aq=te^{-t}$、$a=(1+t)e^{-t}$、$q(t)=\frac{t}{1+t}$（越等越可能出發），$a(3)=4e^{-3}=0.1991$，平均等 2。
+
+\textbf{走 $m$ 步＝卷積}：恰好走了一步、到 $\tau$ 還在等下一步的機率是 $\int_0^\tau a(t_1)q(t_1)a(\tau-t_1)\,dt_1$（(5.110)），$m$ 步是 $m$ 個 $aq$ 與一個 $a$ 的卷積（(5.111)）。
+Laplace 轉換把卷積變乘法：
+\begin{gather*}
+A(\lambda)=\int_0^\infty aq\,e^{-\lambda t}dt,\qquad B(\lambda)=\int_0^\infty a\,e^{-\lambda t}dt,\qquad A=1-\lambda B,\tag{5.117--5.119}\\
+\mathcal L[m\text{ 步}]=A^mB,\qquad \sum_mA^mB=\frac{B}{1-A}=\frac1\lambda.\tag{5.121, 5.122}
+\end{gather*}
+$A=1-\lambda B$ 來自分部積分（$aq=-a'$）；最後一式說機率加起來是 1（$\frac1\lambda$ 是常數 1 的 Laplace 轉換）。
+$\lambda=0.7$：固定速率 $A=B=\frac1{1.7}=0.5882$；兩段等待 $A=\frac1{(1+\lambda)^2}=0.3460$、$B=\frac{2+\lambda}{(1+\lambda)^2}=0.9343$。
+
+\textbf{算到底}：固定速率 $A^mB=\frac{p_0^m}{(p_0+\lambda)^{m+1}}$，反轉得 Poisson 分布 $P_m(t)=\frac{(p_0t)^m}{m!}e^{-p_0t}$；
+兩段等待 $A^mB=\frac{1}{(1+\lambda)^{2m+1}}+\frac{1}{(1+\lambda)^{2m+2}}$，反轉得 $P_m(t)=e^{-t}\big[\frac{t^{2m}}{(2m)!}+\frac{t^{2m+1}}{(2m+1)!}\big]$
+（走了 $m$ 步＝已經結束 $2m$ 或 $2m+1$ 段等待）。例：$P_1(3)=e^{-3}(\frac92+\frac{27}6)=9e^{-3}=0.4481$。
+表 \ref{five-tab-ctrw}：平均步數 3 與 1.2506（$\frac t2-\frac14+\frac{e^{-2t}}4$）。\textbf{揭曉}：固定速率走得多——平均等 1 比平均等 2 短。
+
+\subsubsection{等待＋步伐＝高斯；會消失的走路人}
+\leavevmode\bk{pp.~122--125}\ \anim{W507}\par\nopagebreak
+
+\textbf{問}：把等待和步伐一起算，走很久以後分布是什麼？時間變 4 倍，寬度變幾倍？
+
+走了 $n$ 步的位移的傅立葉是 $\chi(\vec q)^n$（第 1 章），乘上「到 $t$ 恰好走了 $n$ 步」的 $A^nB$ 再加總：
+\[\sum_n\chi(\vec q)^nA(\lambda)^nB(\lambda)=\frac{B(\lambda)}{1-\chi(\vec q)A(\lambda)}.\tag{5.124--5.128}\]
+\textbf{練習 5.8}：固定速率時 $A=\frac{p_0}{p_0+\lambda}$、$B=\frac1{p_0+\lambda}$，(5.128) 變成 $\frac{1}{\lambda+p_0(1-\chi(q))}$；一維格子 $\chi=\cos q$，反轉得
+$P(x,t)=e^{-p_0t}I_{|x|}(p_0t)$。$t=3$、$x=0,\pm1,\pm2$：0.2430、0.1968、0.1118。步數不固定，所以每一格都可能有人（沒有奇偶性）。
+
+\textbf{高斯極限}：長距離、長時間（小 $q$、小 $\lambda$）：$\chi\approx1-Cq^2$、$A=1-\lambda B\approx1-\lambda B(0)$，
+\begin{gather*}
+\frac{B(0)}{1-(1-Cq^2)(1-\lambda B(0))}\approx\frac{1}{\lambda+(C/B(0))q^2}\ \Rightarrow\ e^{-Ctq^2/B(0)},\tag{5.129--5.131}\\
+P(\vec r,t)\approx\Big(\frac{B(0)}{4\pi Ct}\Big)^{d/2}e^{-B(0)r^2/4Ct}.\tag{5.133 更正}
+\end{gather*}
+每個方向的變異數是 $2Ct/B(0)$。$B(0)=\int a\,dt$ 是平均等待時間：就是「每單位時間走 $1/B(0)$ 步」的普通漫步。
+〔注〕(5.133) 本身是積分恆等式 $\int d^dq\,e^{i\vec q\cdot\vec r}e^{-Ctq^2/B(0)}=(\frac{\pi B(0)}{Ct})^{d/2}e^{-B(0)r^2/4Ct}$，機率還要乘 $(2\pi)^{-d}$；(5.131b) 的 $c$ 應為 $C$。
+\begin{errbox}[p.~124，(5.133) 後]
+書上說「width proportional to the time interval $t$」。應為\textbf{變異數} $\propto t$，寬度 $\propto\sqrt t$。
+\end{errbox}
+\textbf{算到底}（一維格子 $C=\frac12$，表 \ref{five-tab-ctrw}）：固定速率 $B(0)=1$，變異數 $t$：$t=10,40$ 是 10、40，寬度 3.162 $\to$ 6.325——
+\textbf{揭曉：時間 $\times4$，寬度 $\times2$}。兩段等待 $B(0)=2$：精確變異數 4.75、19.75（$\approx t/2$；精確變異數就是平均步數）。
+$P(0,10)$：固定速率精確 0.1278、高斯 0.1262；兩段等待 0.1805、0.1784。
+
+\begin{table}[htbp]
+\centering
+\FiveTabCTRW
+\caption{連續時間漫步。上：$t=3$ 走了 $m$ 步的機率；下：一維格子上的分布與高斯極限}\label{five-tab-ctrw}
+\end{table}
+
+\textbf{練習 5.9：會消失的走路人}：除了以速率 $p_0$ 走一步，還以速率 $p_1$ 消失。還在等的機率 $a=e^{-(p_0+p_1)t}$，但只有 $p_0$ 那部分是走一步：
+$A=\frac{p_0}{p_0+p_1+\lambda}$、$B=\frac{1}{p_0+p_1+\lambda}$，所以 $\frac{B}{1-\chi A}=\frac{1}{\lambda+p_1+p_0(1-\chi)}$。$q=0$（$\chi=1$）就是總數 $\frac1{\lambda+p_1}$，即 $e^{-p_1t}$：衰減率是 $p_1$，和怎麼走無關。$p_0=1$、$p_1=0.1$、$t=10$：0.3679，半衰期 $\ln2/p_1=6.931$。〔注〕這時 $A=1-(\lambda+p_1)B\ne1-\lambda B$，(5.119) 不能照用。
+
+% =====================================================================
+\subsection{練習 5.1--5.9 解答}
+{\small
+\begin{enumerate}[label=\textbf{5.\arabic*},itemsep=0.05em]
+\item 偏向漫步的擴散方程。\quad 答：多保留 $\frac12\partial_N^2P\approx\frac{v^2}2\partial_y^2P$，$D=\frac{l^2}2-\frac{v^2}2=2p(1-p)l^2$，只有 $p\to\frac12$ 時等於 $\frac{l^2}2$（5.1.1 節）。
+\item 二階遞迴的解。\quad 答：$R=A_1\lambda_1^N+A_2\lambda_2^N$（$\lambda_{1,2}$＝更正後 (5.37) 的根），係數由 $R(0)=\frac12$、$R(1)=\frac12e^{iql}$ 定出；
+加上 (5.34) 的 $L$，總數的傅立葉是 $c_N-(2Q-1)\cos ql\,c_{N-1}$（5.2.1 節）。
+\item 由格子推 (5.43)(5.44)。\quad 答：$R(x,t+\delta t)=(1-\gamma\delta t)R(x-v\delta t,t)+\gamma\delta t\,L(x-v\delta t,t)$，展開到 $\delta t$ 一階：
+$\delta t(\partial_tR+v\partial_xR)=\gamma\delta t(L-R)$，就是 (5.43)；$L$ 同理。
+\item 電報方程。\quad 答：$\partial_t\Sigma=-v\partial_x\Delta$ 再對 $t$ 微分，代入 $\partial_t\Delta=-v\partial_x\Sigma-2\gamma\Delta$ 與 $v\partial_x\Delta=-\partial_t\Sigma$，
+得 $\Sigma_{tt}+2\gamma\Sigma_t=v^2\Sigma_{xx}$；$\Delta$ 滿足同一個方程。
+\item 大 $t$ 的高斯。\quad 答：$|x|\ll vt$ 時 $s\approx t-\frac{x^2}{2v^2t}$，$I_0(\gamma s)\approx I_1(\gamma s)\approx\frac{e^{\gamma s}}{\sqrt{2\pi\gamma t}}$，
+$\Sigma\approx\frac{\gamma}{v}\frac{e^{-\gamma x^2/2v^2t}}{\sqrt{2\pi\gamma t}}=\frac{1}{\sqrt{4\pi Dt}}e^{-x^2/4Dt}$，$D=\frac{v^2}{2\gamma}$；尖峰 $e^{-\gamma t}$ 消失。$t=8$：0.1388 對 0.1410。
+\item 變異數與持續長度。\quad 答：電報方程乘 $x^2$ 積分，$m(t)=\langle x^2\rangle$ 滿足 $\ddot m+2\gamma\dot m=2v^2$、$m(0)=\dot m(0)=0$，
+所以 $m=\frac{v^2}{\gamma}\big[t-\frac{1-e^{-2\gamma t}}{2\gamma}\big]\approx\frac{v^2t}{\gamma}=2Dt$；持續長度 $l_p=v/\gamma$，$D=\frac12vl_p$。
+\item 反算子 (5.75)。\quad 答：直接相乘（Sherman--Morrison），記 $g=\langle0|A^{-1}|0\rangle$：
+$(A-\gamma|0\rangle\langle0|)A^{-1}=1-\gamma|0\rangle\langle0|A^{-1}$，而 $(A-\gamma|0\rangle\langle0|)\frac{\gamma A^{-1}|0\rangle\langle0|A^{-1}}{1-\gamma g}=\gamma|0\rangle\langle0|A^{-1}$，相加為 1。
+\item 固定速率的連續時間漫步。\quad 答：(5.128) 得 $\frac1{\lambda+p_0(1-\chi(q))}$，反 Laplace 是 $e^{-p_0(1-\chi)t}$；一維格子 $\chi=\cos q$，
+由 $e^{z\cos q}=\sum_nI_n(z)e^{inq}$ 得 $P(x,t)=e^{-p_0t}I_{|x|}(p_0t)$（5.3.2 節）。
+\item 會消失的走路人。\quad 答：$\frac1{\lambda+p_1+p_0(1-\chi)}$，總數 $e^{-p_1t}$、衰減率 $p_1$（5.3.2 節；$t=10$：0.3679）。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 5 章的回顧與筆誤一覽}
+\textbf{回顧}：改了規則，走路人最後還是回到高斯——只是平均、寬度與時間尺度換了樣子。
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+變化 & 結果 & 書上的式子 & 動畫\\
+\midrule
+偏向 & 移動的高斯，寬度 $\times\sqrt{4p(1-p)}$ & (5.1)、(5.7)、(5.10) & W501\\
+慣性 & $\mathbf T$ 的特徵值；持續長度 $l_p=\frac{Q}{1-Q}l$ & (5.15)、(5.17)、(5.27)、(5.30) & W502--W503\\
+電報 & 尖峰 $\frac12e^{-\gamma t}$＋$D=\frac{v^2}{2\gamma}$ 的高斯 & (5.48)、(5.61) & W504\\
+二維、三維 & 前緣、因果性、守恆 & (5.69)、(5.75)、(5.101)、(5.103) & W505\\
+等待 & $\frac{B}{1-\chi A}$，變異數 $2Ct/B(0)$ & (5.122)、(5.128)、(5.133) & W506--W507\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{筆誤一覽}（給 2004 年版）：$\Theta(vt-x)$、p.~106 的 (5.50)、(5.131b) 的 $c$、(5.133) 的 $(2\pi)^{-d}$、練習 5.9 的 $A\ne1-\lambda B$ 是〔注〕，
+其餘在文中用紅框；每一條都用程式核對過。
+\begin{center}
+\footnotesize
+\FiveTabErrata
+\end{center}
