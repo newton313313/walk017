@@ -1,10 +1,10 @@
 """
 render_all.py —— 一次把場景輸出成影片（存到 renders/）。在 codes/ 裡執行；一次只跑一個 manimgl。
 
-    python render_all.py                全部章節的單幕（第 1 章 W101–W112、第 2 章 W201–W212），1080p
-    python render_all.py --ch1          只做第 1 章；--ch2 只做第 2 章（以後的章節是 --ch3 …）
+    python render_all.py                全部章節的單幕（第 1 章 W101–W112、第 2 章 W201–W212、第 3 章 W301–W308），1080p
+    python render_all.py --ch1          只做第 1 章；--ch2、--ch3 同理（以後的章節是 --ch4 …）
     python render_all.py W105 210       只輸出指定的幕（代號；"210" 也可以，等於 W210）
-    python render_all.py --ch2-demo     另外輸出連續播放 Ch2Demo（W201–W212；第 1 章是 --ch1-demo）；只要連續播放就再加 --demos-only
+    python render_all.py --ch2-demo     另外輸出連續播放 Ch2Demo（W201–W212；第 1 章是 --ch1-demo、第 3 章是 --ch3-demo）；只要連續播放就再加 --demos-only
     python render_all.py -l             改用 480p（最快，用來預覽）；另有 -m（720p）、--uhd（4K）
     python render_all.py --force        影片已經存在也重新輸出（預設跳過：已完成的影片不覆寫）
 """
@@ -43,8 +43,18 @@ CH2 = [
     ("W211", "scenes/w211_reciprocal_lattice.py", "W211ReciprocalLattice"),
     ("W212", "scenes/w212_singularities.py", "W212Singularities"),
 ]
-CHAPTERS = {"--ch1": CH1, "--ch2": CH2}
-DEMOS = {"--ch1-demo": ("main.py", "Ch1Demo"), "--ch2-demo": ("main.py", "Ch2Demo")}
+CH3 = [
+    ("W301", "scenes/w301_polya_question.py", "W301PolyaQuestion"),
+    ("W302", "scenes/w302_visit_gf.py", "W302VisitGF"),
+    ("W303", "scenes/w303_one_dimension.py", "W303OneDimension"),
+    ("W304", "scenes/w304_two_dimensions.py", "W304TwoDimensions"),
+    ("W305", "scenes/w305_dimension_divide.py", "W305DimensionDivide"),
+    ("W306", "scenes/w306_watson.py", "W306Watson"),
+    ("W307", "scenes/w307_sites_visited.py", "W307SitesVisited"),
+    ("W308", "scenes/w308_footprint.py", "W308Footprint"),
+]
+CHAPTERS = {"--ch1": CH1, "--ch2": CH2, "--ch3": CH3}
+DEMOS = {"--ch1-demo": ("main.py", "Ch1Demo"), "--ch2-demo": ("main.py", "Ch2Demo"), "--ch3-demo": ("main.py", "Ch3Demo")}
 QUALITY_FLAGS = {"-l", "-m", "--hd", "--uhd"}
 
 

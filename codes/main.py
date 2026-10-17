@@ -4,6 +4,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py               列出所有場景，選一個預覽
     manimgl main.py Ch1Demo -w    第 1 章 12 幕連續播放（W101–W112），輸出到 renders/Ch1Demo.mp4
     manimgl main.py Ch2Demo -w    第 2 章 12 幕連續播放（W201–W212），輸出到 renders/Ch2Demo.mp4
+    manimgl main.py Ch3Demo -w    第 3 章 8 幕連續播放（W301–W308），輸出到 renders/Ch3Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -40,6 +41,14 @@ from scenes import w209_diffusion_green as w209
 from scenes import w210_gaussian_integrals as w210
 from scenes import w211_reciprocal_lattice as w211
 from scenes import w212_singularities as w212
+from scenes import w301_polya_question as w301
+from scenes import w302_visit_gf as w302
+from scenes import w303_one_dimension as w303
+from scenes import w304_two_dimensions as w304
+from scenes import w305_dimension_divide as w305
+from scenes import w306_watson as w306
+from scenes import w307_sites_visited as w307
+from scenes import w308_footprint as w308
 
 
 def play_sequence(scene, classes):
@@ -148,6 +157,38 @@ class W212Singularities(w212.W212Singularities):
     pass
 
 
+class W301PolyaQuestion(w301.W301PolyaQuestion):
+    pass
+
+
+class W302VisitGF(w302.W302VisitGF):
+    pass
+
+
+class W303OneDimension(w303.W303OneDimension):
+    pass
+
+
+class W304TwoDimensions(w304.W304TwoDimensions):
+    pass
+
+
+class W305DimensionDivide(w305.W305DimensionDivide):
+    pass
+
+
+class W306Watson(w306.W306Watson):
+    pass
+
+
+class W307SitesVisited(w307.W307SitesVisited):
+    pass
+
+
+class W308Footprint(w308.W308Footprint):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -170,3 +211,14 @@ class Ch2Demo(w201.W201WhatIsGF):
 
     def construct(self):
         play_sequence(self, CH2)
+
+
+CH3 = [w301.W301PolyaQuestion, w302.W302VisitGF, w303.W303OneDimension, w304.W304TwoDimensions,
+       w305.W305DimensionDivide, w306.W306Watson, w307.W307SitesVisited, w308.W308Footprint]
+
+
+class Ch3Demo(w301.W301PolyaQuestion):
+    """第 3 章 8 幕連續播放（W301–W308）。"""
+
+    def construct(self):
+        play_sequence(self, CH3)
