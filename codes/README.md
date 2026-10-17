@@ -3,7 +3,7 @@
 J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advanced Students and Researchers*（Cambridge University Press 2004）
 的繁體中文導讀動畫與講義。目前完成**第 1–3 章**：第 1 章（Introduction to techniques）12 幕動畫 W101–W112＋連續播放 `Ch1Demo`；
 第 2 章（Generating functions I）12 幕動畫 W201–W212＋連續播放 `Ch2Demo`；第 3 章（Generating functions II：回家、維度、走過幾個點）
-8 幕動畫 W301–W308＋連續播放 `Ch3Demo`；導讀講義 `../notes/walk_導讀.pdf`（三章）。
+8 幕動畫 W301–W308＋連續播放 `Ch3Demo`；第 4 章（邊界條件、穩定態與靜電類比）8 幕動畫 W401–W408＋連續播放 `Ch4Demo`；導讀講義 `../notes/walk_導讀.pdf`（四章）。
 
 **路徑的寫法：** 本檔裡沒有寫磁碟機的相對路徑，一律相對於本資料夾 `C:\mypython\manim\projects\walk017\codes`；
 寫成 `../notes/…`、`../ref/…` 的在上一層 `C:\mypython\manim\projects\walk017`。權威說明是上一層的 `交接說明_HANDOFF.md`。
@@ -25,8 +25,8 @@ J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advan
 | 輸出一幕 1080p | `manimgl scenes/w101_coin_walk.py W101CoinWalk -w --hd`（低畫質把 `--hd` 換 `-l`） |
 | 一次輸出全部 | `python render_all.py`（三章 32 幕）；`--ch1`／`--ch2`／`--ch3` 只做一章；`--ch1-demo`／`--ch2-demo`／`--ch3-demo` 加連續播放；`-l` 480p；`W105 210` 只做指定的幕；已存在的影片預設**跳過**，要重做加 `--force` |
 | 按兩下的選單 | `render_all.bat`（會自動啟用 conda） |
-| 連續播放 | `manimgl main.py Ch1Demo -w --hd`、`manimgl main.py Ch2Demo -w --hd`、`manimgl main.py Ch3Demo -w --hd` |
-| 數學自我測試 | `python utils/walk1d.py`（第 1 章）、`python utils/walk_gf.py`（第 2 章）、`python utils/walk_rec.py`（第 3 章，約 2 秒） |
+| 連續播放 | `manimgl main.py Ch1Demo -w --hd`、`manimgl main.py Ch2Demo -w --hd`、`manimgl main.py Ch3Demo -w --hd`、`manimgl main.py Ch4Demo -w --hd` |
+| 數學自我測試 | `python utils/walk1d.py`（第 1 章）、`python utils/walk_gf.py`（第 2 章）、`python utils/walk_rec.py`（第 3 章，約 2 秒）、`python utils/walk_bc.py`（第 4 章，約 1 秒） |
 | 環境檢查 | `python check_env.py`、`python check_env.py --render` |
 | 試渲染＋總覽圖 | 在 `C:\mypython\manim\projects\combkit` 執行 `python tools/render_check.py C:/mypython/manim/projects/walk017/codes/scenes/<檔名> <類別> --config C:/mypython/manim/projects/walk017/codes/custom_config.yml --tile 480`，看 `runs/<類別>/sheet.png` |
 | 講義 | 在 `../notes` 執行 `python ch1/make_figs.py`、`python ch2/make_figs.py`、`python ch3/make_figs.py`，再 `xelatex walk_導讀.tex` 兩次 |
@@ -85,13 +85,28 @@ J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advan
 
 連續播放：`main.py` 的 `Ch3Demo`（W301–W308），長度 17:39。計畫與場景卡：`../notes/plan_ch03.md`。數學：`utils/walk_rec.py`（依賴 `walk_gf`）；第 3 章沒有新的畫圖模組（小元件寫在場景檔的模組層級函式）。
 
+## 3d. 場景（第 4 章，`scenes/`）
+
+| 代號 | 檔名 | 類別 | 內容 | 書上 | 長度 |
+|---|---|---|---|---|---|
+| W401 | `w401_image_walker.py` | `W401ImageWalker` | 鏡像走路人：16 條路線裡 6 條活著、5 對鏡射配對、(4.1)、一維與 sc 的存活機率 | §4.1.1，pp. 70–73 | 2:22 |
+| W402 | `w402_two_walls.py` | `W402TwoWalls` | 兩牆之間：逐步計數 324/1024、特徵值 $2\cos(m\pi/6)$、模態和 162 與 81、鏡像（練習 4.3） | §4.1.2，pp. 73–76 | 2:12 |
+| W403 | `w403_long_short_time.py` | `W403LongShortTime` | 短時間像沒牆、長時間 $e^{-\pi^2N/2L^2}$（(4.24) 的筆誤）、牆距加倍慢 4.05 倍、漏失的解釋 | §4.1.3，pp. 76–79 | 2:09 |
+| W404 | `w404_sphere_cube.py` | `W404SphereCube` | 球裡的 $j_0$ 模態、權重和＝體積、(4.35)(4.37) 的筆誤、立方體（練習 4.5）、同體積球活得久 | §4.1.4，pp. 79–82 | 2:14 |
+| W405 | `w405_steady_tent.py` | `W405SteadyTent` | 穩定態＝Poisson 方程（(4.40)(4.41) 的筆誤）、Fick 定律、帳篷 6/5…、賭徒破產 3/5（練習 4.6） | §4.2–4.2.1，pp. 82–86 | 2:18 |
+| W406 | `w406_point_source.py` | `W406PointSource` | 點源的 $1/r$（高斯對時間積分）、sc 格子 $nG\to3/2\pi$、吸收牆的鏡像源與偶極 | §4.2.2–4.2.3，pp. 86–89 | 2:14 |
+| W407 | `w407_absorbing_sphere.py` | `W407AbsorbingSphere` | 吸收球：流量 $4\pi D r_0c_\infty$、細胞最大半徑（假設值）、命中機率 $r_0/R$、電容 | §4.2.4–4.2.5，pp. 89–91 | 2:05 |
+| W408 | `w408_receptors.py` | `W408Receptors` | 布滿受器的球（Berg–Purcell，書外）、吸收邊界 (4:S-1)–(4:S-3)、Catalan、第 4 章回顧 | §4.2.6、§4.3，pp. 91–94 | 2:04 |
+
+連續播放：`main.py` 的 `Ch4Demo`（W401–W408），長度 17:49。計畫與場景卡：`../notes/plan_ch04.md`。數學：`utils/walk_bc.py`（依賴 `walk_gf`、`walk_rec`）；第 4 章沒有新的畫圖模組。
+
 ## 4. 程式結構
 
 ```text
 codes/
 ├── README.md             本檔
 ├── custom_config.yml     ManimGL 設定（只能寫英文）
-├── main.py               每個場景的同名子類別＋Ch1Demo、Ch2Demo、Ch3Demo（play_sequence 依序借用各場景的 construct）
+├── main.py               每個場景的同名子類別＋Ch1Demo、Ch2Demo、Ch3Demo、Ch4Demo（play_sequence 依序借用各場景的 construct）
 ├── render_all.py / .bat  批次輸出（.bat 必須純 ASCII＋CRLF）
 ├── check_env.py          環境檢查
 ├── scenes/               w101_…py … w112_…py、w201_…py … w212_…py、w301_…py … w308_…py（一個檔案一幕；輔助函式都是模組層級）
@@ -100,7 +115,8 @@ codes/
 │   ├── walk_draw.py      第 1 章的畫圖元件（ManimGL）：硬幣、數線、走法圖、扇形、長條、Pascal、Δ 格子、表格、筆誤框、圍道
 │   ├── walk_gf.py        第 2 章的數學（純 Python，不依賴 walk1d）：遞迴計數、結構函數、布里淵區積分、高斯與普適性、Cauchy、擴散、補充 1–3
 │   ├── lattice_draw.py   第 2 章的畫圖元件：格線、數字格、鄰居、足跡、熱圖、布里淵區、單位根、三維晶格、分支切割
-│   └── walk_rec.py       第 3 章的數學（純 Python，依賴 walk_gf）：到訪次數的生成函數、還沒回家的機率、Watson 積分、足跡、固定種子的模擬
+│   ├── walk_rec.py       第 3 章的數學（純 Python，依賴 walk_gf）：到訪次數的生成函數、還沒回家的機率、Watson 積分、足跡、固定種子的模擬
+│   └── walk_bc.py        第 4 章的數學（純 Python，依賴 walk_gf、walk_rec）：反射原理、兩牆之間、球與立方體、穩定態、點源與鏡像、吸收球、Berg–Purcell
 └── renders/              影片（不進 git）
 ```
 
@@ -110,7 +126,7 @@ codes/
 
 ## 5. 每個數字怎麼核對
 
-- 場景：每幕的 `check_math()` 用 `utils.walk1d`（第 1 章）、`utils.walk_gf`（第 2 章）或 `utils.walk_rec`（第 3 章）重算畫面上的每個數並 assert；版面用 `assert_in_frame`／`assert_apart`。
+- 場景：每幕的 `check_math()` 用 `utils.walk1d`（第 1 章）、`utils.walk_gf`（第 2 章）、`utils.walk_rec`（第 3 章）或 `utils.walk_bc`（第 4 章）重算畫面上的每個數並 assert；版面用 `assert_in_frame`／`assert_apart`。
 - 數學模組：`python utils/walk1d.py`（公式 vs 暴力列舉、三種動差算法、書上的 15.1044／15.0961 等、`../notes/plan_ch01.md` 場景卡上的全部數字）；
   `python utils/walk_gf.py`（遞迴＝兩枚硬幣＝傅立葉積分、書上的數字、筆誤的更正、`../notes/plan_ch02.md` 場景卡上的全部數字）；
   `python utils/walk_rec.py`（生成函數＝暴力列舉＝逐步遞迴、Watson 積分的 Gamma 閉式＝Bessel 積分＝級數、模擬的固定種子、`../notes/plan_ch03.md` 場景卡上的全部數字）。
