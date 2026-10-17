@@ -1,10 +1,10 @@
 """
 render_all.py —— 一次把場景輸出成影片（存到 renders/）。在 codes/ 裡執行；一次只跑一個 manimgl。
 
-    python render_all.py                第 1 章 12 幕（W101–W112），1080p
-    python render_all.py --ch1          同上（以後的章節是 --ch2、--ch3 …）
-    python render_all.py W105 110       只輸出指定的幕（代號；"110" 也可以，等於 W110）
-    python render_all.py --ch1-demo     另外輸出連續播放 Ch1Demo（W101–W112）；只要連續播放就再加 --demos-only
+    python render_all.py                全部章節的單幕（第 1 章 W101–W112、第 2 章 W201–W212），1080p
+    python render_all.py --ch1          只做第 1 章；--ch2 只做第 2 章（以後的章節是 --ch3 …）
+    python render_all.py W105 210       只輸出指定的幕（代號；"210" 也可以，等於 W210）
+    python render_all.py --ch2-demo     另外輸出連續播放 Ch2Demo（W201–W212；第 1 章是 --ch1-demo）；只要連續播放就再加 --demos-only
     python render_all.py -l             改用 480p（最快，用來預覽）；另有 -m（720p）、--uhd（4K）
     python render_all.py --force        影片已經存在也重新輸出（預設跳過：已完成的影片不覆寫）
 """
@@ -29,8 +29,22 @@ CH1 = [
     ("W111", "scenes/w111_generating_function.py", "W111GeneratingFunction"),
     ("W112", "scenes/w112_steepest_descent.py", "W112SteepestDescent"),
 ]
-CHAPTERS = {"--ch1": CH1}
-DEMOS = {"--ch1-demo": ("main.py", "Ch1Demo")}
+CH2 = [
+    ("W201", "scenes/w201_what_is_gf.py", "W201WhatIsGF"),
+    ("W202", "scenes/w202_gf_is_answer.py", "W202GFIsAnswer"),
+    ("W203", "scenes/w203_lattice_recursion.py", "W203LatticeRecursion"),
+    ("W204", "scenes/w204_structure_function.py", "W204StructureFunction"),
+    ("W205", "scenes/w205_fourier_inversion.py", "W205FourierInversion"),
+    ("W206", "scenes/w206_gaussian_limit.py", "W206GaussianLimit"),
+    ("W207", "scenes/w207_universality.py", "W207Universality"),
+    ("W208", "scenes/w208_off_lattice.py", "W208OffLattice"),
+    ("W209", "scenes/w209_diffusion_green.py", "W209DiffusionGreen"),
+    ("W210", "scenes/w210_gaussian_integrals.py", "W210GaussianIntegrals"),
+    ("W211", "scenes/w211_reciprocal_lattice.py", "W211ReciprocalLattice"),
+    ("W212", "scenes/w212_singularities.py", "W212Singularities"),
+]
+CHAPTERS = {"--ch1": CH1, "--ch2": CH2}
+DEMOS = {"--ch1-demo": ("main.py", "Ch1Demo"), "--ch2-demo": ("main.py", "Ch2Demo")}
 QUALITY_FLAGS = {"-l", "-m", "--hd", "--uhd"}
 
 
