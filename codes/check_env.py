@@ -119,6 +119,9 @@ def main():
     code, out = run([sys.executable, str(notes / "ch2" / "make_figs.py")], cwd=notes)
     ok = code == 0 and "數字檢查通過" in out
     report("講義第 2 章的數字檢查 notes/ch2/make_figs.py", ok, "並重新產生 ch2/figs.tex" if ok else out[-300:])
+    code, out = run([sys.executable, str(notes / "ch3" / "make_figs.py")], cwd=notes)
+    ok = code == 0 and "數字檢查通過" in out
+    report("講義第 3 章的數字檢查 notes/ch3/make_figs.py", ok, "並重新產生 ch3/figs.tex" if ok else out[-300:])
 
     if render:
         print("\n渲染測試中（約 30 秒）……")
