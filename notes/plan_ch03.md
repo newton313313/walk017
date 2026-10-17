@@ -2,7 +2,7 @@
 
 來源：Rudnick & Gaspari 第 3 章 Generating functions II: recurrence, sites visited, and the role of dimensionality，pp. 51–68（PDF 頁序 67–84）。
 本檔的相對路徑都相對於 `C:\mypython\manim\projects\walk017`。§1–§5 是使用者要求「先做大綱、檢討節省 token」的部分；
-§6 定稿場景卡、§7 製作規則、§8 分工在數學模組寫好（每個數字算出來）之後補上。
+§6 定稿場景卡、§7 製作規則、§8 分工、§9 講義在數學模組 `codes/utils/walk_rec.py` 寫好（每個數字算出來並 assert）之後補上。
 
 ## 1. 草稿大綱（8 幕；第 1、2 章各 12 幕，第 3 章只有 18 頁，壓成 8 幕）
 
@@ -64,3 +64,164 @@
 6. **講義第 3 節縮短**：目標 8–10 頁（第 2 節 21 頁），圖 4–5 張（從不回家的級數表、二維還沒回家的表、$q^{d-1}/q^2$ 三條曲線、三種格子的表、足跡大小三條漸近線），練習解答照書上 Ex. 3.1–3.12。
 7. **這個對話已經很長**（第 1 章全程、四十多張圖都在上下文裡），之後每呼叫一次工具都要重讀整段。最省的做法是：**在新的工作階段執行 §6 以後的步驟**（像第 2 章那樣），本對話只交出這份大綱。新工作階段只需讀：本檔、`交接說明_HANDOFF.md` §6–§7、兩個舊模組的檔頭。
 8. 輸出與收尾照舊：1080p 背景一次一支、不輪詢；文件用腳本一次改完（README、交接說明、install.log、git、combkit）。
+
+## 6. 定稿場景卡（代理人讀這裡）
+
+數學模組 `codes/utils/walk_rec.py` 已完成（`python utils/walk_rec.py` 自我測試通過，約 2 秒）：下面每個數字都在它的 `check()` 裡 assert 過。
+
+共同：每幕 2–3 分鐘；開頭一個問題（字幕），結尾一句收束；字幕繁中。記號照書：步數 $N$（足跡那兩幕用 $n$）、$z_c=1/Z$（$Z$＝每步的方向數；一維 $\frac12$、正方 $\frac14$、sc $\frac16$）、
+$G(z;0)$（回到原點的生成函數）、$g(z;0)=\frac{z_c}{z_c-z}$（終點不限）、$G_1=G-1$（至少走一步）、$P_N$＝$N$ 步都沒回過家的機率、$\Delta_n$＝第 $n$ 步踩到新點的機率、$\delta_n$＝$n$ 步平均走過幾個不同的點。
+主例：第 1 章的**十步醉漢**（一維 $N=10$）：十步之內從不回家的走法 252 條＝$\binom{10}{5}$＝第 10 步剛好在家的條數。
+程式代號：`R` = `utils.walk_rec`、`GF` = `utils.walk_gf`、`L` = `utils.lattice_draw`、`D` = `utils.walk_draw`（見 §7）。模擬一律用 `R` 裡鎖定的種子與常數（`R.SIM_*`、`R.TRAIL_*`）。
+
+**W301 醉漢回得了家，醉鳥不一定**（§3.1、§3.4 開頭，pp. 51, 55）
+1. 問：醉漢在街上亂走，一定走得回家嗎？醉鳥在天上亂飛呢？字幕引角谷靜夫的話：「醉漢終究會走回家，醉鳥卻可能永遠迷路。」
+2. 小例子：一維 4 步的 16 條路線（`R.walks_1d(4)`，4×4 排的小走法圖，`D.walk_axes`＋`D.walk_path`）：第 1–4 步碰過 0 的（回過家）標黃，共 10 條；從沒回家的標灰，共 6 條
+   （`R.never_return_1d(4)` = 6，$16-6=10$）。
+3. 先猜再揭曉：一、二、三維（直線、棋盤、立方格子）各 1000 人走 1000 步，回過家的人數？三根長條（`D.bar_chart`）先長到 100 步的 930、579、300，再長到 1000 步的 977、676、325
+   （`R.SIM_RETURNED_100`、`R.SIM_RETURNED`；`R.simulate_first_returns(kind, R.SIM_M, R.SIM_N, R.SIM_SEED[kind])` 重算後 assert）。
+   旁邊理論值（`1 - R.no_return_probs(kind, 1000)[N]`）：$N=100$：0.9204、0.5832、0.3119；$N=1000$：0.9748、0.6782、0.3315。
+4. 揭曉 Pólya 定理（不寫年份）：走無窮多步，回家的機率＝一維 1、二維 1、三維（簡單立方）$1-1/1.516386=0.3405$（`1 - R.escape("sc")`）。表格三列；三維那格用橘色。
+5. 本章地圖（六個框、箭頭串起）：W302 新的生成函數 → W303 一維 → W304 二維 → W305 維度的分水嶺 → W306 三種立方格子 → W307–W308 走過幾個點。
+收束：維度決定命運：一、二維遲早回家；三維有 66% 的人永遠回不了家。
+
+**W302 新的生成函數：用 $(1-t)^M$ 數到訪次數**（§3.2–3.3，pp. 51–54，(3.1)–(3.10)，Fig. 3.1，Ex. 3.1）
+1. 問：4 步的 16 條路線裡，從沒踩到 $+1$ 的有幾條？踩到一次？兩次？（$+1$ 在數線上畫紅圈；腳印算第 0..4 步。）
+2. 分三堆（`R.visit_counts_1d(4, 1)`）：$M=0$：6 條、$M=1$：6 條、$M=2$：4 條。每條路線的權重 $\prod_i(1-t\,\delta_{s_i,S})=(1-t)^M$（(3.3)–(3.5)），加總 (3.1)：
+   $C'(4,t)=6+6(1-t)+4(1-t)^2=16-14t+4t^2$（`R.visit_poly`）。$t=1$：踩到 $+1$ 的路線全部變成 0。
+3. 反過來取回 (3.2)：$C'(4,1)=6$、$-\frac{d}{dt}C'\big|_{t=1}=-(-14+8)=6$、$\frac12\frac{d^2}{dt^2}C'\big|_{t=1}=4$（`R.counts_from_poly`）——三堆的條數。
+4. 排容（Fig. 3.1，`R.virial_terms_1d(4, 1)` = [16, 14, 4]）：$-t$ 項的 14＝「在第 $N_1$ 步到 $+1$、之後隨便走」：$N_1=1$：$1\cdot2^3=8$，$N_1=3$：$3\cdot2=6$（每次到訪都算一次：$6\cdot1+4\cdot2=14$）；
+   $+t^2$ 項的 4＝「到 $+1$、走 2 步再回到 $+1$、再隨便走 1 步」：$1\cdot2\cdot2=4$。畫 Fig. 3.1 的三個示意圖（$-t$、$+t^2$、$-t^3$）：從 $\vec x$ 出發的曲線經過大圓點 $\vec w$ 一次、兩次、三次再到 $\vec y$。
+5. 乘 $z^N$ 求和，卷積變乘積 (3.9)：$G(z,t;\vec x,\vec y,\vec w)=G_{xy}-tG_{xw}G_{wy}+t^2G_{xw}G_1G_{wy}-\cdots=G_{xy}-t\dfrac{G_{xw}G_{wy}}{1+tG_1(z;\vec w,\vec w)}$（公比 $-tG_1$ 的幾何級數；練習 3.1）。
+   一行：(3.10) 的 $M$ 次微分取回「到訪恰好 $M$ 次」的生成函數。
+收束：$(1-t)^M$ 把「到訪幾次」變成 $t$ 的多項式：展開是排容，加起來是幾何級數。
+
+**W303 一維：一定回家**（§3.4 例題，pp. 55–57，(3.11)–(3.24)，Ex. 3.2–3.4）
+1. 問：十步醉漢，十步之內從來沒回過家的走法有幾條？（先猜。）
+2. 令 $\vec w=\vec x$：從不回家（終點不限）的生成函數＝$\dfrac{g(z;0)}{G(z;0)}$（(3.12)(3.13)(3.16)）；一維 $g=\frac1{1-2z}$、$G(z;0)=\frac1{\sqrt{1-4z^2}}=1+2z^2+6z^4+20z^6+70z^8+252z^{10}+\cdots$（(3.21)）。
+   相除 $=\sqrt{\frac{1+2z}{1-2z}}=1+2z+2z^2+4z^3+6z^4+12z^5+20z^6+40z^7+70z^8+140z^9+252z^{10}+\cdots$（`R.never_return_1d_gf(10)`；表的一列一個 $N$，旁邊 $2^N$）。
+   驚喜：252＝$\binom{10}{5}$＝第 10 步剛好在家的條數（一般 $N=2k$：從不回家＝$\binom{2k}{k}$）。
+3. 機率 $P_{10}=252/1024=0.2461$。$N$ 大：(3.22) $g/G\to1/\sqrt{z_c-z}$，(3.23)(3.24) $P_N\approx\sqrt{2/(\pi N)}$。表（`R.escape_1d`、`R.escape_1d_asym`、`R.escape_1d_book`）：
+   $N=10$：精確 0.2461、更正 0.2523、書上 0.1784；$N=100$：0.0796、0.0798、0.0564；$N=1000$：0.02523、0.02523、0.01784。
+   筆誤框（`D.erratum_box`，where「p. 57，(3.23)(3.24)」）：錯 `N^{-1/2}\frac{1}{\Gamma(1/2)}`、對 `\sqrt{2}\,N^{-1/2}\frac{1}{\Gamma(1/2)}=\sqrt{\frac{2}{\pi N}}`；
+   字幕：$(z_c-z)^{-1/2}$ 的係數是 $z_c^{-N-1/2}N^{-1/2}/\Gamma(\frac12)$，少了 $z_c^{-1/2}=\sqrt2$。
+4. 圖（`D.plot_axes`，$N\in[0,100]$）：精確 $P_N$（$N=2,4,\dots,100$ 的點）、$\sqrt{2/\pi N}$（綠線）、$1/\sqrt{\pi N}$（紅虛線）；點落在綠線上 → $P_N\to0$：一維一定回家。
+5. 偏硬幣（練習 3.2–3.4）：$p=0.6$：$G(1;0)=1/\sqrt{1-4pq}=1/\sqrt{0.04}=5$ → 逃脫機率 $1/5=0.2=|p-q|$；
+   $P_N=1,\ 0.52,\ 0.4048,\ 0.2940,\ 0.2427,\ 0.2094,\ 0.2016$（$N=1,2,4,10,20,50,100$，`R.escape_biased_series(0.6, N)`）$\to0.2$；回家機率 $1-|p-q|=0.8$；$p=1$：逃脫機率 1。
+收束：公平的一維醉漢一定回家，但「還沒回家」只像 $1/\sqrt N$ 那樣慢慢消失；有偏向就有一定比例的人一去不回。
+
+**W304 二維：也會回家，但慢得驚人**（§3.5，pp. 58–60，(3.25)–(3.30)，Fig. 3.2）
+1. 問：在棋盤街道上亂走，100 步內還沒回過家的人剩多少？10000 步呢？
+2. 正方格子回到原點的走法 $C(N;0)=1,4,36,400,4900,63504$（$N=0,2,\dots,10$；`R.returns_count("sq", N)`），$u_N=C/4^N$。
+   「回家的路線＝第一次回家 × 之後再回家」：$u_N=\sum_kf_ku_{N-k}$ → 第一次回家的機率 $f_2..f_{10}=0.25,\ 0.0781,\ 0.0430,\ 0.0286,\ 0.0210$（`R.first_return_probs("sq", 10)`），
+   和 0.4208 → $P_{10}=0.5792$。
+3. 生成函數：(3.28) 只留 $q$ 小的部分；$d=2$：(3.30) $G(z;0)\propto\frac{c_1^2}{2c_2}\ln\frac{z_c-z+c_2q_0^2/c_1^2}{z_c-z}$ → 在 $z_c$ 對數發散 → $P_N\propto1/\ln N$。
+   一張示意圖（Fig. 3.2）：$z$ 平面、鞍點 $z_c(1-1/N)$、垂直的最陡下降路徑；一句字幕「鞍點在 $z_c(1-1/N)$，積分 $\approx$ 常數 $\times z_c^{-N}/\ln N$」。
+4. 表（`R.no_return_probs("sq", 10000)`、`R.no_return_sq_book`、`R.no_return_sq_refined`）：
+   $N=10$：精確 0.5792、$\pi/\ln N$ 1.3644（大於 1！）、$\pi/(\ln N+\ln8+\gamma)$ 0.6335；$N=100$：0.4168、0.6822、0.4326；$N=1000$：0.3218、0.4548、0.3285；$N=10^4$：0.2613、0.3411、0.2647。
+   對照 W301 的模擬：1000 步內還沒回家 $1000-676=324$ 人（理論 0.3218）。
+5. 先猜再揭曉：要幾步，「還沒回家」才降到 1%？$\pi/\ln N=0.01$ → $N=e^{100\pi}\approx10^{136}$（`R.log10_steps_for(0.01)` = 136.4）——比宇宙裡的原子數（約 $10^{80}$）還多。
+收束：二維也一定回家，但「還沒回家」只像 $1/\ln N$ 那樣消失——慢得驚人。
+
+**W305 維度的分水嶺**（§3.6，pp. 58–62，(3.26)–(3.33)，Ex. 3.5–3.6）
+1. 問：為什麼二維和三維之間會分出「一定回家」與「可能永遠回不了家」？
+2. (3.27)(3.28)：$q$ 小時 $1-z\chi(\vec q)\approx c_1(z_c-z)+c_2q^2/c_1$；角度積分得 $K_d=\frac{2\pi^{d/2}}{\Gamma(d/2)}$（(3.29)）：$K_1=2$、$K_2=2\pi\approx6.283$、$K_3=4\pi\approx12.566$、$K_4=2\pi^2\approx19.739$（`R.K_d`；
+   練習 3.5：$\int e^{-r^2}d^dr=\pi^{d/2}$）。筆誤框（where「p. 59，(3.27) 後」）：錯 `c_2=1/2`、對 `c_2=1\ (\chi=2\sum\cos q_i\approx 2d-q^2)`。
+3. 分水嶺：$z=z_c$ 時被積函數 $\propto q^{d-1}/q^2$。三條曲線（`D.plot_axes`，$q\in(0,1]$，$d=1,2,3$）＋表 $\int_\varepsilon^1q^{d-3}dq$（`R.tail_integral`）：
+   $\varepsilon=0.1,0.01,0.001$：$d=1$：9、99、999；$d=2$：2.303、4.605、6.908；$d=3$：0.9、0.99、0.999 → $d\le2$ 發散、$d=3$ 有限。
+4. $G(z;0)$（$z=x\,z_c$，`R.G0`）：$x=0.9,\ 0.99,\ 0.999,\ 1$：一維 2.294、7.089、22.37、$\infty$；二維 1.452、2.137、2.862、$\infty$；三維 1.233、1.409、1.480、1.516。
+   奇異部分 $(z_c-z)^{(d-2)/2}$（(3.32)）：$d=1$：$-\frac12$ 次方、$d=2$：對數、$d=3$：$+\frac12$ 次方（值有限）。
+5. (3.33)：$P_\infty=1/G(z_c;0)$；sc：$1/1.516386=0.659463$。練習 3.6（$G\approx B_0-B_1\sqrt{z_c-z}$，$B_1=9/\pi$）：$P_N\approx0.659463+0.28696/\sqrt N$
+   （`R.sc_correction_coeff()`）：$N=100$：0.688159 vs 精確 0.688062；$N=1000$：0.668537 vs 0.668534（`R.no_return_probs("sc", 1000)`）。
+收束：$G(z_c;0)$ 有限 ⇔ 有機會永遠逃走；分水嶺就在 $\int q^{d-3}dq$ 於 $d=2$ 剛好發散。
+
+**W306 三種立方格子的逃脫機率**（§3.7，pp. 62–63，(3.34)–(3.41)，Ex. 3.7–3.8）
+1. 問：鄰居越多，越容易逃走嗎？（sc 6 個、bcc 8 個、fcc 12 個最近鄰。）
+2. 三種格子並排（`L.lattice3d("sc"/"bcc"/"fcc")`），下面各寫 $\chi$：sc $2(\cos q_x+\cos q_y+\cos q_z)$、bcc $8\cos q_x\cos q_y\cos q_z$、fcc $4(\cos q_x\cos q_y+\cos q_y\cos q_z+\cos q_x\cos q_z)$；
+   (3.35) $G(z_c;0)=\frac{1}{(2\pi)^3}\int\frac{d^3q}{1-\chi(\vec q)/\chi(0)}$（Watson 積分）。
+3. 先猜再揭曉：$G=1.516386$、$1.393204$、$1.344661$ → 逃脫機率 $0.659463$、$0.717770$、$0.743682$（`R.G_C`、`R.escape`）。
+   閉式：bcc $\frac{\Gamma(1/4)^4}{4\pi^3}$、fcc $\frac{9\Gamma(1/3)^6}{2^{14/3}\pi^4}$、sc $\frac{\sqrt6}{32\pi^3}\Gamma(\frac1{24})\Gamma(\frac5{24})\Gamma(\frac7{24})\Gamma(\frac{11}{24})$；
+   第二種算法（一行字幕）：sc $=\int_0^\infty e^{-t}I_0(t/3)^3dt$、bcc $=\sum_k(\binom{2k}{k}/4^k)^3$，與閉式一致到小數第 10 位（`R.watson_sc_bessel()`、`R.watson_bcc_series()`）。
+4. 回家幾次（練習 3.8）：sc 的回家機率 $R=1-0.659463=0.340537$；剛好回家 $m$ 次 $f_m=R^m(1-R)$：0.6595、0.2246、0.0765、0.0260、0.0089（$m=0..4$）；$\sum f_m=1$；平均 $R/(1-R)=G-1=0.516386$ 次。
+   長條並排（`D.bar_chart` 兩組）：理論 $f_m$ vs 1000 人走 1000 步的模擬 672、222、60、28、$\ge4$：18 人（`R.SIM_COUNTS_SC`，`R.simulate_return_counts("sc", 1000, 1000, R.SIM_COUNTS_SEED)` 重算 assert）；
+   有限 $N=1000$ 的精確值 0.6685、0.2217、0.0735、0.0243、0.0080（`R.return_count_dist("sc", 1000, 4)`）。
+收束：鄰居越多逃得越遠：0.659 < 0.718 < 0.744；但每種三維格子都有一定比例的人永遠回不了家。
+
+**W307 走過幾個不同的點？**（§3.8，pp. 63–65，(3.42)–(3.49)，Fig. 3.3）
+1. 問：醉漢走 $n$ 步，平均踩過幾個不同的地方？
+2. (3.42)：$\delta_n=\sum_{n'\le n}\Delta_{n'}$，$\Delta_n$＝第 $n$ 步踩到新點的機率（$\Delta_0=1$）。小例子：一維 4 步的 16 條路線（新點打勾）：
+   $\Delta_0..\Delta_4=1,\ 1,\ \frac12,\ \frac12,\ \frac38$（`R.new_site_probs_brute("1d", 4)`）；$\delta_0..\delta_4=1,\ 2,\ \frac52,\ 3,\ \frac{27}8$（16 條的足跡總和 54，`R.distinct_sites_brute`）。
+3. 關鍵：$\Delta_n=P_n$（還沒回家的機率）：$1,1,\frac12,\frac12,\frac38$＝W303 的 $1,2,2,4,6$ 除以 $2^n$。直觀（動畫）：把一條路線倒著走——
+   「第 $n$ 步踩到新點」＝「倒著走的人 $n$ 步都沒回到出發點」。例：路線 $0\to1\to0\to1\to2$ 的第 4 步踩到新點 2；倒著走 $2\to1\to0\to1\to0$，從 2 出發沒再回到 2。
+4. 書上的算法（Fig. 3.3、(3.44)–(3.48)）：走到 B 的路線扣掉「之前到過 B」的：$G_{BA}-G_{BA}G_1+G_{BA}G_1^2-\cdots=\dfrac{G_{BA}}{1+G_1(z;0)}$；對 B 求和 →
+   $\dfrac{g(z;0)}{1+G_1(z;0)}=\dfrac{z_c}{z_c-z}\dfrac{1}{G(z;0)}$（(3.47) $1+G_1=G$）——和 (3.16) 同一個函數。一維 $n=10$：$\Delta_{10}=252/1024=0.2461$。
+5. 二維核對：暴力列舉 $4^n$ 條（$n\le5$）$\delta_n=1,\ 2,\ 2.75,\ 3.5,\ 4.1719,\ 4.8438$＝生成函數（`R.distinct_sites_brute("sq", n)`、`R.distinct_sites("sq", 5)`）。
+收束：新點的機率＝還沒回家的機率：回家的問題一解決，足跡的問題也跟著解決。
+
+**W308 足跡大小＋第 3 章回顧**（§3.8，pp. 65–68，(3.50)–(3.58)，Ex. 3.9–3.12）
+1. 問：走 $n$ 步，足跡大約多大？和 $n$ 成正比嗎？
+2. 一維：$\Delta_n\approx\sqrt{2/(\pi n)}$ → $\delta_n\approx\sqrt{\frac2\pi}\sum n'^{-1/2}=\sqrt{8n/\pi}$（(3.54)）。$n=100$：精確 15.997（`R.distinct_sites_1d(100)`）vs $\sqrt{800/\pi}=15.958$；
+   200 人模擬平均 15.665（`R.SIM_DISTINCT`，總和 3133）。
+3. 二維 (3.55)–(3.57)：$\Delta_n\approx\pi/\ln n$ → $\delta_n\approx\pi n/\ln n$。足跡圖：400 步（`R.trail("sq", R.TRAIL_N, R.TRAIL_SEED)`，`L.trail`，踩過的格點用 `L.heat_cells` 上色）：
+   159 個點（`R.TRAIL_SITES`，終點 $(-8,14)$），平均 $\delta_{400}=162.57$。表（`R.distinct_sites("sq", 10000)`）：$n=10,100,1000,10^4$：精確 7.881、49.50、363.6、2874.6；
+   $\pi n/\ln n$（書）13.64、68.22、454.8、3410.9；$\pi n/\ln(8n)$（Montroll–Weiss）7.169、47.00、349.6、2782.7。筆誤框（where「p. 66，(3.56)」）：錯 `\sum_{n'=2}^{\infty}`、對 `\sum_{n'=2}^{n}`。
+4. 三維 (3.58)：$\delta_n\approx n/G(z_c;0)=0.6595\,n$；sc：$\delta_n/n=0.9051,\ 0.7229,\ 0.6782$（$n=10,100,1000$，`R.distinct_sites("sc", 1000)`）；次一項 $0.5739\sqrt n$（練習 3.11）：
+   $n=1000$：$659.5+18.1=677.6$ vs 精確 678.2。一行列出練習：3.9 bcc $0.7178n$；3.10 偏硬幣 $|p-q|n$（$p=0.6$：$0.2n$，$n=100$ 精確 24.95）；3.12 sc $0.6595n$。
+5. 第 3 章回顧（表三列：一維／二維／三維）：還沒回家 $\sqrt{2/\pi N}$／$\pi/\ln N$／0.6595；足跡 $\sqrt{8n/\pi}$／$\pi n/\ln n$／$0.6595n$；$G(z_c;0)$：$\infty$／$\infty$／1.516。
+   底下一行：同一個生成函數 $\frac{z_c}{z_c-z}\frac1{G(z;0)}$ 管回家也管足跡。
+收束：回家與足跡是同一枚硬幣的兩面：一個 $G(z;0)$ 全部說完。
+
+## 7. 製作規則（代理人必讀）
+
+- ManimGL 1.7.2（`from manimlib import *`），**不是** Manim Community（用 `ShowCreation` 不用 `Create`）。繼承 `ChuScene`；`construct` 只呼叫**模組層級函式**
+  （連續播放會借用 `construct`，寫成方法會 AttributeError）。開頭 `self.show_header("…")`＋`check_math()`，結尾收束字幕後 `self.wait(1.0)`。
+- 場景骨架：
+  ```python
+  import sys
+  from pathlib import Path
+  sys.path.insert(0, str(Path(__file__).resolve().parent.parent))      # codes/
+  sys.path.insert(0, r"C:\mypython\manim\projects\combkit")
+  from manimlib import *
+  from combkit.draw.fulton_draw import assert_apart, assert_in_frame
+  from combkit.draw.scene_base import ChuScene
+  from combkit.draw.styles import mixed, zh
+  from utils import walk_rec as R
+  from utils import walk_gf as GF
+  from utils import lattice_draw as L
+  from utils import walk_draw as D
+  ```
+- 每個畫面上的數字都由 `walk_rec`（必要時 `walk_gf`）算出、在 `check_math()` 裡 assert（卡片上的數字就是 assert 的目標）；版面用 `assert_in_frame`／`assert_apart`。
+  不要在場景裡呼叫 `R.check()`／`GF.check()`（整套自我測試由 `check_env.py` 跑）。最慢的呼叫：`R.no_return_probs("sq", 10000)` 約 0.3 秒、三個模擬各 < 0.3 秒、`R.G0("sc", x)` 約 0.02 秒。
+- 字幕 `self.say("中文", "$數學$", "中文")`（以 `$` 開頭的段落是 LaTeX），每句 ≤ 30 字；字幕在 $y=-3.45$，**內容放在 $y\in[-2.9,3.2]$**，左上角留給標題。
+- `Tex(..., color=X)` 無效，用 `.set_color(X)`；同一個 `play` 不要同時動畫父物件與它的子物件；Tex 開頭結尾不放 `\,`、`\;`；
+  用 `t2c` 時不要 `\left(\right)`（用 `\Big(`）；`\iff` 改 `\Leftrightarrow`；Tex 裡不放中文（中文用 `zh()`／`mixed()`）；字幕裡的「÷」寫成「除以」。
+  `get_center()` 回傳活的陣列，要存就 `.copy()`；不要 `.scale()` 元件（用參數 cell、unit、width 決定大小）。標題的 `Text` 不能有上標（寫「1−t 的 M 次方」或省略）。
+- 大量物件：熱圖／色塊最多 40×40、數字格最多 9×9、足跡最多 400 步、長條最多 60 根、小走法圖最多 16 張；避免數千個小物件。
+- 只建立自己的場景檔；共用檔（`utils/`、`main.py`、`render_all.py`）不改，缺什麼寫成場景檔裡的模組層級函式（例如 Fig. 3.1 的示意圖、足跡色塊），回報時說明。每幕 250–450 行。
+- 自查：在 `C:\mypython\manim\projects\combkit` 執行
+  `python tools/render_check.py C:/mypython/manim/projects/walk017/codes/scenes/<檔名> <類別> --config C:/mypython/manim/projects/walk017/codes/custom_config.yml --tile 480`，
+  看 `runs/<類別>/sheet.png`（重疊、出框、缺字、數字）；**每幕最多 3 次，且最後一次 render_check 必須是最終版**：檔案改過（哪怕只改一行）就要再跑一次，不能停在沒驗證過的版本。
+  不要直接在 codes/ 跑 manimgl，也不要用 `-s`。不要 commit。
+- 回報 ≤ 8 行：檔名、長度、STATUS（最後一次 render_check 的結果）、偏離本檔之處。
+
+## 8. 檔名與分工（`codes/scenes/`）
+
+| 代號 | 檔名 | 類別 | 代理人 |
+|---|---|---|---|
+| W301 | `w301_polya_question.py` | `W301PolyaQuestion` | A |
+| W302 | `w302_visit_gf.py` | `W302VisitGF` | A |
+| W303 | `w303_one_dimension.py` | `W303OneDimension` | A |
+| W304 | `w304_two_dimensions.py` | `W304TwoDimensions` | A |
+| W305 | `w305_dimension_divide.py` | `W305DimensionDivide` | B |
+| W306 | `w306_watson.py` | `W306Watson` | B |
+| W307 | `w307_sites_visited.py` | `W307SitesVisited` | B |
+| W308 | `w308_footprint.py` | `W308Footprint` | B |
+
+連續播放：`main.py` 的 `Ch3Demo`（W301–W308）。
+
+## 9. 講義（我寫，與代理人同時進行）
+
+`notes/walk_導讀.tex`（主檔）加 `\input{ch3/part3}`；內文 `notes/ch3/part3.tex`，圖表與數字檢查 `notes/ch3/make_figs.py`
+（`check_numbers_ch3()` 逐一 assert，表格與 TikZ 圖產生成 `notes/ch3/figs.tex`；巨集都以 `\Three` 開頭、`\label` 用 `three-…`）。
+目標 8–10 頁、圖表 4–5 張（從不回家的級數表、二維還沒回家的表、$q^{d-1}/q^2$ 三條曲線、三種格子的表、足跡大小三條漸近線）；
+小節對應書上 3.1–3.8，每節：先看這裡框 → 直觀 → 例子（算到底）→ 書上的式子（標頁碼）→ 筆誤提醒；最後練習 3.1–3.12 的解答。

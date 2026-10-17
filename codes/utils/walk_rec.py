@@ -656,6 +656,8 @@ def check():
     assert abs(GF.coeff_power_asym(10, 0.5, 0.5) / 2 ** 10 - escape_1d_asym(10)) < 1e-14        # z_c^{−1/2} = √2 不能少
     assert round(float(escape_1d(1000)) / escape_1d_asym(1000), 5) == 0.99975
     assert abs(escape_biased(0.6) - 0.2) < 1e-12 and escape_biased(1.0) == 1.0              # Ex. 3.2、3.3
+    assert round(1 / escape_biased(0.6), 9) == 5 and 2 ** 4 - never_return_1d(4) == 10       # G(1;0) = 5；W301：16 條裡 10 條回過家
+    assert sum(len(set(p)) for p in walks_1d(4)) == 54                                        # W307：16 條的足跡總和 = 16·27/8
     PB = [escape_biased_series(0.6, N) for N in (1, 2, 4, 10, 20, 50, 100)]
     assert all(abs(a - escape_biased_dp(0.6, N)) < 1e-12 for a, N in zip(PB, (1, 2, 4, 10, 20, 50, 100)))
     assert _r(PB, 4) == [1.0, 0.52, 0.4048, 0.294, 0.2427, 0.2094, 0.2016]
@@ -670,6 +672,8 @@ def check():
     for kind, Ns in (("sq", (2, 4, 10, 30)), ("sc", (2, 4, 10, 16)), ("fcc", (1, 2, 3, 6)), ("bcc", (2, 4, 8))):
         P = no_return_probs(kind, max(Ns))
         assert all(abs(P[N] - never_return_dp(kind, N) / Z[kind] ** N) < 1e-12 for N in Ns), kind
+    fs = first_return_probs("sq", 10)                                                         # W304：第一次回家
+    assert _r([fs[n] for n in (2, 4, 6, 8, 10)], 4) == [0.25, 0.0781, 0.043, 0.0286, 0.021] and round(sum(fs), 4) == 0.4208
     P2 = no_return_probs("sq", 10000)
     assert _r([P2[N] for N in (10, 100, 1000, 10000)], 4) == [0.5792, 0.4168, 0.3218, 0.2613]
     assert _r([no_return_sq_book(N) for N in (10, 100, 1000, 10000)], 4) == [1.3644, 0.6822, 0.4548, 0.3411]
@@ -737,7 +741,8 @@ def check():
     D3 = distinct_sites("sc", 1000)
     assert [round(D3[n] / n, 4) for n in (10, 100, 1000)] == [0.9051, 0.7229, 0.6782]
     assert round(1000 / G_C["sc"] + 2 * A * math.sqrt(1000), 1) == 677.6 and round(D3[1000], 1) == 678.2   # Ex. 3.11
-    assert round(2 * A, 4) == 0.5739
+    assert round(2 * A, 4) == 0.5739 and round(1000 / G_C["sc"], 1) == 659.5 and round(2 * A * math.sqrt(1000), 1) == 18.1
+    assert round(escape("bcc"), 4) == 0.7178 and round(escape("sc"), 4) == 0.6595                      # Ex. 3.9、3.12
     assert round(sum(escape_biased_series(0.6, N) for N in range(101)), 2) == 24.95                     # Ex. 3.10
     for kind, n, tot in SIM_DISTINCT:
         assert sum(simulate_distinct(kind, 200, n, SIM_DISTINCT_SEED)) == tot
