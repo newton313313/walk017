@@ -5,6 +5,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py Ch1Demo -w    第 1 章 12 幕連續播放（W101–W112），輸出到 renders/Ch1Demo.mp4
     manimgl main.py Ch2Demo -w    第 2 章 12 幕連續播放（W201–W212），輸出到 renders/Ch2Demo.mp4
     manimgl main.py Ch3Demo -w    第 3 章 8 幕連續播放（W301–W308），輸出到 renders/Ch3Demo.mp4
+    manimgl main.py Ch4Demo -w    第 4 章 8 幕連續播放（W401–W408），輸出到 renders/Ch4Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -49,6 +50,14 @@ from scenes import w305_dimension_divide as w305
 from scenes import w306_watson as w306
 from scenes import w307_sites_visited as w307
 from scenes import w308_footprint as w308
+from scenes import w401_image_walker as w401
+from scenes import w402_two_walls as w402
+from scenes import w403_long_short_time as w403
+from scenes import w404_sphere_cube as w404
+from scenes import w405_steady_tent as w405
+from scenes import w406_point_source as w406
+from scenes import w407_absorbing_sphere as w407
+from scenes import w408_receptors as w408
 
 
 def play_sequence(scene, classes):
@@ -189,6 +198,38 @@ class W308Footprint(w308.W308Footprint):
     pass
 
 
+class W401ImageWalker(w401.W401ImageWalker):
+    pass
+
+
+class W402TwoWalls(w402.W402TwoWalls):
+    pass
+
+
+class W403LongShortTime(w403.W403LongShortTime):
+    pass
+
+
+class W404SphereCube(w404.W404SphereCube):
+    pass
+
+
+class W405SteadyTent(w405.W405SteadyTent):
+    pass
+
+
+class W406PointSource(w406.W406PointSource):
+    pass
+
+
+class W407AbsorbingSphere(w407.W407AbsorbingSphere):
+    pass
+
+
+class W408Receptors(w408.W408Receptors):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -222,3 +263,13 @@ class Ch3Demo(w301.W301PolyaQuestion):
 
     def construct(self):
         play_sequence(self, CH3)
+
+
+CH4 = [w401.W401ImageWalker, w402.W402TwoWalls, w403.W403LongShortTime, w404.W404SphereCube, w405.W405SteadyTent, w406.W406PointSource, w407.W407AbsorbingSphere, w408.W408Receptors]
+
+
+class Ch4Demo(w401.W401ImageWalker):
+    """第 4 章 8 幕連續播放（W401–W408）。"""
+
+    def construct(self):
+        play_sequence(self, CH4)

@@ -1,10 +1,10 @@
 """
 render_all.py —— 一次把場景輸出成影片（存到 renders/）。在 codes/ 裡執行；一次只跑一個 manimgl。
 
-    python render_all.py                全部章節的單幕（第 1 章 W101–W112、第 2 章 W201–W212、第 3 章 W301–W308），1080p
-    python render_all.py --ch1          只做第 1 章；--ch2、--ch3 同理（以後的章節是 --ch4 …）
+    python render_all.py                全部章節的單幕（第 1 章 W101–W112、第 2 章 W201–W212、第 3 章 W301–W308、第 4 章 W401–W408），1080p
+    python render_all.py --ch1          只做第 1 章；--ch2、--ch3、--ch4 同理（以後的章節是 --ch5 …）
     python render_all.py W105 210       只輸出指定的幕（代號；"210" 也可以，等於 W210）
-    python render_all.py --ch2-demo     另外輸出連續播放 Ch2Demo（W201–W212；第 1 章是 --ch1-demo、第 3 章是 --ch3-demo）；只要連續播放就再加 --demos-only
+    python render_all.py --ch2-demo     另外輸出連續播放 Ch2Demo（W201–W212；第 1 章是 --ch1-demo、第 3 章是 --ch3-demo、第 4 章是 --ch4-demo）；只要連續播放就再加 --demos-only
     python render_all.py -l             改用 480p（最快，用來預覽）；另有 -m（720p）、--uhd（4K）
     python render_all.py --force        影片已經存在也重新輸出（預設跳過：已完成的影片不覆寫）
 """
@@ -53,8 +53,19 @@ CH3 = [
     ("W307", "scenes/w307_sites_visited.py", "W307SitesVisited"),
     ("W308", "scenes/w308_footprint.py", "W308Footprint"),
 ]
-CHAPTERS = {"--ch1": CH1, "--ch2": CH2, "--ch3": CH3}
-DEMOS = {"--ch1-demo": ("main.py", "Ch1Demo"), "--ch2-demo": ("main.py", "Ch2Demo"), "--ch3-demo": ("main.py", "Ch3Demo")}
+CH4 = [
+    ("W401", "scenes/w401_image_walker.py", "W401ImageWalker"),
+    ("W402", "scenes/w402_two_walls.py", "W402TwoWalls"),
+    ("W403", "scenes/w403_long_short_time.py", "W403LongShortTime"),
+    ("W404", "scenes/w404_sphere_cube.py", "W404SphereCube"),
+    ("W405", "scenes/w405_steady_tent.py", "W405SteadyTent"),
+    ("W406", "scenes/w406_point_source.py", "W406PointSource"),
+    ("W407", "scenes/w407_absorbing_sphere.py", "W407AbsorbingSphere"),
+    ("W408", "scenes/w408_receptors.py", "W408Receptors"),
+]
+CHAPTERS = {"--ch1": CH1, "--ch2": CH2, "--ch3": CH3, "--ch4": CH4}
+DEMOS = {"--ch1-demo": ("main.py", "Ch1Demo"), "--ch2-demo": ("main.py", "Ch2Demo"), "--ch3-demo": ("main.py", "Ch3Demo"),
+         "--ch4-demo": ("main.py", "Ch4Demo")}
 QUALITY_FLAGS = {"-l", "-m", "--hd", "--uhd"}
 
 
