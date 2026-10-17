@@ -1,8 +1,9 @@
 # walk017：《Elements of the Random Walk》導讀動畫（ManimGL）
 
 J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advanced Students and Researchers*（Cambridge University Press 2004）
-的繁體中文導讀動畫與講義。目前完成**第 1–2 章**：第 1 章（Introduction to techniques）12 幕動畫 W101–W112＋連續播放 `Ch1Demo`；
-第 2 章（Generating functions I）12 幕動畫 W201–W212＋連續播放 `Ch2Demo`；導讀講義 `../notes/walk_導讀.pdf`（兩章）。
+的繁體中文導讀動畫與講義。目前完成**第 1–3 章**：第 1 章（Introduction to techniques）12 幕動畫 W101–W112＋連續播放 `Ch1Demo`；
+第 2 章（Generating functions I）12 幕動畫 W201–W212＋連續播放 `Ch2Demo`；第 3 章（Generating functions II：回家、維度、走過幾個點）
+8 幕動畫 W301–W308＋連續播放 `Ch3Demo`；導讀講義 `../notes/walk_導讀.pdf`（三章）。
 
 **路徑的寫法：** 本檔裡沒有寫磁碟機的相對路徑，一律相對於本資料夾 `C:\mypython\manim\projects\walk017\codes`；
 寫成 `../notes/…`、`../ref/…` 的在上一層 `C:\mypython\manim\projects\walk017`。權威說明是上一層的 `交接說明_HANDOFF.md`。
@@ -11,7 +12,7 @@ J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advan
 
 - ManimGL **1.7.2**（3Blue1Brown 版，commit fafa083，`manimgl` 指令、`from manimlib import *`），**不是** Manim Community；不要升級或重裝。
   全機環境見 `C:\mypython\manim\環境與交接_ENVIRONMENT.md`、`C:\mypython\manim\新計畫起步指南_NEW_PROJECT_GUIDE.md`。
-- 共用工具包 **combkit 1.12.0 以上**（`C:\mypython\manim\projects\combkit`）：場景基底 `ChuScene`、中文字 `zh()`／`mixed()`、版面檢查 `assert_in_frame`。
+- 共用工具包 **combkit 1.13.0 以上**（`C:\mypython\manim\projects\combkit`）：場景基底 `ChuScene`、中文字 `zh()`／`mixed()`、版面檢查 `assert_in_frame`。
   場景檔開頭用 `sys.path.insert` 載入它，不必安裝。
 - LaTeX：MiKTeX（`latex`＋`dvisvgm`＋`cm-super`；講義用 `xelatex`＋`xeCJK`、`tcolorbox`、`tikz`）。字型：微軟正黑體、標楷體。
 - 檢查：`python check_env.py`（加 `--render` 會實際渲染一小段）。
@@ -22,13 +23,13 @@ J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advan
 |---|---|
 | 預覽一幕 | `manimgl scenes/w101_coin_walk.py W101CoinWalk`（Ctrl+Q 結束、滾輪縮放、按住 f 平移、r 重設） |
 | 輸出一幕 1080p | `manimgl scenes/w101_coin_walk.py W101CoinWalk -w --hd`（低畫質把 `--hd` 換 `-l`） |
-| 一次輸出全部 | `python render_all.py`（兩章 24 幕）；`--ch1`／`--ch2` 只做一章；`--ch1-demo`／`--ch2-demo` 加連續播放；`-l` 480p；`W105 210` 只做指定的幕；已存在的影片預設**跳過**，要重做加 `--force` |
+| 一次輸出全部 | `python render_all.py`（三章 32 幕）；`--ch1`／`--ch2`／`--ch3` 只做一章；`--ch1-demo`／`--ch2-demo`／`--ch3-demo` 加連續播放；`-l` 480p；`W105 210` 只做指定的幕；已存在的影片預設**跳過**，要重做加 `--force` |
 | 按兩下的選單 | `render_all.bat`（會自動啟用 conda） |
-| 連續播放 | `manimgl main.py Ch1Demo -w --hd`、`manimgl main.py Ch2Demo -w --hd` |
-| 數學自我測試 | `python utils/walk1d.py`（第 1 章）、`python utils/walk_gf.py`（第 2 章） |
+| 連續播放 | `manimgl main.py Ch1Demo -w --hd`、`manimgl main.py Ch2Demo -w --hd`、`manimgl main.py Ch3Demo -w --hd` |
+| 數學自我測試 | `python utils/walk1d.py`（第 1 章）、`python utils/walk_gf.py`（第 2 章）、`python utils/walk_rec.py`（第 3 章，約 2 秒） |
 | 環境檢查 | `python check_env.py`、`python check_env.py --render` |
 | 試渲染＋總覽圖 | 在 `C:\mypython\manim\projects\combkit` 執行 `python tools/render_check.py C:/mypython/manim/projects/walk017/codes/scenes/<檔名> <類別> --config C:/mypython/manim/projects/walk017/codes/custom_config.yml --tile 480`，看 `runs/<類別>/sheet.png` |
-| 講義 | 在 `../notes` 執行 `python ch1/make_figs.py` 與 `python ch2/make_figs.py`，再 `xelatex walk_導讀.tex` 兩次 |
+| 講義 | 在 `../notes` 執行 `python ch1/make_figs.py`、`python ch2/make_figs.py`、`python ch3/make_figs.py`，再 `xelatex walk_導讀.tex` 兩次 |
 | 參考文獻轉檔 | 在 `../ref` 執行 `python convert_to_md.py`（全書 → `md/`）；`python page_png.py 5`（書上第 5 頁 → `png/p005.png`） |
 
 ## 3. 場景（第 1 章，`scenes/`）
@@ -69,32 +70,49 @@ J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advan
 
 連續播放：`main.py` 的 `Ch2Demo`（W201–W212），長度 26:20。計畫與場景卡：`../notes/plan_ch02.md`。
 
+## 3c. 場景（第 3 章，`scenes/`）
+
+| 代號 | 檔名 | 類別 | 內容 | 書上 | 長度 |
+|---|---|---|---|---|---|
+| W301 | `w301_polya_question.py` | `W301PolyaQuestion` | 醉漢回得了家，醉鳥不一定：16 條路線、1000 人模擬、Pólya 定理 | §3.1、§3.4，pp. 51, 55 | 2:03 |
+| W302 | `w302_visit_gf.py` | `W302VisitGF` | 新的生成函數：用 $(1-t)^M$ 數到訪次數、排容（Fig. 3.1）、幾何級數 (3.9) | §3.2–3.3，pp. 51–54 | 2:14 |
+| W303 | `w303_one_dimension.py` | `W303OneDimension` | 一維一定回家：從不回家的走法 252、$\sqrt{2/\pi N}$（(3.24) 的筆誤）、偏硬幣（練習 3.2–3.4） | §3.4，pp. 55–58 | 2:07 |
+| W304 | `w304_two_dimensions.py` | `W304TwoDimensions` | 二維也會回家，但慢得驚人：第一次回家、$\pi/\ln N$、$10^{136}$ 步 | §3.5，pp. 58–60 | 2:09 |
+| W305 | `w305_dimension_divide.py` | `W305DimensionDivide` | 維度的分水嶺：$q^{d-1}/q^2$、$K_d$、$G(z;0)$ 的奇異部分、練習 3.5–3.6 | §3.6，pp. 58–62 | 2:24 |
+| W306 | `w306_watson.py` | `W306Watson` | 三種立方格子的逃脫機率（Watson 積分）、回家 $m$ 次（練習 3.8） | §3.7，pp. 62–63 | 2:09 |
+| W307 | `w307_sites_visited.py` | `W307SitesVisited` | 走過幾個點：新點的機率＝還沒回家的機率（倒著走、Fig. 3.3） | §3.8，pp. 63–65 | 2:11 |
+| W308 | `w308_footprint.py` | `W308Footprint` | 足跡大小 $\sqrt{8n/\pi}$、$\pi n/\ln n$、$0.6595n$＋第 3 章回顧（練習 3.9–3.12） | §3.8，pp. 65–68 | 2:14 |
+
+連續播放：`main.py` 的 `Ch3Demo`（W301–W308），長度 17:39。計畫與場景卡：`../notes/plan_ch03.md`。數學：`utils/walk_rec.py`（依賴 `walk_gf`）；第 3 章沒有新的畫圖模組（小元件寫在場景檔的模組層級函式）。
+
 ## 4. 程式結構
 
 ```text
 codes/
 ├── README.md             本檔
 ├── custom_config.yml     ManimGL 設定（只能寫英文）
-├── main.py               每個場景的同名子類別＋Ch1Demo、Ch2Demo（play_sequence 依序借用各場景的 construct）
+├── main.py               每個場景的同名子類別＋Ch1Demo、Ch2Demo、Ch3Demo（play_sequence 依序借用各場景的 construct）
 ├── render_all.py / .bat  批次輸出（.bat 必須純 ASCII＋CRLF）
 ├── check_env.py          環境檢查
-├── scenes/               w101_…py … w112_…py、w201_…py … w212_…py（一個檔案一幕；輔助函式都是模組層級）
+├── scenes/               w101_…py … w112_…py、w201_…py … w212_…py、w301_…py … w308_…py（一個檔案一幕；輔助函式都是模組層級）
 ├── utils/
 │   ├── walk1d.py         第 1 章的數學（純 Python；check() 核對書上的數字與每張場景卡的數字）
 │   ├── walk_draw.py      第 1 章的畫圖元件（ManimGL）：硬幣、數線、走法圖、扇形、長條、Pascal、Δ 格子、表格、筆誤框、圍道
 │   ├── walk_gf.py        第 2 章的數學（純 Python，不依賴 walk1d）：遞迴計數、結構函數、布里淵區積分、高斯與普適性、Cauchy、擴散、補充 1–3
-│   └── lattice_draw.py   第 2 章的畫圖元件：格線、數字格、鄰居、足跡、熱圖、布里淵區、單位根、三維晶格、分支切割
+│   ├── lattice_draw.py   第 2 章的畫圖元件：格線、數字格、鄰居、足跡、熱圖、布里淵區、單位根、三維晶格、分支切割
+│   └── walk_rec.py       第 3 章的數學（純 Python，依賴 walk_gf）：到訪次數的生成函數、還沒回家的機率、Watson 積分、足跡、固定種子的模擬
 └── renders/              影片（不進 git）
 ```
 
-`walk1d.py`、`walk_draw.py`、`walk_gf.py`、`lattice_draw.py` 的複本在 combkit（`combkit.walk1d`、`combkit.walk_gf`、`combkit.draw.walk_draw`、
-`combkit.draw.lattice_draw`），用 combkit 的 `tools/sync_from_walk017.py` 同步；
+`walk1d.py`、`walk_draw.py`、`walk_gf.py`、`lattice_draw.py`、`walk_rec.py` 的複本在 combkit（`combkit.walk1d`、`combkit.walk_gf`、`combkit.walk_rec`、
+`combkit.draw.walk_draw`、`combkit.draw.lattice_draw`），用 combkit 的 `tools/sync_from_walk017.py` 同步；
 改這裡的正本，再到 combkit 執行同步、升版、打包。
 
 ## 5. 每個數字怎麼核對
 
-- 場景：每幕的 `check_math()` 用 `utils.walk1d`（第 1 章）或 `utils.walk_gf`（第 2 章）重算畫面上的每個數並 assert；版面用 `assert_in_frame`／`assert_apart`。
+- 場景：每幕的 `check_math()` 用 `utils.walk1d`（第 1 章）、`utils.walk_gf`（第 2 章）或 `utils.walk_rec`（第 3 章）重算畫面上的每個數並 assert；版面用 `assert_in_frame`／`assert_apart`。
 - 數學模組：`python utils/walk1d.py`（公式 vs 暴力列舉、三種動差算法、書上的 15.1044／15.0961 等、`../notes/plan_ch01.md` 場景卡上的全部數字）；
-  `python utils/walk_gf.py`（遞迴＝兩枚硬幣＝傅立葉積分、書上的數字、筆誤的更正、`../notes/plan_ch02.md` 場景卡上的全部數字）。
-- 講義：`../notes/ch1/make_figs.py` 的 `check_numbers_ch1()`、`../notes/ch2/make_figs.py` 的 `check_numbers_ch2()`。
-- 書上的筆誤：`../ref/md/ch01_formulas.md`（13 處）、`../ref/md/ch02_formulas.md`（16 處），動畫裡用紅色「書上筆誤」框標出。
+  `python utils/walk_gf.py`（遞迴＝兩枚硬幣＝傅立葉積分、書上的數字、筆誤的更正、`../notes/plan_ch02.md` 場景卡上的全部數字）；
+  `python utils/walk_rec.py`（生成函數＝暴力列舉＝逐步遞迴、Watson 積分的 Gamma 閉式＝Bessel 積分＝級數、模擬的固定種子、`../notes/plan_ch03.md` 場景卡上的全部數字）。
+- 講義：`../notes/ch1/make_figs.py` 的 `check_numbers_ch1()`、`../notes/ch2/make_figs.py` 的 `check_numbers_ch2()`、`../notes/ch3/make_figs.py` 的 `check_numbers_ch3()`。
+- 書上的筆誤：`../ref/md/ch01_formulas.md`（13 處）、`../ref/md/ch02_formulas.md`（16 處）、`../ref/md/ch03_formulas.md`（12 處，含 2 條〔注〕），動畫裡用紅色「書上筆誤」框標出。
