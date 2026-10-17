@@ -103,11 +103,18 @@ def main():
     code, out = run([sys.executable, str(HERE / "utils" / "walk1d.py")])
     ok = code == 0 and "walk1d（第 1 章）：計數、動差、Stirling、高斯近似、遞迴、傅立葉、生成函數、最陡下降全部驗證通過" in out
     report("數學驗證 utils/walk1d.py", ok, "公式、暴力列舉、書上的數字、場景卡的數字全部一致" if ok else out[-300:])
+    code, out = run([sys.executable, str(HERE / "utils" / "walk_gf.py")])
+    ok = code == 0 and "walk_gf（第 2 章）" in out and "全部驗證通過" in out
+    report("數學驗證 utils/walk_gf.py（第 2 章）", ok, "遞迴＝兩枚硬幣＝傅立葉、書上的數字、筆誤的更正、場景卡的數字全部一致"
+           if ok else out[-300:])
 
     notes = HERE.parent / "notes"
     code, out = run([sys.executable, str(notes / "ch1" / "make_figs.py")], cwd=notes)
     ok = code == 0 and "數字檢查通過" in out
     report("講義第 1 章的數字檢查 notes/ch1/make_figs.py", ok, "並重新產生 ch1/figs.tex" if ok else out[-300:])
+    code, out = run([sys.executable, str(notes / "ch2" / "make_figs.py")], cwd=notes)
+    ok = code == 0 and "數字檢查通過" in out
+    report("講義第 2 章的數字檢查 notes/ch2/make_figs.py", ok, "並重新產生 ch2/figs.tex" if ok else out[-300:])
 
     if render:
         print("\n渲染測試中（約 30 秒）……")
