@@ -6,6 +6,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py Ch2Demo -w    第 2 章 12 幕連續播放（W201–W212），輸出到 renders/Ch2Demo.mp4
     manimgl main.py Ch3Demo -w    第 3 章 8 幕連續播放（W301–W308），輸出到 renders/Ch3Demo.mp4
     manimgl main.py Ch4Demo -w    第 4 章 8 幕連續播放（W401–W408），輸出到 renders/Ch4Demo.mp4
+    manimgl main.py Ch5Demo -w    第 5 章 7 幕連續播放（W501–W507），輸出到 renders/Ch5Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -58,6 +59,13 @@ from scenes import w405_steady_tent as w405
 from scenes import w406_point_source as w406
 from scenes import w407_absorbing_sphere as w407
 from scenes import w408_receptors as w408
+from scenes import w501_biased_walk as w501
+from scenes import w502_persistent_walk as w502
+from scenes import w503_persistence_length as w503
+from scenes import w504_telegrapher as w504
+from scenes import w505_run_and_tumble as w505
+from scenes import w506_waiting_time as w506
+from scenes import w507_ctrw_gauss as w507
 
 
 def play_sequence(scene, classes):
@@ -230,6 +238,34 @@ class W408Receptors(w408.W408Receptors):
     pass
 
 
+class W501BiasedWalk(w501.W501BiasedWalk):
+    pass
+
+
+class W502PersistentWalk(w502.W502PersistentWalk):
+    pass
+
+
+class W503PersistenceLength(w503.W503PersistenceLength):
+    pass
+
+
+class W504Telegrapher(w504.W504Telegrapher):
+    pass
+
+
+class W505RunAndTumble(w505.W505RunAndTumble):
+    pass
+
+
+class W506WaitingTime(w506.W506WaitingTime):
+    pass
+
+
+class W507CtrwGauss(w507.W507CtrwGauss):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -273,3 +309,13 @@ class Ch4Demo(w401.W401ImageWalker):
 
     def construct(self):
         play_sequence(self, CH4)
+
+
+CH5 = [w501.W501BiasedWalk, w502.W502PersistentWalk, w503.W503PersistenceLength, w504.W504Telegrapher, w505.W505RunAndTumble, w506.W506WaitingTime, w507.W507CtrwGauss]
+
+
+class Ch5Demo(w501.W501BiasedWalk):
+    """第 5 章 7 幕連續播放（W501–W507）。"""
+
+    def construct(self):
+        play_sequence(self, CH5)

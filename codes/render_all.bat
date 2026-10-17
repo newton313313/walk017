@@ -27,9 +27,9 @@ echo.
 echo ============================================================
 echo   One-click render  (output: codes\renders\)
 echo ============================================================
-echo   1. Everything: scenes W101-W112, W201-W212, W301-W308, W401-W408 + Ch1Demo..Ch4Demo, 1080p
-echo   2. Demos only: Ch1Demo (W101-W112), Ch2Demo (W201-W212), Ch3Demo (W301-W308), Ch4Demo (W401-W408), 1080p
-echo   3. Scenes only: the 40 single-scene videos, 1080p
+echo   1. Everything: scenes W101-W112, W201-W212, W301-W308, W401-W408, W501-W507 + Ch1Demo..Ch5Demo, 1080p
+echo   2. Demos only: Ch1Demo (W101-W112), Ch2Demo (W201-W212), Ch3Demo (W301-W308), Ch4Demo, Ch5Demo (W501-W507), 1080p
+echo   3. Scenes only: the 47 single-scene videos, 1080p
 echo   4. Quick check: everything at 480p (fast, low quality)
 echo   Q. Quit
 echo.
@@ -39,7 +39,7 @@ set "CHOICE=none"
 set /p "CHOICE=Choose 1-4 or Q: "
 set "CHOICE=%CHOICE: =%"
 
-set DEMOS=--ch1-demo --ch2-demo --ch3-demo --ch4-demo
+set DEMOS=--ch1-demo --ch2-demo --ch3-demo --ch4-demo --ch5-demo
 
 if /i "%CHOICE%"=="Q" goto :eof
 if "%CHOICE%"=="1" python render_all.py --hd %DEMOS% & goto :done
