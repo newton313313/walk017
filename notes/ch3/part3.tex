@@ -1,0 +1,324 @@
+\input{ch3/figs}
+
+\section{生成函數 II：回家、維度、走過幾個點（第 3 章）}
+
+\begin{keybox}[先看這裡]
+醉漢在街上亂走，遲早會走回家嗎？鳥在天上亂飛呢？這一章用第 2 章的生成函數回答兩個問題，答案取決於\textbf{維度}：
+\begin{center}
+\small
+\begin{tabular}{@{}ll@{}}
+回不回得了家 & 新的生成函數數「到訪幾次」；永遠不回家的機率 $1/G(z_c;0)$（3.2--3.3 節）\\
+維度的角色 & 一維、二維遲早回家；三維不一定。分水嶺在 $d=2$（3.3--3.6 節）\\
+走過幾個點 & 第 $n$ 步踩到新點的機率＝還沒回家的機率，足跡大小隨之而來（3.7 節）
+\end{tabular}
+\end{center}
+\textbf{記號}：$Z$＝每一步可走的方向數，$z_c=1/Z$（一維 $\frac12$、正方格子 $\frac14$、簡單立方 sc $\frac16$）；$G(z;0)=\sum_NC(N;\vec0)z^N$；
+$u_N=C(N;\vec0)/Z^N$＝第 $N$ 步剛好在原點的機率；$P_N$＝走了 $N$ 步都還沒回過家的機率；$\Delta_n$＝第 $n$ 步踩到新點的機率；
+$\delta_n$＝$n$ 步平均踩過幾個不同的點。
+
+\textbf{全章的主例}：第 1 章的十步醉漢。$N$ 步之內\textbf{從來沒回過家}的走法有
+\[1,\ 2,\ 2,\ 4,\ 6,\ 12,\ 20,\ 40,\ 70,\ 140,\ 252\qquad(N=0,1,\dots,10)\]
+條。最後一個 252 恰好等於 $\binom{10}{5}$＝第 10 步剛好在家的走法數（3.3 節）；3.7 節再用同一串數算「走過幾個點」。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+3.1 & 醉漢與醉鳥 & W301 & 3.5 & 維度的分水嶺 & W305\\
+3.2 & 數到訪次數的生成函數 & W302 & 3.6 & 三種立方格子 & W306\\
+3.3 & 一維：一定回家 & W303 & 3.7 & 走過幾個點 & W307--W308\\
+3.4 & 二維：慢得驚人 & W304 & 3.8--3.9 & 練習解答、筆誤 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+數字一律由 \texttt{codes/utils/walk\_rec.py} 重算，圖表由 \texttt{ch3/make\_figs.py} 產生並先做數字檢查；逐式校對見 \texttt{ref/md/ch03\_formulas.md}。
+連續播放：\texttt{Ch3Demo}（W301--W308）。
+\end{keybox}
+
+% =====================================================================
+\subsection{醉漢與醉鳥：Pólya 的問題}
+\bk{pp.~51, 55}\ \anim{W301}
+
+數學家角谷靜夫有一句名言：「醉漢終究會走回家，醉鳥卻可能永遠迷路。」在一維的街道或二維的棋盤街道上亂走，遲早會回到出發點；
+在三維空間裡亂飛，卻有一定的機率永遠回不來。遲早一定回來的漫步叫\textbf{常返}（recurrent），不一定回來的叫\textbf{暫態}（transient）。
+
+\textbf{最小的例子}：一維走 4 步，共 $2^4=16$ 條路線。第 1--4 步之中碰過原點的有 10 條；從沒回家的有 6 條：
+$++++$、$+++-$、$++-+$ 和它們的鏡像。
+
+\textbf{大一點的實驗}：一、二、三維（直線、正方格子、簡單立方格子）各讓 1000 個人走 1000 步（固定亂數種子）。
+「理論」一欄是 $1000\times(1-P_N)$，由 3.3--3.5 節的方法精確算出。
+\begin{table}[H]
+\centering
+\small
+\ThreeTabSim
+\caption{各 1000 人的模擬：回過家的人數。一、二維的比例一直往 1 爬（二維爬得很慢），三維卡在三分之一左右}\label{three-tab-sim}
+\end{table}
+
+\begin{thmbox}[Pólya 定理]
+格子上的簡單隨機漫步：在一維與二維，遲早回到出發點的機率是 1（常返）；在三維簡單立方格子，回到出發點的機率只有
+\[1-\frac{1}{G(z_c;0)}=1-\frac{1}{1.516386}=0.3405\qquad\text{（暫態）}.\]
+\end{thmbox}
+
+% =====================================================================
+\subsection{數「到訪幾次」的生成函數}
+\bk{pp.~51--54}\ \anim{W302}
+
+\subsubsection{權重 \texorpdfstring{$(1-t)^M$}{(1-t) 的 M 次方}}
+令 $C(N,M;\vec x,\vec y,\vec w)$＝從 $\vec x$ 走 $N$ 步到 $\vec y$、途中\textbf{到訪 $\vec w$ 恰好 $M$ 次}的走法數。腳印算第 $0,1,\dots,N$ 步，共 $N+1$ 個，所以 $M\le N+1$。
+新的生成函數把每條走法乘上 $(1-t)^M$：
+\[C'(N,t;\vec x,\vec y,\vec w)=\sum_{M=0}^{\infty}C(N,M;\vec x,\vec y,\vec w)(1-t)^M,\qquad
+C(N,M;\cdot)=(-1)^M\frac{1}{M!}\frac{d^M}{dt^M}C'(N,t;\cdot)\Big|_{t=1}\tag{3.1, 3.2}\]
+注意展開點是 $t=1$，不是 $0$。$(1-t)^M$ 從哪裡來？給每個腳印一個權重 $w(s_i)=1-t\,\delta_{s_i,S}$（踩在特別的點 $S$ 上才不是 1），
+整條走法的權重是乘積 $\prod_i(1-t\,\delta_{s_i,S})=(1-t)^M$（(3.3)--(3.5)）。$t=1$ 時，踩過 $S$ 的走法權重全變成 0。
+
+\begin{notebox}[〔注〕p.~52--53，(3.3)(3.5)]
+書上的乘積寫成 $\prod_{i=1}^{N}$。要和「$M\le N+1$」以及 (3.8) 允許 $N_1=0$ 一致，應從 $i=0$ 起：起點也算一個腳印。
+\end{notebox}
+
+\textbf{例}：一維、$N=4$、從 $0$ 出發、$\vec w=+1$、終點不限。第 4 步一定在偶數點，所以只看前 3 步、第 4 步任意（乘 2）：
+到訪 0 次的前 3 步是 $-+-$、$--+$、$---$（$3\times2=6$ 條），1 次是 $+++$、$+--$、$-++$（6 條），2 次是 $++-$、$+-+$（$2\times2=4$ 條）。
+所以 $C'(4,t)=6+6(1-t)+4(1-t)^2=16-14t+4t^2$。用 (3.2) 取回：$C'(4,1)=6$；$-\frac{d}{dt}C'\big|_{t=1}=-(-14+8)=6$；$\frac12\frac{d^2}{dt^2}C'\big|_{t=1}=4$。
+
+\subsubsection{對 \texorpdfstring{$t$}{t} 展開：排容}
+把權重對 $t$ 展開：一次項 $-t\sum_i\delta_{s_i,S}$（(3.6)）、二次項 $t^2\sum_{i>j}\delta_{s_i,S}\delta_{s_j,S}$（(3.7)）……。乘上走法再加總，
+$(-t)^k$ 的係數＝「挑出 $k$ 次到訪、其餘隨便」的總數，也就是把走法在第 $k$ 次挑出的到訪處切開、各段自由的卷積：
+\[C(N;\vec x,\vec y)-t\!\!\sum_{N_1+N_2=N}\!\!C(N_1;\vec x,\vec w)C(N_2;\vec w,\vec y)
++t^2\!\!\!\!\sum_{\substack{N_1+N_2+N_3=N\\N_2\ge1}}\!\!\!\!C(N_1;\vec x,\vec w)C(N_2;\vec w,\vec w)C(N_3;\vec w,\vec y)-\cdots\tag{3.8}\]
+例子裡：$-t$ 的係數 $14$＝「第 $N_1$ 步到 $+1$、之後隨便走」：$N_1=1$ 有 $1\cdot2^3=8$ 條、$N_1=3$ 有 $3\cdot2=6$ 條（也就是每次到訪各算一次：$6\cdot1+4\cdot2=14$）；
+$t^2$ 的係數 $4$＝「到 $+1$、走 2 步再回到 $+1$、再隨便走 1 步」$=1\cdot2\cdot2$。$N_2\ge1$ 是為了不把「走 0 步又到訪」算進去。
+\begin{figure}[H]
+\centering
+\ThreeFigVirial
+\caption{書上 Fig.~3.1 的樣子：(3.8) 的各項。紅點是 $\vec w$；$-t$ 項經過它一次，$+t^2$ 項在它那裡繞一圈再出發……}\label{three-fig-virial}
+\end{figure}
+
+\subsubsection{乘上 \texorpdfstring{$z^N$}{z 的 N 次方}：幾何級數}
+乘 $z^N$ 對 $N$ 求和，卷積變成乘積；$t^k$ 項是 $G_{xw}G_1^{\,k-1}G_{wy}$（$G_{xw}=G(z;\vec x,\vec w)$ 等；$G_1$＝至少走一步的 $G(z;\vec w,\vec w)$），是公比 $-tG_1$ 的幾何級數：
+\[G(z,t;\vec x,\vec y,\vec w)=G(z;\vec x,\vec y)-t\,\frac{G(z;\vec x,\vec w)\,G(z;\vec w,\vec y)}{1+t\,G_1(z;\vec w,\vec w)}.\tag{3.9}\]
+(3.10) 說：對 $t$ 微分 $M$ 次、乘 $(-1)^M/M!$、令 $t=1$，就是「到訪恰好 $M$ 次」的生成函數。實際算出來（令 $s=1-t$ 展開）：
+\[M=0:\ G_{xy}-\frac{G_{xw}G_{wy}}{G_{ww}},\qquad M\ge1:\ \frac{G_{xw}}{G_{ww}}\Big(\frac{G_{ww}-1}{G_{ww}}\Big)^{M-1}\frac{G_{wy}}{G_{ww}}.\]
+讀法：$\frac{G_{xw}}{G_{ww}}$＝第一次到達 $\vec w$；$\frac{G_{ww}-1}{G_{ww}}$＝「離開再第一次回來」，出現 $M-1$ 次；最後離開 $\vec w$ 不再回來走到 $\vec y$。
+（\texttt{walk\_rec} 用這個式子和暴力列舉互相核對到 $N=8$。）
+
+% =====================================================================
+\subsection{一維：一定回家}
+\bk{pp.~55--58}\ \anim{W303}
+
+\subsubsection{從不回家的生成函數}
+令 $\vec w=\vec x$。為了不把第 0 步算成「回家」，分子用 $G_1$：
+\[\frac{G(z;\vec x-\vec y)}{1+G_1(z;0)}=\frac{G(z;\vec x-\vec y)}{G(z;0)}\tag{3.12}\]
+是「走到 $\vec y$、途中沒回過 $\vec x$」的生成函數。對終點 $\vec y$ 求和，用 $\sum_{\vec y}G(z;\vec x-\vec y)=g(z;\vec q=0)=\frac{1}{1-z\chi(0)}=\frac{z_c}{z_c-z}$（(3.14)(3.15)）：
+\[\boxed{\ \text{$N$ 步都不回家的走法數}=[z^N]\ \frac{z_c}{z_c-z}\,\frac{1}{G(z;0)}\ }\tag{3.16}\]
+
+\begin{notebox}[另一個看法（機率版）]
+「第 $N$ 步在家」的路線＝「第 $k$ 步第一次回家」接上「從家出發、$N-k$ 步後在家」：$u_N=\sum_{k=1}^{N}f_ku_{N-k}$（$N\ge1$）。
+令 $U(s)=\sum u_Ns^N$、$F(s)=\sum f_Ns^N$，得 $U=1+FU$，即 $1-F=1/U$。「$N$ 步都還沒回家」的機率 $P_N=1-\sum_{k\le N}f_k=[s^N]\frac{1-F(s)}{1-s}=[s^N]\frac{1}{(1-s)U(s)}$。
+令 $s=z/z_c$，$U(s)=G(z;0)$，這就是 (3.16) 除以 $Z^N$。$N\to\infty$：$P_\infty=1-F(1)=1/U(1)=1/G(z_c;0)$。
+\end{notebox}
+
+\subsubsection{一維算到底}
+一維 $\chi(q)=e^{iq}+e^{-iq}$，$z_c=\frac12$（(3.17)）。令 $\alpha=e^{iq}$，積分變成單位圓上的圍道積分：
+\[G(z,0)=\frac{1}{2\pi}\int_0^{2\pi}\frac{dq}{1-z(e^{iq}+e^{-iq})}=-\frac{1}{2\pi iz}\oint\frac{d\alpha}{\alpha^2-\alpha/z+1}
+=\frac{1}{\sqrt{1-4z^2}}=\frac{z_c}{\sqrt{z_c-z}\sqrt{z_c+z}}.\tag{3.18--3.21}\]
+極點 $\alpha_\pm=\frac12\{\frac1z\pm\sqrt{(1/z)^2-4}\}$，$\alpha_+\alpha_-=1$，只有 $\alpha_-$ 在單位圓內（$0<z<\frac12$ 時）。
+\begin{errbox}[p.~56--57，(3.18)--(3.20)]
+(3.18) 第二行漏了 $\frac{1}{2\pi}$。(3.19) 第二行的分母印成 $\alpha^2-\alpha/2+1/z$，應為 $\alpha^2-\alpha/z+1$（它的兩根才是 (3.20) 的 $\alpha_\pm$）。
+(3.20) 後說「$z<1$ 時只有 $\alpha_-$ 在圓內」：應為 $0<z<\frac12$；$\frac12<z<1$ 時根號裡是負的，兩個極點都在單位圓上。
+\end{errbox}
+
+$G(z;0)=\frac{1}{\sqrt{1-4z^2}}=\sum_k\binom{2k}{k}z^{2k}=1+2z^2+6z^4+20z^6+70z^8+252z^{10}+\cdots$，正是第 $N$ 步在家的走法數。
+(3.16) 在一維可以精確算：
+\begin{align*}
+\frac{g(z;0)}{G(z;0)}&=\frac{\sqrt{1-4z^2}}{1-2z}=\sqrt{\frac{1+2z}{1-2z}}=(1+2z)\sum_k\binom{2k}{k}z^{2k}\\
+&=1+2z+2z^2+4z^3+6z^4+12z^5+\cdots+252z^{10}+\cdots
+\end{align*}
+所以 $N=2k$ 步都不回家的走法數＝$\binom{2k}{k}$＝第 $2k$ 步剛好在家的走法數；奇數步 $2k+1$ 是它的 2 倍。
+\begin{table}[H]
+\centering
+\ThreeTabNever
+\caption{一維：$N$ 步都不回家的走法數（$\sqrt{(1+2z)/(1-2z)}$ 的係數）與機率 $P_N$。偶數 $N$ 那一欄和「第 $N$ 步在家」一樣多}\label{three-tab-never}
+\end{table}
+
+\subsubsection{\texorpdfstring{$N$ 很大：$P_N\approx\sqrt{2/\pi N}$}{N 很大：P ≈ √(2/πN)}}
+$z\to z_c$ 時 $\sqrt{z_c+z}\to\sqrt{2z_c}=1$，(3.22) 給 $g/G\to(z_c-z)^{-1/2}$。補充 3 的 (2:S3-10)：$(z_c-z)^{-\alpha}$ 的 $z^N$ 係數約 $z_c^{-N-\alpha}N^{\alpha-1}/\Gamma(\alpha)$，
+取 $\alpha=\frac12$ 再除以全部的 $z_c^{-N}=2^N$：
+\[P_N\approx z_c^{-1/2}\frac{N^{-1/2}}{\Gamma(1/2)}=\sqrt{\frac{2}{\pi N}}\ \to\ 0.\tag{3.23, 3.24}\]
+\begin{errbox}[p.~57，(3.23)(3.24)]
+書上 (3.23) 寫 $\frac{z_c^{-N}}{\Gamma(1/2)}N^{-1/2}$、(3.24) 寫 $N^{-1/2}\frac{1}{\Gamma(1/2)}=\frac{1}{\sqrt{\pi N}}$：都漏了 $z_c^{-1/2}=\sqrt2\approx1.4142$。
+精確值站在更正這邊（$N=10$、100、1000）：精確 $0.2461$、$0.0796$、$0.0252$；更正式 $0.2523$、$0.0798$、$0.0252$；
+書上印的 $1/\sqrt{\pi N}$ 只有 $0.1784$、$0.0564$、$0.0178$。書上自己的 (3.54) 也用 $\sqrt{2/\pi}$。
+\end{errbox}
+
+\subsubsection{偏硬幣（練習 3.2--3.4）}
+向右的機率 $p$、向左 $q=1-p$。用機率的生成函數（$z_c=1$）：$G(z;0)=\sum_k\binom{2k}{k}(pq)^kz^{2k}=1/\sqrt{1-4pqz^2}$，於是
+\[P_\infty=\frac{1}{G(1;0)}=\sqrt{1-4pq}=\sqrt{(p+q)^2-4pq}=|p-q|.\]
+$p=0.6$：$G(1;0)=1/\sqrt{0.04}=5$，永遠不回家的機率 $0.2$；有限 $N$（$=2,4,10,20,50,100$）時 $P_N=0.52$、$0.4048$、$0.2940$、$0.2427$、$0.2094$、$0.2016$，很快逼近 0.2。
+回家的機率 $1-|p-q|$（$p=0.6$ 時 0.8）；$p=1$ 時永遠不回家的機率是 1。只要 $p\ne\frac12$，就有一定比例的人一去不回。
+
+% =====================================================================
+\subsection{二維：回家，但慢得驚人}
+\bk{pp.~58--60}\ \anim{W304}
+
+正方格子回到原點的走法 $C(N;\vec0)=1,4,36,400,4900,63504$（$N=0,2,\dots,10$，第 2 章的主例）。用上面的「機率版」：
+第一次回家的機率 $f_2,f_4,\dots,f_{10}=0.25,\ 0.0781,\ 0.0430,\ 0.0286,\ 0.0210$（$f_2=4/16$：走出去馬上走回來；$f_4=20/256$），
+和 $0.4208$，所以 $P_{10}=0.5792$：十步之後還有一半以上的人沒回過家。
+
+一般維度：(3.25) 要的是 $\frac{z_c}{(z_c-z)G(z;0)}$ 的係數，而 $G(z;0)=\frac{1}{(2\pi)^d}\int\frac{d^dq}{1-z\chi(\vec q)}$。$z$ 靠近 $z_c$ 時，
+積分主要來自 $\vec q$ 很小的地方，那裡 $\chi(\vec q)=c_1-c_2|\vec q|^2+\cdots$（(3.27)），$c_1=2d$：
+\[G(z;0)\approx\frac{K_d}{(2\pi)^d}\int\frac{1}{c_1}\frac{q^{d-1}dq}{(z_c-z)+c_2q^2/c_1^2},\qquad K_d=\frac{2\pi^{d/2}}{\Gamma(d/2)}.\tag{3.28, 3.29}\]
+\begin{errbox}[p.~59，(3.27) 後]
+書上說簡單立方格子 $c_2=1/2$。$\chi=2\sum_i\cos q_i=2d-|\vec q|^2+\cdots$，所以 $c_2=1$（3.5 節的 $B_1=9/\pi$ 也要 $c_2=1$ 才對得上數值）。
+\end{errbox}
+$d=2$ 時角度積分後是 $\int_0^{q_0}\frac{q\,dq}{z_c-z+c_2q^2/c_1^2}=\frac{c_1^2}{2c_2}\ln\frac{z_c-z+c_2q_0^2/c_1^2}{z_c-z}$（(3.30)）：$G(z;0)\propto-\ln(z_c-z)$，在 $z_c$ \textbf{對數發散}。
+正方格子還有精確式 $G(z;0)=\frac2\pi K(4z)$（第 2 章的橢圓積分），$z\to z_c$ 時
+\begin{gather*}
+G(z;0)\approx\frac1\pi\Big[\ln8-\ln\Big(1-\frac{z}{z_c}\Big)\Big]\\
+\Rightarrow\quad P_N\approx\frac{\pi}{\ln N}\ \text{（書上的首項）}\quad\text{或}\quad\frac{\pi}{\ln N+\ln8+\gamma}\ \text{（含常數項）}.
+\end{gather*}
+\begin{table}[H]
+\centering
+\ThreeTabNoReturn
+\caption{三種維度「$N$ 步都還沒回家」的機率 $P_N$：精確值（更新方程）與漸近式。二維的 $\pi/\ln N$ 在 $N=10$ 時是 1.364，比 1 還大；它要 $N$ 非常大才準}\label{three-tab-noreturn}
+\end{table}
+\textbf{慢得驚人}：要 $\pi/\ln N=0.01$，得 $N=e^{100\pi}\approx10^{136}$ 步——比宇宙裡的原子數（約 $10^{80}$）還多。
+回到表 \ref{three-tab-sim}：1000 步之內還沒回家的有 $1000-676=324$ 人，理論 $0.3218$。
+
+\begin{notebox}[最陡下降（書上 Fig.~3.2）與一個小筆誤]
+書上用最陡下降估 $\frac{1}{2\pi i}\oint\frac{1}{(z_c-z)\ln(z_c-z)}\frac{dz}{z^{N+1}}$：把被積函數寫成 $h(z)e^{f(z)}$，$h=1/\ln(z_c-z)$、$f=-\ln(z_c-z)-(N+1)\ln z$。
+鞍點在 $z=z_c(1-1/N)=z_c-\delta$，路徑平行虛軸穿過它，得到常數 $\times z_c^{-(N+1)}/\ln N$。
+〔注〕p.~60 寫「$f''(z_c)=1/\delta^2$」：$f''$ 在 $z_c$ 發散，應是鞍點上的 $f''(z_c-\delta)\approx1/\delta^2$。
+\end{notebox}
+
+% =====================================================================
+\subsection{維度的分水嶺}
+\bk{pp.~60--62}\ \anim{W305}
+
+為什麼偏偏是 $d=2$？在 $z=z_c$，(3.28) 的被積函數在 $q\to0$ 附近是 $\frac{q^{d-1}}{q^2}=q^{d-3}$：
+\begin{figure}[H]
+\centering
+\ThreeFigTail
+\caption{$z=z_c$ 時 (3.28) 的被積函數 $q^{d-1}/q^2$。從 $\varepsilon$ 積到 1 的面積（$\varepsilon=0.1$、$0.01$、$0.001$）：
+$d=1$ 是 9、99、999，$d=2$ 是 2.303、4.605、6.908（$=\ln\frac1\varepsilon$），$d=3$ 是 0.9、0.99、0.999（綠色，停在 1）}\label{three-fig-tail}
+\end{figure}
+所以 $d\le2$ 時 $G(z_c;0)=\infty$、$P_\infty=0$（常返）；$d=3$ 時 $G(z_c;0)$ 有限、$P_\infty>0$（暫態）。角度積分給的常數
+$K_1=2$、$K_2=2\pi\approx6.283$、$K_3=4\pi\approx12.566$、$K_4=2\pi^2\approx19.739$ 只是 $d$ 維單位球的表面積（練習 3.5）。
+
+\textbf{奇異的形狀}：(3.31) 把 $q^{d-1}=q^{d-3}\cdot q^2$ 拆開，再令 $q=Q\,c_1(z_c-z)^{1/2}/c_2^{1/2}$，得
+\[G(z;0)\propto\frac{c_1^2}{c_2}\frac{q_0^{d-2}}{d-2}-\Big(\frac{c_1^2}{c_2}\Big)^{d/2}(z_c-z)^{(d-2)/2}\int_0^\infty\frac{Q^{d-3}dQ}{1+Q^2}+R\,(z_c-z).\tag{3.32}\]
+$2<d<4$ 時第一項是有限的常數、第二項是 $(z_c-z)$ 的非整數正次方：$G(z_c;0)$ 有限，但導數在 $z_c$ 發散。
+$d=1$ 換成 $(z_c-z)^{-1/2}$（3.3 節），$d=2$ 換成對數（3.4 節）。
+\begin{errbox}[p.~61，(3.32) 與前一句]
+換變數印成 $q=Qa(z_c-z)^{1/2}/c_2^{1/2}$、係數 $(a^2/c_2)^{d/2}$：$a$ 應為 $c_1$（$a$ 在本書是格距，這裡用不到）。
+\end{errbox}
+\begin{table}[H]
+\centering
+\small
+\ThreeTabGzero
+\caption{$z$ 逼近 $z_c$ 時的 $G(z;0)$：一維、二維一路發散，三維停在 1.516（第三列用 Bessel 積分算，並和級數 $\sum u_Nx^N$ 核對）}\label{three-tab-gzero}
+\end{table}
+
+$d=3$ 時 $G(z;0)\approx G(z_c;0)$，(3.33) 的係數是 $z_c^{-N}/G(z_c;0)$，除以全部的 $z_c^{-N}$：
+\[P_\infty=\frac{1}{G(z_c;0)}\qquad(\text{sc：}1/1.516386=0.659463).\tag{3.33, 3.34}\]
+\textbf{有限 $N$ 的修正（練習 3.6）}：$G(z;0)\approx B_0-B_1(z_c-z)^{1/2}$。代進 (3.16)：
+$P_N\approx\frac{1}{B_0}+\frac{B_1\sqrt{z_c}}{B_0^2}\frac{1}{\sqrt{\pi N}}$。由 (3.28)(3.32)（$c_1=6$、$c_2=1$、$\int_0^\infty\frac{dQ}{1+Q^2}=\frac\pi2$）得 $B_1=9/\pi\approx2.865$，所以
+\[P_N\approx0.659463+\frac{0.28696}{\sqrt N}\]
+（$N=100$：0.688159，精確 0.688062；$N=1000$：0.668537，精確 0.668534）。
+
+% =====================================================================
+\subsection{三種立方格子：Watson 積分}
+\bk{pp.~62--63}\ \anim{W306}
+
+三維的答案取決於 $G(z_c;0)=\frac{1}{(2\pi)^3}\int\frac{d^3q}{1-\chi(\vec q)/\chi(0)}$（(3.35)），稱為 \textbf{Watson 積分}（1939）。三種立方格子：
+\begin{gather*}
+\chi_{sc}=2(\cos q_x+\cos q_y+\cos q_z),\qquad \chi_{bcc}=8\cos q_x\cos q_y\cos q_z,\\
+\chi_{fcc}=4(\cos q_x\cos q_y+\cos q_y\cos q_z+\cos q_x\cos q_z).\tag{3.36--3.38}
+\end{gather*}
+\begin{table}[H]
+\centering
+\ThreeTabLattices
+\caption{三種立方格子的 Watson 積分（(3.39)--(3.41)）與逃脫機率。鄰居越多越容易逃走}\label{three-tab-lattices}
+\end{table}
+書上只給數值；閉式是 Gamma 函數。\texttt{walk\_rec} 另用兩種算法核對：sc 用 $\int_0^\infty e^{-t}I_0(t/3)^3dt$（$I_0$ 是 Bessel 函數；
+來自 $\frac{1}{1-x}=\int_0^\infty e^{-t(1-x)}dt$ 與 $\frac{1}{2\pi}\int e^{a\cos q}dq=I_0(a)$），bcc 用 $\sum_k\big(\binom{2k}{k}/4^k\big)^3$（bcc 的回家次數是一維的三次方），
+兩者都和閉式一致到小數第 10 位；fcc 用精確的回家次數級數加尾巴，差 $<10^{-3}$。（書上 $G_{bcc}$ 印 1.393\,203，是截斷值。）
+
+\textbf{回家幾次（練習 3.8）}：sc 回家的機率 $R=1-0.659463=0.340537$。每次回到家，往後的漫步就像重新開始，所以剛好回家 $m$ 次的機率
+\[f_m=R^m(1-R),\qquad \sum_mf_m=1,\qquad \sum_m m f_m=\frac{R}{1-R}=G-1=0.516386,\]
+$m=0,\dots,4$ 依序是 $0.6595$、$0.2246$、$0.0765$、$0.0260$、$0.0089$：平均回家半次。
+\begin{table}[H]
+\centering
+\small
+\ThreeTabFm
+\caption{sc：剛好回家 $m$ 次的機率。1000 步內的精確值由第一次回家的機率 $f_n$ 卷積算出；模擬是 1000 人各走 1000 步}\label{three-tab-fm}
+\end{table}
+
+% =====================================================================
+\subsection{走過幾個不同的點}
+\bk{pp.~63--68}\ \anim{W307--W308}
+
+\subsubsection{新點的機率＝還沒回家的機率}
+令 $\Delta_n$＝第 $n$ 步踩到\textbf{新點}（以前沒到過）的機率，$\Delta_0=1$。平均足跡就是把每一步的新點加起來：
+\[\delta_n=\sum_{n'=0}^{n}\Delta_{n'},\qquad \Delta_n=\sum_{\vec y\ne\vec x}F_n(\vec x-\vec y)\tag{3.42, 3.43}\]
+（$F_n(\vec x-\vec y)$＝第 $n$ 步\textbf{第一次}到 $\vec y$ 的機率）。\textbf{例}：一維 4 步的 16 條路線，數每一步是不是新點：
+$\Delta_0,\dots,\Delta_4=1,\ 1,\ \frac12,\ \frac12,\ \frac38$，平均足跡 $\delta_0,\dots,\delta_4=1,\ 2,\ \frac52,\ 3,\ \frac{27}8$（16 條的足跡總和 $54=16\times\frac{27}{8}$）。
+
+這串 $\Delta_n$ 和表 \ref{three-tab-never} 的 $P_n=1,1,\frac12,\frac12,\frac38$ 一模一樣。\textbf{為什麼？}把路線倒過來走：「第 $n$ 步踩到新點」＝「倒著走的人 $n$ 步都沒回到他的出發點」。
+例如 $0\to1\to0\to1\to2$ 的第 4 步踩到新點 2；倒著走 $2\to1\to0\to1\to0$，從 2 出發沒再回到 2。每條路線倒過來仍是一條等機率的路線，所以 $\Delta_n=P_n$。
+
+書上的算法（Fig.~3.3）：走到 B 的路線扣掉「之前到過 B」的，和 3.2 節一樣是幾何級數：
+\[G(z;\vec r_B-\vec r_A)-G(z;\vec r_B-\vec r_A)G_1(z;0)+\cdots=\frac{G(z;\vec r_B-\vec r_A)}{1+G_1(z;0)},\qquad 1+G_1(z;0)=G(z;0).\tag{3.44--3.47}\]
+對 B 求和得 $\frac{g(z;0)}{1+G_1(z;0)}=\frac{z_c}{z_c-z}\frac{1}{G(z;0)}$（(3.48)）——和 (3.16) 是\textbf{同一個函數}。
+所以一維精確：$\delta_n=(2n+1)\binom{2k}{k}/4^k$（$n=2k$）、$2n\binom{2k}{k}/4^k$（$n=2k+1$）；二維暴力列舉 $4^n$ 條（$n\le5$）也和生成函數一致。
+
+\subsubsection{足跡有多大}
+\begin{itemize}
+\item \textbf{一維}：$\Delta_n\approx\sqrt{2/\pi n}$，$\delta_n\approx\sqrt{\frac2\pi}\sum_{n'=1}^n(n')^{-1/2}\approx2\sqrt{\frac2\pi}\,n^{1/2}=\sqrt{8n/\pi}$（(3.53)(3.54)）。
+      $n=100$：精確 15.997，$\sqrt{800/\pi}=15.958$。足跡只長成 $\sqrt n$，和第 1 章「離家 $\sqrt N$ 遠」一致。
+\item \textbf{二維}：$\Delta_n\approx\pi/\ln n$，$\delta_n\approx\pi\sum_{n'=2}^{n}\frac{1}{\ln n'}\approx\frac{\pi n}{\ln n}$（(3.55)--(3.57)）。
+      動畫 W308 的 400 步足跡踩過 159 個點，平均 $\delta_{400}=162.57$。
+\item \textbf{三維}：(3.58) $\delta_n\approx n/G(z_c;0)$；sc 是 $0.6595\,n$：$\delta_n/n=0.9051,\ 0.7229,\ 0.6782$（$n=10,100,1000$）。
+      加上次一項 $2\times0.28696\sqrt n=0.5739\sqrt n$（練習 3.11）：$n=1000$ 給 677.6，精確 678.2。
+\end{itemize}
+\begin{errbox}[p.~66--67，(3.53)--(3.57)]
+(3.53) 後「$(z_c-z)^{1/2}$ 的 $z^n$ 係數」應為 $(z_c-z)^{-1/2}$。(3.56) 的和上限印成 $\infty$，應為 $n$（否則發散）。
+(3.57) 的積分下限印成 1（三項都在 $n'=1$ 發散），照前一段的說明應為 2。
+\end{errbox}
+\begin{figure}[H]
+\centering
+\ThreeFigFoot
+\caption{平均足跡占步數的比例 $\delta_n/n$（實線：精確）與漸近式（虛線、點線）。一維、二維的比例趨近 0，三維停在 $1/G(z_c;0)$}\label{three-fig-foot}
+\end{figure}
+\begin{table}[H]
+\centering
+\ThreeTabFoot
+\caption{平均足跡 $\delta_n$：精確值與漸近式（二維的 $\pi n/\ln n$ 收斂得很慢）}\label{three-tab-foot}
+\end{table}
+
+% =====================================================================
+\subsection{練習 3.1--3.12 解答}
+{\small
+\begin{enumerate}[label=\textbf{3.\arabic*},itemsep=0.05em]
+\item 推 (3.9)。\quad 答：(3.8) 第 $k$ 項是 $k+1$ 段卷積（$\vec x\to\vec w$、$k-1$ 段 $\vec w\to\vec w$ 各至少一步、$\vec w\to\vec y$），乘 $z^N$ 求和得 $(-t)^kG_{xw}G_1^{k-1}G_{wy}$；對 $k\ge1$ 是公比 $-tG_1$ 的幾何級數，和為 $-\frac{tG_{xw}G_{wy}}{1+tG_1}$。
+\item 偏硬幣不回家的機率不是 0。\quad 答：$P_\infty=1/G(1;0)=\sqrt{1-4pq}=|p-q|>0$（$p\ne\frac12$）。
+\item $p=1$ 時逃脫機率是 1。\quad 答：$|p-q|=1$；由生成函數：$pq=0$ 使 $G(z;0)=1$，$P_\infty=1$。
+\item 偏硬幣終究回家的機率。\quad 答：$1-|p-q|$；$p=0.6$ 時 0.8。
+\item 推 (3.29)。\quad 答：$\int e^{-|\vec r|^2}d^dr=\big(\int e^{-x^2}dx\big)^d=\pi^{d/2}$；用球座標 $=K_d\int_0^\infty r^{d-1}e^{-r^2}dr=K_d\,\Gamma(d/2)/2$，
+所以 $K_d=2\pi^{d/2}/\Gamma(d/2)$。
+\item 三維有限 $N$ 的修正。\quad 答：見 3.5 節：$P_N\approx\frac1{B_0}+\frac{B_1\sqrt{z_c}}{B_0^2\sqrt{\pi N}}$，修正 $\propto N^{-1/2}$；sc 為 $0.659463+0.28696/\sqrt N$。
+\item sc 逃脫機率的式子。\quad 答：$P_\infty=\Big[\frac{1}{(2\pi)^3}\int_{\rm BZ}\frac{d^3q}{1-\frac13(\cos q_x+\cos q_y+\cos q_z)}\Big]^{-1}=0.659463$。
+\item 回家恰好 $m$ 次的比例 $f_m$。\quad 答：由 (3.10)，到訪 $m+1$ 次（含起點）的生成函數是 $g\,(G-1)^m/G^{m+1}$，$z\to z_c$ 時得 $f_m=R^m(1-R)$，$R=1-1/G(z_c;0)$；$\sum_mf_m=(1-R)\frac{1}{1-R}=1$。
+\item bcc 的平均足跡。\quad 答：$\delta_N\approx N/G_{bcc}(z_c;0)=0.717770\,N$，$G_{bcc}=\frac{1}{(2\pi)^3}\int\frac{d^3q}{1-\cos q_x\cos q_y\cos q_z}$。
+\item 偏硬幣的平均足跡。\quad 答：$\Delta_n\to|p-q|$，所以 $\delta_N\approx|p-q|N$（$p=0.6$：$0.2N$；$N=100$ 精確 24.95）：每步平均往前推進 $|p-q|$ 格，新點都在前緣。
+\item sc 足跡的次一項。\quad 答：$\Delta_n\approx\frac1{B_0}+\frac{0.28696}{\sqrt n}$，加總得 $\delta_N\approx0.659463N+0.5739N^{1/2}$：次一項是 $N^{1/2}$。
+\item sc 的平均足跡。\quad 答：$\delta_N\approx N/1.516386=0.659463\,N$。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 3 章的筆誤一覽}
+給 2004 年版。每一條都用程式核對過（\texttt{walk\_rec.check()}、\texttt{check\_numbers\_ch3()}）；
+逐式的 LaTeX 版見 \texttt{ref/md/ch03\_formulas.md}。其中 (3.3)(3.5) 的乘積與 $f''(z_c)$ 兩條是書上沒處理好的地方（文中用灰框〔注〕），其餘在文中用紅框。
+\begin{center}
+\footnotesize
+\ThreeTabErrata
+\end{center}
