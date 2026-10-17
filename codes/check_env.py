@@ -107,6 +107,10 @@ def main():
     ok = code == 0 and "walk_gf（第 2 章）" in out and "全部驗證通過" in out
     report("數學驗證 utils/walk_gf.py（第 2 章）", ok, "遞迴＝兩枚硬幣＝傅立葉、書上的數字、筆誤的更正、場景卡的數字全部一致"
            if ok else out[-300:])
+    code, out = run([sys.executable, str(HERE / "utils" / "walk_rec.py")])
+    ok = code == 0 and "walk_rec（第 3 章）" in out and "全部驗證通過" in out
+    report("數學驗證 utils/walk_rec.py（第 3 章）", ok, "生成函數＝暴力列舉＝逐步遞迴、Watson 積分三種算法、筆誤的更正、場景卡的數字全部一致"
+           if ok else out[-300:])
 
     notes = HERE.parent / "notes"
     code, out = run([sys.executable, str(notes / "ch1" / "make_figs.py")], cwd=notes)
