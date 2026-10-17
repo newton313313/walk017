@@ -1,6 +1,7 @@
 % !TEX program = xelatex
 % 編譯方式： xelatex walk_導讀.tex   （在 notes/ 裡執行，跑兩次以產生目錄與交互參照）
-% 內文在 ch1/part1.tex；圖與表由 ch1/make_figs.py 產生（ch1/figs.tex，含數字檢查）。先 python ch1/make_figs.py 再編譯。
+% 內文在 ch1/part1.tex、ch2/part2.tex；圖與表由 ch1/make_figs.py、ch2/make_figs.py 產生（ch1/figs.tex、ch2/figs.tex，含數字檢查）。
+% 先 python ch1/make_figs.py 與 python ch2/make_figs.py 再編譯。
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[margin=2.2cm]{geometry}
@@ -12,10 +13,11 @@
 \linespread{1.28}
 \setlength{\parskip}{0.45em}
 \setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}   % 長的 \texttt 路徑不要凸出版面
 
 \usepackage{xcolor}
 \usepackage{tikz}
-\usetikzlibrary{calc,arrows.meta,positioning,decorations.markings}
+\usetikzlibrary{calc,arrows.meta,positioning,decorations.markings,decorations.pathmorphing}
 \usepackage[most]{tcolorbox}
 \usepackage{booktabs}
 \usepackage{enumitem}
@@ -57,12 +59,12 @@
 
 \begin{center}
 {\Large\bfseries 隨機漫步導讀}\\[4pt]
-J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1 章（配合 manim 動畫 W101--W112）\\[8pt]
+J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1--2 章（配合 manim 動畫 W101--W112、W201--W212）\\[8pt]
 {\small 原文：Joseph Rudnick and George Gaspari, \emph{Elements of the Random Walk: An Introduction for Advanced
 Students and Researchers}, Cambridge University Press, 2004.}
 \end{center}
 
-\begin{keybox}[全書地圖（目前完成：第 1 章）]
+\begin{keybox}[全書地圖（目前完成：第 1--2 章）]
 \small
 \begin{tabular}{@{}rp{0.93\linewidth}@{}}
 1 & 技巧入門：一維最簡單的漫步——數路線、動差、Stirling 與高斯、擴散方程、生成函數、鞍點法（序曲）\\
@@ -96,7 +98,7 @@ Students and Researchers}, Cambridge University Press, 2004.}
 \end{enumerate}
 \end{keybox}
 
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{3}
 \begingroup
 \setlength{\parskip}{0pt}
 \tableofcontents
@@ -115,10 +117,16 @@ Students and Researchers}, Cambridge University Press, 2004.}
 \end{tabular}
 \end{center}
 
-\noindent 以〔書 p.~5〕標示書上的頁碼，式號 (1.6) 等與書上相同。內文寫到的每一個數字都由程式（\texttt{codes/utils/walk1d.py}）重算，
-圖表由 \texttt{ch1/make\_figs.py} 產生並先做數字檢查（路徑相對於 \texttt{C:\textbackslash mypython\textbackslash manim\textbackslash projects\textbackslash walk017}）。
-書上有十幾處筆誤，在文中用紅框標出，總表在 1.7 節；逐式校對見 \texttt{ref/md/ch01\_formulas.md}。連續播放：\texttt{Ch1Demo}（W101--W112）。
+\noindent 以〔書 p.~5〕標示書上的頁碼，式號 (1.6)、(2.20) 等與書上相同。內文寫到的每一個數字都由程式重算，圖表由程式產生並先做數字檢查：
+\begin{itemize}[nosep]
+\item 第 1 章：數學 \texttt{codes/utils/walk1d.py}，圖表 \texttt{notes/ch1/make\_figs.py}，逐式校對 \texttt{ref/md/ch01\_formulas.md}，連續播放 \texttt{Ch1Demo}（W101--W112）；
+\item 第 2 章：數學 \texttt{codes/utils/walk\_gf.py}，圖表 \texttt{notes/ch2/make\_figs.py}，逐式校對 \texttt{ref/md/ch02\_formulas.md}，連續播放 \texttt{Ch2Demo}（W201--W212）。
+\end{itemize}
+路徑都相對於 \texttt{C:\textbackslash mypython\textbackslash manim\textbackslash projects\textbackslash walk017}。
+書上的筆誤在文中用紅框標出，總表在 1.7 節與 2.5 節。上表是第 1 章各節與動畫的對應；第 2 章的對應表在第 2 節開頭。
 
 \input{ch1/part1}
+\clearpage
+\input{ch2/part2}
 
 \end{document}
