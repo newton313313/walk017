@@ -1,0 +1,324 @@
+\input{ch9/figs}
+
+\section{漫步的標度與臨界現象（第 9 章）}
+
+\begin{keybox}[先看這裡]
+第 7、8 章得到自迴避漫步 $\langle R^2\rangle\propto N^{2\nu}$。這一章說明 de Gennes 的發現：\textbf{$\nu$ 是一個磁鐵的臨界指數}——「每個自旋有 $n$ 個分量」的磁鐵
+（O($n$) 模型）在 $n\to0$ 時，關聯函數就是自迴避漫步的生成函數。路線：統計力學的詞彙（\textbf{配分函數、磁化率、關聯長度、臨界指數}）$\to$ 六個指數之間的\textbf{標度律}
+$\to$ 讓自旋可以伸縮的 Ginzburg--Landau--Wilson 模型 $\to$ 取 $z^N$ 的係數得 $\langle R^2\rangle\propto N^{2\nu}$ $\to$ 用高斯積分說明 $n\to0$ 時只剩不碰自己的路徑。
+不熟統計力學也能讀：每個概念都先用 2--16 個自旋的小例子算到底。
+
+\textbf{記號}：$J=k_B=1$；Ising 自旋 $s=\pm1$、$K=J/T$、無因次外場 $H=h/T$、每個自旋的磁化 $m$；O($n$) 的分量數 $n$；臨界指數 $\alpha,\beta,\gamma,\delta,\nu,\eta$；
+GLW 的約化溫度 $r$（$\propto T-T_c$）與四次項係數 $u$；自迴避條數 $c_N$（書上 9.4 節叫 $\Gamma_N$）、每步的逸度 $z$、$z_c=1/\mu$（二維 0.3791）。
+
+\textbf{全章的主例}：4 個自旋 $Z=2e^{4K}+12+2e^{-4K}$；一維 Ising $\chi=e^{2K}$；雙井 $m^*=\sqrt{-r/u}$；梯子在 $n\to0$ 時 $G_{03}=K+K^3+K^5$（三條自迴避路徑）。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+9.1--9.2 & 漫步的指數、臨界點 & W901 & 9.3 & Ginzburg--Landau--Wilson、雙井 & W904\\
+9.2.1--9.2.2 & O($n$) 模型、對稱破缺 & W902 & 9.4 & 從磁鐵讀出 $\langle R^2\rangle$ & W905\\
+9.2.2--9.2.3 & 臨界指數、標度律 & W903 & 9.5--9.6 & $n\to0$、路徑積分、高斯積分 & W906\\
+\bottomrule
+\end{tabular}
+\end{center}
+（上表是書上的節號，本講義 9.1--9.6 依序對應，書上的高斯積分補充在 9.6 節末。）
+數字一律由 \texttt{codes/utils/walk\_crit.py} 重算，逐式校對見 \texttt{ref/md/ch09\_formulas.md}，圖表由 \texttt{ch9/make\_figs.py} 產生並先做數字檢查。連續播放：\texttt{Ch9Demo}（W901--W906）。
+\end{keybox}
+
+% =====================================================================
+\subsection{漫步的指數就是臨界指數}
+\leavevmode\bk{pp.~203--205}\ \anim{W901}\par\nopagebreak
+
+\textbf{問}：自迴避漫步越走越大、磁鐵加熱就失去磁性——為什麼說這是同一個數學問題？
+
+\textbf{漫步的指數}（(9.1)(9.2)）：$\langle R^2\rangle\propto N^p$，Flory（第 7、8 章兩次推出）給 $p=2\nu=\frac6{d+2}$。$d=1,2,3,4$：$p=2,\frac32,\frac65,1$；已知的 $2\nu$ 是 $2,\frac32,1.176,1$（圖 \ref{nine-fig-ms} 右上）：一、二、四維完全正確，三維 0.600 對 0.588。
+〔注〕書上說三維「差一個百分點左右」；實際 $0.600/0.588-1=0.0204$，差 2\%。二維精確列舉（第 7 章）的局部指數 $2\nu_{\rm eff}=1.4442,\ 1.4505,\ 1.4556$（$N=10,12,14$），慢慢爬向 $\frac32$。
+
+\textbf{磁鐵的三分鐘入門}：鐵塊裡每個原子像一根小磁針（\textbf{自旋}）。相鄰自旋同向時能量較低，所以低溫時它們排成一致的方向，沒有外加磁場也有\textbf{自發磁化} $M_s$；
+溫度把自旋打亂，高過\textbf{臨界溫度} $T_c$（居禮溫度）就 $M_s=0$。重點是 $T_c$ 附近 $M_s$ \emph{怎麼}消失：
+\[M_s\propto(T_c-T)^\beta,\tag{9.3}\]
+$\beta$ 叫\textbf{臨界指數}。它和漫步的 $\frac12$ 一樣是\textbf{普適}的：鐵、鎳、二元合金……細節不同，只要空間維度與「自旋有幾個分量」相同，$\beta$ 就相同。
+
+\textbf{兩個算到底的例子}（圖 \ref{nine-fig-ms} 左）。(1) \textbf{平均場}：把一個自旋的鄰居都換成平均值 $m$，它在這個「平均的場」裡的平均是 $\tanh(m/T)$（$T$ 以 $T_c$ 為單位），自洽要求
+$m=\tanh(m/T)$。$T_c=1$ 附近用 $\tanh x\approx x-\frac{x^3}3$：除以 $m$ 得 $1=\frac1T-\frac{m^2}{3T^3}$，$m^2=3T^2(1-T)$，$m\approx\sqrt{3(1-T)}$，所以 $\beta=\frac12$
+（$T=0.99$：近似式 0.1732、精確解 0.1725）。(2) \textbf{二維 Ising}（Onsager 的精確解）：$M_s=\big(1-\sinh^{-4}(2/T)\big)^{1/8}$，$T_c=2/\ln(1+\sqrt2)=2.2692$（$\sinh(2/T_c)=1$），$\beta=\frac18$。
+$T/T_c=0.5,\ 0.9,\ 0.99$：平均場 0.9575、0.5254、0.1725；Onsager 0.9980、0.8959、0.6859——$\beta$ 越小，在 $T_c$ 前掉得越陡。$\ln M_s$ 對 $\ln(1-T/T_c)$ 的斜率量到 0.5000、0.1250。
+〔注〕書上說 $\beta\approx\frac13$：那是三維（三維 Ising 約 0.326、三維 $n=0$ 約 0.302，只引用）。
+
+\textbf{de Gennes 的字典}：$p=2\nu$ 的 $\nu$，是一個假想磁鐵（$n=0$ 個分量的 O($n$) 模型）的\textbf{關聯長度指數}。對照（9.5、9.6 節證明）：
+步數 $N\leftrightarrow1/(z_c-z)$（離臨界點多遠）；$\langle R^2\rangle\propto N^{2\nu}\leftrightarrow\xi^2\propto(z_c-z)^{-2\nu}$；條數 $c_N\propto\mu^NN^{\gamma-1}\leftrightarrow\chi\propto(z_c-z)^{-\gamma}$；不碰自己 $\leftrightarrow n=0$。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.52\linewidth}\centering\NineFigMs\end{minipage}\hfill
+\begin{minipage}[c]{0.46\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3.5pt}\NineTabFlory\\[8pt]\NineTabMs\end{minipage}
+\caption{漫步的指數與自發磁化。左：$M_s$ 對 $T/T_c$，平均場（橙）$\propto(1-T/T_c)^{1/2}$、二維 Ising（藍）$\propto(1-T/T_c)^{1/8}$；圓點是右下表的三個溫度。
+右上：Flory 的 $p$ 與已知的 $2\nu$（三維是數值，只引用）。右下：$M_s$ 與 log--log 斜率}\label{nine-fig-ms}
+\end{figure}
+
+\textbf{揭曉}：漫步的 $\nu$ 和磁鐵的 $\beta$ 都是臨界指數；本章要說明為什麼「$n=0$ 的磁鐵」會數自迴避漫步。
+
+% =====================================================================
+\subsection{\texorpdfstring{O($n$)}{O(n)} 模型與對稱破缺}
+\leavevmode\bk{pp.~205--211}\ \anim{W902}\par\nopagebreak
+
+\textbf{問}：能量在「所有自旋一起轉」之下不變，所以平均磁化一定是 0——那永久磁鐵是怎麼來的？
+
+\textbf{O($n$) 模型}（(9.4)(9.5)）：每個格點一個 $n$ 分量的向量 $\vec S_i$；$n=1$ 是 Ising（只能上下）、$n=2$ 是 xy（在平面上轉；超導、超流）、$n=3$ 是 Heisenberg（空間任意方向），$n=0$ 是自迴避漫步（9.6 節）：
+\[H_{\rm int}=-J\sum_{\langle i,j\rangle}\vec S_i\cdot\vec S_j,\qquad\vec M=\sum_i\vec S_i .\tag{9.4, 9.5}\]
+只用到內積，所以\textbf{全部一起轉}時 $H$ 不變。例：8 個平面自旋（種子 902）全部轉 $120^\circ$，能量 $-6.3851$、$|\vec M|=6.7943$ 都不變，方向從 $-13.1^\circ$ 變成 $106.9^\circ$。
+各個方向一樣好，所以 $\langle\vec M\rangle=0$。
+
+\textbf{統計力學的四個詞}（(9.6)--(9.13)）：加上外場，$H=-J\sum\vec S_i\cdot\vec S_j-\vec h\cdot\sum_i\vec S_i$。溫度 $T$ 時，每個組態出現的機率正比於\textbf{波茲曼權重} $e^{-H/k_BT}$：
+\[Z=\sum_{\text{組態}}e^{-H/k_BT},\qquad F=-k_BT\ln Z,\qquad\langle\vec M\rangle=-\frac{\partial F}{\partial\vec h},\qquad\chi_T=\frac{\partial\langle\vec M\rangle}{\partial\vec h}\propto|T_c-T|^{-\gamma}.\tag{9.8--9.13}\]
+\textbf{配分函數} $Z$ 是權重的總和（機率的分母），\textbf{自由能} $F$ 是它的對數。$Z$ 就像第 1 章的生成函數：對 $h$ 微分一次得\textbf{平均磁化}，再微分一次得\textbf{磁化率} $\chi$
+——磁化對外場有多敏感，它也等於磁化的漲落 $(\langle M^2\rangle-\langle M\rangle^2)/k_BT$。
+
+\textbf{算到底：4 個自旋圍一圈}（$2\times2$ 方塊、4 條鍵、16 個組態）：全同向 2 個（$E=-4$，權重 $e^{4K}$）；翻一個 8 個（$E=0$）；兩上兩下相鄰 4 個（$E=0$）、交錯 2 個（$E=+4$，權重 $e^{-4K}$）。所以
+$Z=2e^{4K}+12+2e^{-4K}$，$P(M=\pm4)=e^{4K}/Z$、$P(\pm2)=4/Z$、$P(0)=(4+2e^{-4K})/Z$。$K=1$（$T=1$）：$Z=121.2329$，$P(M=\pm4,\pm2,0)=0.4504,\ 0.0330,\ 0.0333$；$K=0.2$（$T=5$）：$Z=17.3497$，$P=0.1283,\ 0.2306,\ 0.2823$（圖 \ref{nine-fig-break} 左上）。
+兩種溫度都左右對稱，$\langle M\rangle=0$；可是 $\langle|m|\rangle=0.9337$ 對 0.4871：低溫時磁化「不是正就是負」，只是正負各半。（2 個自旋、$K=1$：$Z=2(e+e^{-1})=6.1723$、$\langle|m|\rangle=0.8808$。）
+
+\textbf{要等多久才翻面？}用 Metropolis 模擬：每次試翻一個自旋，能量降低就翻，升高 $\Delta E$ 就以機率 $e^{-\Delta E/T}$ 翻；這樣產生的組態，機率正比於 $e^{-E/T}$。
+二維 $L\times L$ 週期格子，$T=2.0<T_c$（$M_s=0.9113$），從全部朝上開始，4000 sweep $\times$ 50 個複本（種子 902），$m$ 在 $>0.5$ 與 $<-0.5$ 之間換邊算一次翻轉：
+平均等待 133、608、2151 sweep（$L=4,6,8$）——$L$ 每加 2 約乘 4（圖 \ref{nine-fig-break} 右）。取樣器的核對：$L=4$ 的 $\langle|m|\rangle=0.9182$（精確列舉 0.9189）、每個自旋的能量 $-1.7528$（$-1.7554$）。
+〔注〕書上說等待時間是「天文數字」，而且系統越大越久。無限大的系統永遠等不到：它選定一邊就不回頭——這就是\textbf{對稱破缺}。
+
+\textbf{外場與相圖}（Fig.~9.2）：加一個很小的外場（$K=1$）：$H=0.1,\ 0.01$ 時 4 個自旋的 $\langle m\rangle=0.3506,\ 0.0367$，$4\times4$ 週期格子 0.9210、0.1584——格子越大，同一個小外場越接近無限大格子的 $M_s=0.9993$。
+正確的順序是\textbf{先}讓系統變成無限大、\textbf{再}讓 $h\to0$，得 $M\to\pm M_s$。所以 $T<T_c$、$h=0$ 是一條\textbf{一級相變線}（$h$ 由負變正，$M$ 從 $-M_s$ 跳到 $+M_s$），終點 $(T_c,0)$ 是\textbf{臨界點}。
+
+\textbf{關聯函數與關聯長度}（(9.14)(9.15)）：相距 $\rho$ 的兩個自旋同向的程度
+\[C(\vec\rho)=\langle\vec S(\vec R)\cdot\vec S(\vec R+\vec\rho)\rangle\propto\frac{f(|\vec\rho|/\xi)}{|\vec\rho|^{d-2+\eta}},\qquad\xi\propto|T-T_c|^{-\nu}.\tag{9.14, 9.15}\]
+$\xi$ 是「同向小島」的大小；靠近 $T_c$ 時各種大小的小島都有，$\xi\to\infty$。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.44\linewidth}\centering\NineFigPM\\[8pt]\footnotesize\setlength{\tabcolsep}{3pt}\NineTabField\end{minipage}\hfill
+\begin{minipage}[c]{0.54\linewidth}\centering\NineFigTrace\\[6pt]\footnotesize\setlength{\tabcolsep}{4pt}\NineTabFlip\end{minipage}
+\caption{對稱破缺。左上：4 個自旋一圈的 $P(M)$，低溫（藍）集中在 $\pm4$、高溫（橙）集中在 0，都左右對稱。左下：小外場下的 $\langle m\rangle$。
+右：Metropolis 的 $m$（每條 200 點），低溫時格子越大越難翻面；下表是 50 個複本的平均翻轉等待}\label{nine-fig-break}
+\end{figure}
+
+\textbf{揭曉}：對稱說平均是 0；可是低溫時翻一次要等很久——格子越大越久，無限大就永遠不翻：這就是對稱破缺。
+
+% =====================================================================
+\subsection{臨界指數與標度律}
+\leavevmode\bk{pp.~209--215}\ \anim{W903}\par\nopagebreak
+
+\textbf{問}：一個磁鐵有六個臨界指數 $\alpha,\beta,\gamma,\delta,\nu,\eta$——它們彼此獨立嗎？
+
+\textbf{六個指數}（Table 9.1，圖 \ref{nine-fig-exp} 左上）：比熱 $\propto|T-T_c|^{-\alpha}$、自發磁化 $\propto(T_c-T)^\beta$、磁化率 $\propto|T-T_c|^{-\gamma}$、$T=T_c$ 時 $M\propto|h|^{1/\delta}$、
+關聯長度 $\xi\propto|T-T_c|^{-\nu}$、$T=T_c$ 時 $C(\rho)\propto\rho^{-(d-2+\eta)}$。
+\begin{errbox}[p.~210，Table 9.1]
+(1) 三維欄的 $\alpha=\alpha'=0.12$ 應約為 0.19：同一欄的 $\beta,\gamma$ 代 (9.16) 得 $2-2\beta-\gamma=0.194$，$\nu$ 代 (9.18) 得 $2-3\nu=0.194$（照書上 $\alpha+2\beta+\gamma=1.926\ne2$；同欄其他值彼此自洽，見圖 \ref{nine-fig-exp} 右）。(2) 第二個「關聯長度」列把定義寫成 $\xi=\int C\rho^2d^d\rho/\!\int C\,d^d\rho$，應為 $\xi^2$（第一列寫對了）：比值是長度的\emph{平方}，見下面一維的例子。
+\end{errbox}
+〔注〕表中的「$\xi^2\propto|T-T_c|^{-\nu}$」要讀成 $\xi\propto|T-T_c|^{-\nu}$。三維欄是較舊的估計；目前的文獻值（只引用）$\nu\approx0.5876$、$\gamma\approx1.157$、$\eta\approx0.031$、$\alpha\approx0.237$、$\beta\approx0.302$。
+
+\textbf{算到底：一維 Ising 鏈}（$K=1$）：每條鍵的權重寫成 $e^{Kss'}=\cosh K\,(1+t\,ss')$，$t=\tanh K=0.7616$。乘開之後對自旋求和，凡是有自旋只出現一次的項都是 0，
+只剩「把 0 和 $r$ 連起來」的那一串鍵（9.6 節的梯子用的是同一招）：
+\[G(r)=\langle s_0s_r\rangle=t^{|r|}=1,\ 0.7616,\ 0.5800,\ 0.4417,\ 0.3364,\ \dots,\qquad\xi=-\frac1{\ln t}=3.6719\]
+（$G=e^{-|r|/\xi}$，圖 \ref{nine-fig-exp} 左下）。磁化率是關聯的總和（(9.24)--(9.26)：$k_BT\chi_T=\sum_jC(\vec R_i-\vec R_j)$），這裡 $\chi=\sum_rG(r)=1+\frac{2t}{1-t}=\frac{1+t}{1-t}=e^{2K}=7.3891$；
+一根一根加，$|r|\le5,10,20$：5.7520、6.9696、7.3615；16 個自旋的環逐一列舉得 7.2021（有限大小）。
+Table 9.1 的比值 $\sum r^2G/\sum G=2t/(1-t)^2$ 除以 $\xi^2$ 得 1.9877、1.9998、2.0000（$K=1,2,3$），是常數；除以 $\xi$ 則一直變大——所以它是 $\xi^2$。
+
+\textbf{Fisher 定律的由來}（(9.26)(9.27)）：把 (9.14) 代進 $\chi\propto\int d^dR\,C$，令 $\vec R=\xi\vec x$：
+\[\chi_T\propto\xi^{2-\eta}\int d^dx\,\frac{f(|\vec x|)}{|\vec x|^{d-2+\eta}}\propto|T-T_c|^{-\nu(2-\eta)}\qquad\Rightarrow\qquad\gamma=\nu(2-\eta).\tag{9.27}\]
+〔注〕書上 (9.27) 的被積函數只寫 $f(|\vec x|)$，少了 $|\vec x|^{-(d-2+\eta)}$，不影響結論。一維核對：$\chi/\xi=2.0123,\ 2.0002,\ 2.0000$（$K=1,2,3$），即 $\chi\propto\xi^{2-\eta}$、$\eta=1$
+（一維 $T_c=0$，臨界點上 $G\equiv1$ 不衰減，$d-2+\eta=0$）。
+
+\textbf{四條標度律}（(9.16)--(9.19)）：
+\[\alpha+2\beta+\gamma=2,\qquad\gamma=\nu(2-\eta),\qquad\alpha=2-d\nu,\qquad\delta=\frac{d+2-\eta}{d-2+\eta}.\tag{9.16--9.19}\]
+平均場、二維 Ising、二維自迴避三組精確指數每一條都成立（圖 \ref{nine-fig-exp} 右，用分數驗算）；平均場的後兩條（hyperscaling）只在 $d=4$ 成立（$d=3$ 時 $2-d\nu=\frac12\ne0$）。
+六個指數只有兩個獨立：例如知道 $\nu,\eta$，就有 $\gamma=(2-\eta)\nu$、$\alpha=2-d\nu$、$\beta=\nu(d-2+\eta)/2$ 與 $\delta$。
+
+\textbf{Widom 的齊次形式}（(9.20)--(9.23)，練習 9.1--9.2）：靠近臨界點，自由能只透過一個組合依賴 $h$，
+\[G(T,h)=|r|^{2-\alpha}f\Big(\frac h{|r|^\Delta},\frac r{|r|}\Big),\qquad r=\frac{T-T_c}{T_c}.\tag{9.21, 9.23}\]
+對 $h$ 微分一次、兩次得 $\beta=2-\alpha-\Delta$、$\gamma=\Delta-\beta$（合起來就是 (9.16)）；$r=0$ 時得 $\delta=\Delta/\beta$，即 $\beta(\delta-1)=\gamma$（Widom）。二維 Ising $\alpha=0$、$\Delta=\frac{15}8$：
+$\beta=\frac18$、$\gamma=\frac74$、$\delta=15$；用一個具體的 $f$ 數值微分，斜率量到 0.1250、1.7500、0.0667（$=\frac1{15}$），而 $\frac18\times14=\frac74$。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.5\linewidth}\centering\footnotesize\setlength{\tabcolsep}{2pt}\NineTabNineOne\\[8pt]\NineFigChain\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering\footnotesize\setlength{\tabcolsep}{2.2pt}\NineTabLaws\end{minipage}
+\caption{臨界指數。左上：書上的 Table 9.1（紅字是筆誤、綠字是更正；$\gamma'$ 無定義是因為 $\chi_T=\infty$）。左下：一維 Ising 鏈的 $G(r)=t^{|r|}$，正好落在 $e^{-|r|/\xi}$ 上。
+右：三組精確指數與書上的三維欄，逐格驗算標度律；書上三維欄兩格不成立，都來自 $\alpha$}\label{nine-fig-exp}
+\end{figure}
+
+\textbf{揭曉}：六個指數只有兩個獨立；知道 $\nu$ 和 $\eta$，其餘都由標度律決定。
+
+% =====================================================================
+\subsection{Ginzburg--Landau--Wilson：讓自旋可以伸縮}
+\leavevmode\bk{pp.~215--217}\ \anim{W904}\par\nopagebreak
+
+\textbf{問}：如果自旋不是固定長度的箭頭，而是可以伸縮的「場」，磁鐵的自由能長什麼樣子？
+
+\textbf{有效 Hamiltonian}（(9.28)(9.29)）：
+\[\mathcal H_{GL}=\sum_i\Big\{\frac r2|\vec S_i|^2+\frac12|\nabla\vec S_i|^2+\frac u4|\vec S_i|^4-\vec h\cdot\vec S_i\Big\},\qquad Z=\prod_i\int d^nS_i\,e^{-\mathcal H_{GL}}.\tag{9.28, 9.29}\]
+三項各有用意。$|\nabla\vec S|^2$（相鄰格點之差的平方）取代 $-J\vec S_i\cdot\vec S_j$：因為 $-\vec S_i\cdot\vec S_j=\frac12|\vec S_i-\vec S_j|^2-\frac12(|\vec S_i|^2+|\vec S_j|^2)$，鄰居想要相等。
+$\frac r2|\vec S|^2+\frac u4|\vec S|^4$ 是長度的「軟約束」，$r\propto T-T_c$ 是約化溫度。指數裡沒有 $k_BT$：溫度已經吸收進係數，所以叫「有效」Hamiltonian。
+
+\textbf{Fourier 分解與平均場}（(9.30)--(9.34)，練習 9.3）：$\vec S(\vec q)=\frac1N\sum_i\vec S_ie^{i\vec q\cdot\vec r_i}$ 讓二次項對各個 $\vec q$ 分開成 $(r+|\vec q|^2)|\vec S(\vec q)|^2$（格子上 $|\vec q|^2$ 是 $4\sin^2\frac q2$），
+四次項把 $\vec q_1+\vec q_2+\vec q_3+\vec q_4=0$ 的四個模態連起來；8 點環（種子 904）的離散版，三個恆等式的誤差都 $<10^{-12}$。〔注〕(9.32) 的 $V$ 與 $(2\pi)^d$ 因子和 (9.30)(9.31) 的正規化對不上，不影響 (9.33)。
+\textbf{只留 $\vec q=0$}（所有 $\vec S_i$ 都等於 $\vec m$）就是平均場：
+\[\mathcal H_{MF}=V\Big[\frac r2|\vec m|^2+\frac u4|\vec m|^4-\vec h\cdot\vec m\Big],\qquad Z_{MF}=\int d^nm\,e^{-\mathcal H_{MF}(\vec m)}.\tag{9.33, 9.34}\]
+
+\textbf{算到底：雙井}（$n=1$、$u=1$，圖 \ref{nine-fig-glw} 左）：$F(m)=\frac r2m^2+\frac u4m^4-hm$，$F'(m)=rm+um^3-h=0$。$h=0$ 時 $r>0$ 只有 $m=0$ 一個谷；$r<0$ 有兩個谷 $m^*=\pm\sqrt{-r/u}$，
+$F_{\min}=\frac r2\cdot\frac{-r}u+\frac u4\cdot\frac{r^2}{u^2}=-\frac{r^2}{4u}$（$r=-1$：$m^*=\pm1$、$F_{\min}=-0.25$）。小球滾進其中一個谷＝對稱破缺；$h=0.1$ 把雙井歪向右，谷底移到 $m^*=1.0467$。谷底 $\propto(-r)^{1/2}$，所以平均場 $\beta=\frac12$。
+
+\textbf{練習 9.4}（書上 (9.35) $F=\frac r2m^2+\frac{m^4}{12}-hm$，即 $u=\frac13$）：$r=-1$ 時 $m^*=\sqrt3=1.7321$、$F_{\min}=-0.75$。令 $m=|r|^{1/2}\mathcal M$、$h=x|r|^{3/2}$，
+方程變成與 $|r|$ 無關的 $\frac{\mathcal M^3}3-\mathcal M=x$（$x=1$：$\mathcal M=2.1038$，$r=-0.01$ 與 $-0.0001$ 相同），所以 $\beta=\frac12$、$\Delta=\frac32$；$F_{\min}\propto|r|^2$ 給 $\alpha=0$；
+另有 $\delta=3$（$r=0$：$m=(3h)^{1/3}$）、$\gamma=1$（數值斜率見圖 \ref{nine-fig-glw} 右下）。〔注〕(9.35) 的四次項是 $\frac{m^4}{12}$，不是 (9.33) 的 $\frac u4m^4$ 配 $u=1$，指數不受影響；(b) 小題的 $r^{2-\alpha}$ 應為 $|r|^{2-\alpha}$。
+
+\textbf{有限體積}（(9.34)，$r=-1$、$u=1$；圖 \ref{nine-fig-glw} 右上）：$h=0.01$ 時 $\langle m\rangle=0.0869,\ 0.7576,\ 1.0042$（$V=10,100,1000$），趨近谷底 $m^*=1.0050$；
+$h=0$ 時不論 $V$ 多大 $\langle m\rangle=0$，但 $\langle|m|\rangle=0.8888,\ 0.9922,\ 0.9992$；$-\ln Z/V=-0.2719,\ -0.2397,\ -0.2478\to F_{\min}=-0.25$。
+先 $V\to\infty$、再 $h\to0$ 才得到 $m^*\ne0$——和 9.2 節的翻轉等待是同一件事。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.5\linewidth}\centering\NineFigWell\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\NineTabZmf\\[8pt]\NineTabExNineFour\end{minipage}
+\caption{GLW 的平均場。左：雙井 $F=\frac r2m^2+\frac14m^4-hm$，$r=1,0,-1$（藍，由淺到深）；$r=-1$ 的兩個谷 $m^*=\pm1$（綠點），外場 $h=0.1$ 把它歪向右（橙虛線，球在新的谷底）。
+右上：(9.34) 的有限體積平均。右下：練習 9.4 的數值斜率}\label{nine-fig-glw}
+\end{figure}
+
+\textbf{揭曉}：GLW 把自旋變成可伸縮的場；只留 $\vec q=0$ 就是平均場：雙井給出 $\beta=\frac12$、$\delta=3$、$\alpha=0$。
+
+% =====================================================================
+\subsection{從磁鐵讀出漫步：\texorpdfstring{$\langle R^2\rangle\propto N^{2\nu}$}{⟨R²⟩ 正比於 N 的 2ν 次方}}
+\leavevmode\bk{pp.~218--219}\ \anim{W905}\par\nopagebreak
+
+\textbf{問}：只知道磁鐵的 $\xi\propto(z_c-z)^{-\nu}$、$\chi\propto(z_c-z)^{-\gamma}$，能不能推出漫步的 $\langle R^2\rangle\propto N^{2\nu}$？
+
+\textbf{先借用 9.6 節的結論}（(9.45)）：$n\to0$ 的磁鐵，關聯函數就是自迴避漫步的生成函數 $G(z;\vec R)=\sum_NC(N;\vec R)z^N$
+（$C$＝從原點走 $N$ 步到 $\vec R$ 的自迴避條數，$z$ 是每步的逸度，$z\to z_c$ 就是 $T\to T_c$）。於是
+\[\xi^2=\frac{\sum_{\vec R}R^2G}{\sum_{\vec R}G}=\frac{\sum_Nc_N\langle R^2\rangle_Nz^N}{\sum_Nc_Nz^N},\qquad\chi=\sum_Nc_Nz^N .\tag{9.36, 9.37}\]
+分子把每一條漫步的 $R^2$ 加起來，分母數條數。\textbf{算到底}（二維，第 7 章的精確計數）：
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}\NineTabSaw\hfill\NineTabCoef
+\end{center}
+$N=2$：直走 4 條（$R^2=4$）、轉彎 8 條（$R^2=2$），$16+16=32$。$z=0.1$（$N\le14$ 的部分和）：分子 0.9964、$\chi=1.5699$，$\xi^2=0.6347$；$z=0.15,\ 0.2$：$\xi^2=1.2799,\ 2.4593$——$z$ 越接近 $z_c=0.3791$，$\xi$ 越大。
+〔注〕書上寫 $\Gamma_N(z/z_0)^N$，$z_0=(2dJ)^{-1}$ 是平均場的臨界逸度，所以奇點在 $z_c=z_0/\mu$；用每步的逸度就是 $z_c=1/\mu$。
+
+\textbf{取係數}（第 2 章補充 3 的 (2:S3-10)；〔注〕書上說「Chapter 1」）：
+\[[z^N](z_c-z)^{-s}=z_c^{-N-s}\frac{\Gamma(N+s)}{\Gamma(s)N!}\approx\frac{N^{s-1}}{\Gamma(s)}z_c^{-(N+s)} .\]
+精確 $\div$ 漸近見上右表（$s=\gamma$ 與 $s=\gamma+2\nu$），$N$ 越大越接近 1；$s$ 越大收斂越慢。\textbf{兩個係數一除}（(9.38)--(9.41)）：$\xi^2\chi=K_1K_2(z_c-z)^{-(\gamma+2\nu)}$ 的係數是 $c_N\langle R^2\rangle_N$，$\chi=K_2(z_c-z)^{-\gamma}$ 的係數是 $c_N$，
+\[\langle R^2\rangle_N=\frac{K_1K_2N^{\gamma+2\nu-1}z_c^{-(N+\gamma+2\nu)}/\Gamma(\gamma+2\nu)}{K_2N^{\gamma-1}z_c^{-(N+\gamma)}/\Gamma(\gamma)}=\frac{K_1}{z_c^{2\nu}}\frac{\Gamma(\gamma)}{\Gamma(\gamma+2\nu)}N^{2\nu}.\tag{9.41}\]
+兩個精確係數之比 $\div$ 這個式子：1.2476、1.0240、1.0024 $\to1$（上右表最後一列）。
+\begin{errbox}[p.~218--219，(9.37)--(9.41)]
+(1) (9.37) 之後說關聯長度 $\propto K_1/(z_c-z)^\nu$；要得到 (9.38) 的 $K_1K_2$，應是 $\xi^2\approx K_1/(z_c-z)^{2\nu}$（否則後面的 $K_1$ 都要換成 $K_1^2$）。
+(2) (9.38)$\to$(9.39) 的係數印成 $z_c^{-(N+s)}N^{\delta-1}/\Gamma(s)$，應為 $N^{s-1}$；照書上（$\delta=\frac{91}5$）$N=10$ 的比值是 $1.4\times10^{-17}$，完全不對。
+(3) (9.40) 之後「must be equal to $V\Gamma_N/z_0$」應為 $V\Gamma_N/z_0^N$。
+(4) (9.41) 印成 $K_1/z_c^{\gamma}$，應為 $K_1/z_c^{2\nu}$：$z_c^{-(N+\gamma+2\nu)}\div z_c^{-(N+\gamma)}=z_c^{-2\nu}$；二維 $\mu^{3/2}=4.2850$，書上給 $\mu^{43/32}=3.6823$。
+\end{errbox}
+\textbf{回到第 7 章}（$N=10,12,14$）：$2\nu_{\rm eff}=1.4442,\ 1.4505,\ 1.4556\to\frac32$；$\langle R^2\rangle_N/N^{3/2}=0.8299,\ 0.8224,\ 0.8168$，慢慢趨於常數：前因子與 $N$ 無關，$\langle R^2\rangle\propto N^{2\nu}$——de Gennes。
+
+\textbf{揭曉}：磁鐵的 $\xi$ 和 $\chi$ 只要是冪次，取 $z^N$ 的係數一除，就得到漫步的 $\langle R^2\rangle\propto N^{2\nu}$。
+
+% =====================================================================
+\subsection{\texorpdfstring{$n\to0$}{n→0} 的魔術：O(\texorpdfstring{$n$}{n}) 模型就是自迴避漫步}
+\leavevmode\bk{pp.~219--231}\ \anim{W906}\par\nopagebreak
+
+\textbf{問}：「$n=0$ 個分量的磁鐵」聽起來荒謬——它為什麼會數自迴避漫步？目標是 (9.45)：
+\[\lim_{n\to0}\frac1n\sum_{\alpha=1}^n\langle S_{i\alpha}S_{j\alpha}\rangle=G(z;\vec R_i,\vec R_j)\equiv\sum_NC(N;\vec R_i,\vec R_j)z^N .\tag{9.45}\]
+
+\textbf{先在小圖上看見它}（圖 \ref{nine-fig-n0} 左）：$2\times3$ 梯子（6 點 7 鍵），權重 $\prod_{\text{鍵}}(1+K\vec S_i\cdot\vec S_j)$，自旋長度 $|\vec S|^2=n$（每個分量 $\langle S_\alpha^2\rangle=1$）。
+乘開：每條鍵「不選」（1）或「選」（$K\vec S_i\cdot\vec S_j$）。對自旋方向平均時，一個格點上的 $\vec S$ 出現奇數次就平均成 0，所以只有「每點用 0 或 2 次」的鍵集合活下來（這張圖每點最多 3 條鍵）；
+一個閉圈 $(\vec S_1\cdot\vec S_2)(\vec S_2\cdot\vec S_3)\cdots(\vec S_k\cdot\vec S_1)$ 平均後是 $\sum_\alpha1=n$。分母 $Z$ 是閉圈的和；分子 $\langle S_{0\alpha}S_{3\alpha}\rangle$ 還要一條從 0 到 3 的路（加上不相交的閉圈）：
+\[G_{03}=\frac{K+K^3+K^5+nK^5}{1+2nK^4+nK^6},\qquad G_{05}=\frac{3K^3+K^5}{1+2nK^4+nK^6}.\]
+$K=0.5$：$G_{03}=0.6027$（$n=1$，64 個 Ising 組態暴力加總）、0.5610（$n=2$）。$n\to0$ 時\textbf{每個閉圈都帶一個 $n$ 而消失}，分母變 1，剩下 $K+K^3+K^5=0.65625$
+——正是三條從 0 到 3 的自迴避路徑（長 1、3、5）；對角的 $G_{05}$：0.3562、0.3171、0.40625$\,=3K^3+K^5$（長 3、3、3、5）。
+
+\textbf{書上的路：六步走完 (9.42)--(9.77)}（只看主軸，(9.47)--(9.65) 的細節不逐行核對）：
+\begin{enumerate}[label=\textbf{\arabic*.},itemsep=0.1em,leftmargin=1.6em]
+\item \textbf{加源}（(9.42)--(9.44)）：在 GLW 的指數裡加 $\sum_i\vec h_i\cdot\vec S_i$，$\partial^2\ln Z/\partial h_{i\alpha}\partial h_{j\alpha}$ 就是關聯函數。〔注〕(9.44) 左邊書上寫 $\partial^2Z$，應為 $\partial^2\ln Z$。
+\item \textbf{四次項變二次}（(9.46)）：每個格點引進一個輔助場 $\phi_i$，
+\[e^{-\frac u4|\vec S_i|^4}=\frac1{\sqrt{\pi u}}\int_{-\infty}^\infty d\phi_i\,e^{-\phi_i^2/u-i\phi_i|\vec S_i|^2}\tag{9.46}\]
+（一維高斯積分；$u=1$、$|\vec S|^2=1,2$ 的數值積分得 0.7788、0.3679，就是 $e^{-1/4}$、$e^{-1}$）。
+\item \textbf{每個分量一樣}（(9.47)--(9.62)）：固定 $\phi$，$\vec S$ 的積分是高斯積分，$n$ 個分量各給一個相同的因子 $(\det\overleftrightarrow V)^{-1/2}$，$\overleftrightarrow V=(\frac r2-\frac12\nabla^2)\overleftrightarrow I+i\overleftrightarrow\phi$；
+所以 $Z_n\propto(\det\overleftrightarrow V)^{-n/2}\to1$（$n\to0$），而 $\langle S_{i\alpha}S_{j\alpha}\rangle\propto(\overleftrightarrow V^{-1})_{ij}$（本節末的補充），再對 $\phi$ 以權重 $e^{-\sum\phi_i^2/u}$ 平均。$n\to0$ 的作用就是讓分母消失。
+\item \textbf{逆矩陣寫成積分}（(9.63)--(9.65)，練習 9.5）：$\overleftrightarrow V^{-1}=\int_0^\infty e^{-t\overleftrightarrow V}dt$，所以
+\[G(\vec R_i,\vec R_j)=\prod_l\int\frac{d\phi_l}{\sqrt{\pi u}}e^{-\sum\phi_l^2/u}\int_0^\infty dt\,e^{-rt/2}\langle\vec R_i|e^{(\frac12\nabla^2-i\phi)t}|\vec R_j\rangle .\tag{9.65}\]
+〔注〕書上的 (9.65) 沒寫出 $\phi$ 的高斯權重 $e^{-\sum\phi_i^2/u}$（(9.62) 第二行有）。
+\item \textbf{切片成路徑積分}（(9.66)--(9.71)，練習 9.6）：$t$ 切成 $M$ 段 $\epsilon$，$e^{(\frac12\nabla^2-i\phi)\epsilon}\approx e^{-i\phi\epsilon}e^{\frac12\nabla^2\epsilon}$，段與段之間插入 $\sum_{\vec R}|\vec R\rangle\langle\vec R|$：
+$e^{-i\phi\epsilon}$ 是對角的（記下路徑經過處的 $\phi$），$e^{\frac12\nabla^2\epsilon}$ 是擴散核（第 2 章的高斯）。誤差（6 點環、種子 906，圖 \ref{nine-fig-n0} 右下）：一階 $\propto\epsilon^2$，乘上交換子項後 $\propto\epsilon^3$；
+$t=1$ 的總誤差 $\propto1/M$，$M\to\infty$ 才精確。
+\item \textbf{對 $\phi$ 積分}（(9.72)--(9.77)）：一個格點被走過 $k$ 次，$\phi$ 的積分給 $\frac1{\sqrt{\pi u}}\int d\phi\,e^{-\phi^2/u-ik\phi}=e^{-uk^2/4}$：$k=1$ 給 $e^{-u/4}$、$k=2$ 給 $e^{-u}$，
+比「兩次分開經過」多了 $e^{-u}/(e^{-u/4})^2=e^{-u/2}$（$u=1$：0.6065）——\textbf{每相交一次乘 $e^{-u/2}$}（$k^2=k+2\binom k2$）。於是 $G=\int_0^\infty dt\,e^{-rt/2}C(t;\vec R_i,\vec R_j)$
+（$C$＝相交受罰的漫步之和）；換成步數，$G=\sum_NC(N)e^{-rN/2}$、$e^{-r/2}=z/z_c$（(9.76)(9.77)）：就是 (9.45)。
+\end{enumerate}
+\begin{errbox}[p.~225，(9.70)]
+書上寫 $\langle\vec R_M|e^{\nabla^2\epsilon}|\vec R_{M'}\rangle=(2\pi)^{-d/2}\exp\big(-\frac d2|\vec R_M-\vec R_{M'}|^2/\epsilon\big)$；應為
+$\langle\vec R_M|e^{\frac12\nabla^2\epsilon}|\vec R_{M'}\rangle=(2\pi\epsilon)^{-d/2}\exp\big(-|\vec R_M-\vec R_{M'}|^2/2\epsilon\big)$。照書上，核的總積分是 $(\epsilon/d)^{d/2}$（$\epsilon=0.1$：一維 0.3162、三維 0.00609），不是 1。
+\end{errbox}
+\begin{errbox}[p.~226，(9.72)(9.75)]
+(1) (9.72) 的積分下限是 0，應為 $\int_{-\infty}^\infty$：從 0 積得 $0.3894-0.2395i$，不是 $e^{-1/4}=0.7788$。
+(2) (9.75) 指數裡兩項之間少了負號，應為 $-\int\frac d2|\frac{d\vec R}{ds}|^2ds-\frac u4\iint\delta(\vec R(s')-\vec R(s))\,ds\,ds'$；照書上每相交一次乘 $e^{+u/2}$，越相交越多（圖 \ref{nine-fig-n0} 左下最後一欄）。
+\end{errbox}
+
+\textbf{弱自迴避}（圖 \ref{nine-fig-n0} 左下）：$N=8$ 的全部 $4^8$ 條漫步，每相交一次乘 $e^{-u/2}$：$u=0,1,4,\infty$ 得 65536、23695.11、7988.15、5916——$u\to\infty$ 只剩自迴避的 $c_8=5916$；照書上的正號，$u=1$ 得 $6.2\times10^5$。
+〔注〕所以 $C(t;\cdots)$ 是「弱自迴避」（Edwards 模型）：$u$ 有限時相交只是受罰，$u\to\infty$ 才嚴格；兩者在臨界點附近屬於同一個普適類，指數相同。
+p.~227 寫「$r/2=1-T_c/T$、$e^{-r/2}\approx T_c/T=J/T=z/z_c$」：和 (9.21) 的 $r=(T-T_c)/T_c$ 差 2 倍（只差常數倍，指數不受影響）；中間的「$=J/T$」只在 $z_c=1$ 時成立。
+
+\textbf{補充（書上 9.6 節）：高斯積分}（(9:S-1)--(9:S-22)）。轉到 $\hat T$ 的本徵座標，$N$ 維積分變成 $N$ 個一維高斯積分的乘積：
+\[\prod_i\int dx_i\,e^{-\frac12\sum x_iT_{ij}x_j+\sum h_ix_i}=\frac{(2\pi)^{N/2}}{\sqrt{\det\hat T}}\exp\Big(\frac12\sum_{i,j}h_i(\hat T^{-1})_{ij}h_j\Big),\qquad\langle x_rx_s\rangle=(\hat T^{-1})_{rs}.\tag{9:S-11, 9:S-18}\]
+例：$\hat T=\begin{pmatrix}2&-1\\-1&2\end{pmatrix}$、$\vec h=(1,0)$：$\det\hat T=3$、$\hat T^{-1}=\frac13\begin{pmatrix}2&1\\1&2\end{pmatrix}$，積分 $=\frac{2\pi}{\sqrt3}e^{1/3}=5.0627$（二重數值積分相同）；$\langle x_1x_2\rangle=\frac13$、$\langle x_1^2\rangle=\frac23$。
+四次動差用 \textbf{Wick 定理} (9:S-20)：對所有配對的乘積求和，$\langle x_1^2x_2^2\rangle=\langle x_1^2\rangle\langle x_2^2\rangle+2\langle x_1x_2\rangle^2=\frac49+\frac29=\frac23$、$\langle x_1^4\rangle=3\cdot\frac49=\frac43$；
+$2m$ 個變數的配對數 $\frac{(2m)!}{2^mm!}=1,3,15,105$（第 7 章的弧線圖）。第 3 步用的就是 (9:S-11)：每個分量一個 $(\det)^{-1/2}$。〔注〕(9:S-16) 左邊的 $\langle x_rx_k\rangle$ 應為 $\langle x_rx_s\rangle$。
+\begin{errbox}[p.~230，(9:S-19)]
+第二行寫 $\frac{\partial^3}{\partial x_r\partial x_s\partial x_t}$，應為 $\frac{\partial^3}{\partial h_r\partial h_s\partial h_t}$；第三行括號裡的 $\langle x_rx_s\rangle$ 應為 $\langle x_tx_u\rangle$（對 $h_u$、$h_t$ 微分後留下的是 $\langle x_tx_u\rangle$）。
+照書上再微分，$\hat T=\begin{pmatrix}2&-1\\-1&3\end{pmatrix}$ 的 $\langle x_1^2x_2^2\rangle$ 得 0.44，正確是 0.32。
+\end{errbox}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.5\linewidth}\centering\NineFigLadder\\[6pt]\footnotesize\setlength{\tabcolsep}{2.5pt}\NineTabWeak\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering\footnotesize\setlength{\tabcolsep}{2.5pt}\NineTabLadder\\[8pt]\setlength{\tabcolsep}{3pt}\NineTabTrotter\end{minipage}
+\caption{$n\to0$。左上：$2\times3$ 梯子乘開後存活的項（藍點是端點，橙色是路徑，紅色是帶一個 $n$ 的閉圈）；$n\to0$ 時紅色的全部消失，分母變成 1。
+左下：$N=8$ 的弱自迴避計數。右上：關聯函數（$n=1$ Ising、$n=2$ xy）。右下：Trotter 分解的誤差（練習 9.6）}\label{nine-fig-n0}
+\end{figure}
+
+\textbf{揭曉}：$n\to0$ 時每個閉圈都帶一個 $n$ 而消失，剩下的就是一條從 $i$ 到 $j$、不碰自己的路——O($n$) 的關聯函數就是自迴避漫步的生成函數。
+
+% =====================================================================
+\subsection{練習 9.1--9.6 解答}
+{\small
+\begin{enumerate}[label=\textbf{9.\arabic*},itemsep=0.05em]
+\item Widom 形式 $\Rightarrow$ (9.16)。\quad 答：$M=-\partial G/\partial h=-|r|^{2-\alpha-\Delta}f_1(0,\pm1)$（$f_1$＝對第一個變數的導數）$\Rightarrow\beta=2-\alpha-\Delta$；
+$\chi=\partial M/\partial h\propto|r|^{2-\alpha-2\Delta}\Rightarrow\gamma=2\Delta-2+\alpha=\Delta-\beta$。消去 $\Delta$ 得 $\alpha+2\beta+\gamma=2$。二維 Ising（$\alpha=0$、$\Delta=\frac{15}8$）：$\beta=\frac18$、$\gamma=\frac74$；
+取 $f(x)=-(1+x^2)^{q/2}-x(1+x^2)^{(q-1)/2}$（$q=\frac{2-\alpha}\Delta$）數值微分，斜率 0.1250、1.7500。
+\item Widom 定律。\quad 答：（題目的「$t=0$」即 $r=0$。）$r\to0$ 時 $G$ 要有限且與 $r$ 無關 $\Rightarrow$ 大 $x$ 時 $f\sim x^{(2-\alpha)/\Delta}$、$G\propto h^{(2-\alpha)/\Delta}$ $\Rightarrow$ $M\propto h^{(2-\alpha-\Delta)/\Delta}=h^{\beta/\Delta}$，
+$\delta=\Delta/\beta$，$\beta(\delta-1)=\Delta-\beta=\gamma$。平均場（$\Delta=\frac32$）3、二維 Ising（$\frac{15}8$）15、二維自迴避（$\frac{91}{64}$）$\frac{91}5$；上例 $1/\delta$ 量到 0.0667。
+\item GLW 的 Fourier 形式。\quad 答：代入 (9.31)，用 $\sum_ie^{i(\vec q+\vec q\,')\cdot\vec r_i}=(2\pi)^d\delta(\vec q+\vec q\,')$（格距 1、$V=N$）：二次項 $\frac{V^2}{2(2\pi)^d}\int(r+|\vec q|^2)|\vec S(\vec q)|^2d^dq$（格子上 $|\vec q|^2\to\sum_k4\sin^2\frac{q_k}2$），
+四次項 $\frac{uV^4}{4(2\pi)^{3d}}\int(\vec S_1\cdot\vec S_2)(\vec S_3\cdot\vec S_4)\delta(\vec q_1+\cdots+\vec q_4)\prod_kd^dq_k$，外場 $-V\vec h\cdot\vec S(0)$；書上 (9.32) 只差常數因子。離散版（8 點環）誤差 $<10^{-12}$。
+\item Landau 自由能。\quad 答：$rm+\frac{m^3}3-h=0$；$h=0$、$r<0$：$m^*=\sqrt{-3r}$、$F_{\min}=-\frac34r^2$。令 $m=|r|^{1/2}\mathcal M$、$h=x|r|^{3/2}$ 得 $\frac{\mathcal M^3}3\pm\mathcal M=x$（與 $|r|$ 無關；$x=1$、$r<0$：2.1038）
+$\Rightarrow\beta=\frac12$、$\Delta=\frac32$；$F_{\min}=|r|^2\mathcal K\Rightarrow\alpha=0$；$\delta=3$；$\chi=1/r$（$r>0$）、$1/2|r|$（$r<0$，$F''(m^*)=-2r$）$\Rightarrow\gamma=\gamma'=1$，振幅比 2。
+\item 逆矩陣的積分表示。\quad 答：$\overleftrightarrow V\int_0^\infty e^{-t\overleftrightarrow V}dt=\int_0^\infty\big(-\frac d{dt}e^{-t\overleftrightarrow V}\big)dt=\overleftrightarrow I-\lim_{t\to\infty}e^{-t\overleftrightarrow V}=\overleftrightarrow I$，因為
+$\mathrm{Re}\,\langle x,\overleftrightarrow Vx\rangle=\langle x,(\frac r2-\frac12\nabla^2)x\rangle\ge\frac r2|x|^2$（$i\phi$ 只貢獻虛部），$|e^{-t\overleftrightarrow V}x|\le e^{-rt/2}|x|\to0$。$\overleftrightarrow V$ 與 $e^{-t\overleftrightarrow V}$ 對易，左逆也是右逆；數值（6 點環）誤差 $<10^{-10}$。
+\item Trotter 公式的下一項。\quad 答：$e^{\epsilon(X+Y)}=e^{\epsilon X}e^{\epsilon Y}e^{-\frac{\epsilon^2}2[X,Y]+O(\epsilon^3)}$（兩邊展開到 $\epsilon^2$ 比較）；$X=-i\phi$、$Y=\frac12\nabla^2$：$-\frac{\epsilon^2}2[X,Y]=\frac{i\epsilon^2}4[\phi,\nabla^2]$。
+一階誤差相鄰比 3.85、3.92 $\to4$，加上這一項後 7.63、7.81 $\to8$；$t=1$、$M=10,20,40$ 段的總誤差 0.02366、0.0117、0.005821（$\propto1/M$）。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 9 章的回顧與筆誤一覽}
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+主題 & 結果 & 書上的式子 & 動畫\\
+\midrule
+臨界指數 & $p=2\nu=\frac6{d+2}$；$M_s\propto(T_c-T)^\beta$：平均場 $\frac12$、二維 Ising $\frac18$ & (9.1)--(9.3) & W901\\
+對稱破缺 & $\langle M\rangle=0$ 但 $\langle|m|\rangle=0.9337$；翻轉等待 133、608、2151 & (9.4)--(9.15) & W902\\
+標度律 & 一維 $\chi=e^{2K}$、$\eta=1$；四條標度律；三維 $\alpha=0.12\to0.19$ & (9.16)--(9.27) & W903\\
+GLW & $m^*=\sqrt{-r/u}$；$\beta=\frac12$、$\Delta=\frac32$、$\alpha=0$、$\delta=3$ & (9.28)--(9.35) & W904\\
+磁鐵 $\to$ 漫步 & $\langle R^2\rangle_N=\frac{K_1}{z_c^{2\nu}}\frac{\Gamma(\gamma)}{\Gamma(\gamma+2\nu)}N^{2\nu}$ & (9.36)--(9.41) & W905\\
+$n\to0$ & 每個閉圈 $\times n$、每相交 $e^{-u/2}$；$G=\sum_NC(N)(z/z_c)^N$ & (9.42)--(9.77) & W906\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{筆誤一覽}（給 2004 年版；〔注〕見各節）：下表在文中都用紅框標出，每一條都用程式核對過。
+\begin{center}
+\footnotesize\renewcommand{\arraystretch}{0.9}
+\NineTabErrata
+\end{center}
