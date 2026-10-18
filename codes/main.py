@@ -7,6 +7,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py Ch3Demo -w    第 3 章 8 幕連續播放（W301–W308），輸出到 renders/Ch3Demo.mp4
     manimgl main.py Ch4Demo -w    第 4 章 8 幕連續播放（W401–W408），輸出到 renders/Ch4Demo.mp4
     manimgl main.py Ch5Demo -w    第 5 章 7 幕連續播放（W501–W507），輸出到 renders/Ch5Demo.mp4
+    manimgl main.py Ch6Demo -w    第 6 章 7 幕連續播放（W601–W607），輸出到 renders/Ch6Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -66,6 +67,13 @@ from scenes import w504_telegrapher as w504
 from scenes import w505_run_and_tumble as w505
 from scenes import w506_waiting_time as w506
 from scenes import w507_ctrw_gauss as w507
+from scenes import w601_shape_cloud as w601
+from scenes import w602_gyration_tensor as w602
+from scenes import w603_asphericity as w603
+from scenes import w604_infinite_dim as w604
+from scenes import w605_kramers_identity as w605
+from scenes import w606_one_over_d as w606
+from scenes import w607_fixman_saw as w607
 
 
 def play_sequence(scene, classes):
@@ -266,6 +274,34 @@ class W507CtrwGauss(w507.W507CtrwGauss):
     pass
 
 
+class W601ShapeCloud(w601.W601ShapeCloud):
+    pass
+
+
+class W602GyrationTensor(w602.W602GyrationTensor):
+    pass
+
+
+class W603Asphericity(w603.W603Asphericity):
+    pass
+
+
+class W604InfiniteDim(w604.W604InfiniteDim):
+    pass
+
+
+class W605KramersIdentity(w605.W605KramersIdentity):
+    pass
+
+
+class W606OneOverD(w606.W606OneOverD):
+    pass
+
+
+class W607FixmanSaw(w607.W607FixmanSaw):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -319,3 +355,13 @@ class Ch5Demo(w501.W501BiasedWalk):
 
     def construct(self):
         play_sequence(self, CH5)
+
+
+CH6 = [w601.W601ShapeCloud, w602.W602GyrationTensor, w603.W603Asphericity, w604.W604InfiniteDim, w605.W605KramersIdentity, w606.W606OneOverD, w607.W607FixmanSaw]
+
+
+class Ch6Demo(w601.W601ShapeCloud):
+    """第 6 章 7 幕連續播放（W601–W607）。"""
+
+    def construct(self):
+        play_sequence(self, CH6)
