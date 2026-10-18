@@ -23,7 +23,7 @@
 | 講義 | `notes/walk_導讀.tex/.pdf`（91 頁）；內文 `notes/ch1/part1.tex`、`notes/ch2/part2.tex`、`notes/ch3/part3.tex`、`notes/ch4/part4.tex`、`notes/ch5/part5.tex`、`notes/ch6/part6.tex`、`notes/ch7/part7.tex`，圖表與數字檢查 `notes/chN/make_figs.py` → `notes/chN/figs.tex` |
 | combkit | 1.17.0：`combkit.walk1d`、`combkit.walk_gf`、`combkit.walk_rec`、`combkit.walk_bc`、`combkit.walk_var`、`combkit.walk_shape`、`combkit.walk_saw`、`combkit.draw.walk_draw`、`combkit.draw.lattice_draw`、`examples/ex14_random_walk.py`、`ex15_lattice_gf.py`、`ex16_recurrence.py`、`ex17_image_walker.py`、`ex18_persistent_walk.py`、`ex19_walk_shape.py`、`ex20_saw_flory.py`、`tools/sync_from_walk017.py`；`projects/combkit_v1.17.0.zip`（路徑相對於 `C:\mypython\manim`） |
 | git | 本資料夾是獨立的 repo（master，無遠端）；`codes/renders/`、LaTeX 中間檔、`ref/png/` 不進 git |
-| 程式複本 | `C:\mypython\manim\projects\walkit`（2026-10-18，第 1–6 章，91 個檔案；上一版第 1–5 章改名為 `walkit_ch1-5`、再上一版第 1–4 章為 `walkit_ch1-4`，都保存著；第 7 章之後還沒重新複製）：codes/、notes 的 LaTeX 原始檔與 make_figs.py、ref 的兩支工具，附 README；不含影片、講義 PDF、書與 md。本資料夾才是正本，更新後要重新複製（舊的 walkit 先改名） |
+| 程式複本 | `C:\mypython\manim\projects\walkit`（2026-10-18，第 1–7 章，101 個檔案；舊版 `walkit_ch1-6`、`walkit_ch1-5`、`walkit_ch1-4` 都保存著）：codes/、notes 的 LaTeX 原始檔與 make_figs.py、ref 的兩支工具，附 README；不含影片、講義 PDF、書與 md。本資料夾才是正本，更新後要重新複製（舊的 walkit 先改名） |
 
 ## 3. 檔案結構
 
