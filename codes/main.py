@@ -10,6 +10,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py Ch6Demo -w    第 6 章 7 幕連續播放（W601–W607），輸出到 renders/Ch6Demo.mp4
     manimgl main.py Ch7Demo -w    第 7 章 6 幕連續播放（W701–W706），輸出到 renders/Ch7Demo.mp4
     manimgl main.py Ch8Demo -w    第 8 章 4 幕連續播放（W801–W804），輸出到 renders/Ch8Demo.mp4
+    manimgl main.py Ch9Demo -w    第 9 章 6 幕連續播放（W901–W906），輸出到 renders/Ch9Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -86,6 +87,12 @@ from scenes import w801_non_gaussian as w801
 from scenes import w802_scaling_form as w802
 from scenes import w803_steepest_descent as w803
 from scenes import w804_rescaling_flory as w804
+from scenes import w901_critical_exponent as w901
+from scenes import w902_broken_symmetry as w902
+from scenes import w903_scaling_laws as w903
+from scenes import w904_landau_wilson as w904
+from scenes import w905_walk_from_magnet as w905
+from scenes import w906_n_to_zero as w906
 
 
 def play_sequence(scene, classes):
@@ -354,6 +361,30 @@ class W804RescalingFlory(w804.W804RescalingFlory):
     pass
 
 
+class W901CriticalExponent(w901.W901CriticalExponent):
+    pass
+
+
+class W902BrokenSymmetry(w902.W902BrokenSymmetry):
+    pass
+
+
+class W903ScalingLaws(w903.W903ScalingLaws):
+    pass
+
+
+class W904LandauWilson(w904.W904LandauWilson):
+    pass
+
+
+class W905WalkFromMagnet(w905.W905WalkFromMagnet):
+    pass
+
+
+class W906NToZero(w906.W906NToZero):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -437,3 +468,13 @@ class Ch8Demo(w801.W801NonGaussian):
 
     def construct(self):
         play_sequence(self, CH8)
+
+
+CH9 = [w901.W901CriticalExponent, w902.W902BrokenSymmetry, w903.W903ScalingLaws, w904.W904LandauWilson, w905.W905WalkFromMagnet, w906.W906NToZero]
+
+
+class Ch9Demo(w901.W901CriticalExponent):
+    """第 9 章 6 幕連續播放（W901–W906）。"""
+
+    def construct(self):
+        play_sequence(self, CH9)
