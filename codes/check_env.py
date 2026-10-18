@@ -131,6 +131,10 @@ def main():
     ok = code == 0 and "walk_scale（第 8 章）" in out and "全部驗證通過" in out
     report("數學驗證 utils/walk_scale.py（第 8 章）", ok, "χ(q) 數值＝閉式、模擬寬度＝穩定分布、逆 Fourier＝換變數的尾巴、塌縮、格子 G＝級數＝Yukawa、最陡下降＝數值極值＝精確二項式、比值法、重新標度的因子、筆誤的更正、場景卡的數字全部一致"
            if ok else out[-300:])
+    code, out = run([sys.executable, str(HERE / "utils" / "walk_crit.py")])
+    ok = code == 0 and "walk_crit（第 9 章）" in out and "全部驗證通過" in out
+    report("數學驗證 utils/walk_crit.py（第 9 章）", ok, "平均場＝牛頓＝漸近、Onsager＝低溫展開、小 Ising 列舉＝閉式、Metropolis＝精確列舉、一維 G＝轉移矩陣＝環、標度律（Fraction）、Widom 解析＝差分、Landau 根＝格點、(9.34) quad＝梯形、係數 lgamma＝遞迴、ξ² 兩種列舉、高斯積分＝dblquad＝Gauss–Hermite、Trotter 階數、梯子 n＝1、2 暴力＝閉式、n→0＝自迴避、筆誤的更正、場景卡的數字全部一致"
+           if ok else out[-300:])
 
     notes = HERE.parent / "notes"
     code, out = run([sys.executable, str(notes / "ch1" / "make_figs.py")], cwd=notes)
