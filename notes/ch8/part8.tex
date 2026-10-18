@@ -1,0 +1,247 @@
+\input{ch8/figs}
+
+\section{標度入門（第 8 章）}
+
+\begin{keybox}[先看這裡]
+前七章的結論幾乎都是高斯：走 $N$ 步，寬度 $\propto\sqrt N$。這一章問兩件事：\textbf{什麼時候不是高斯？}以及\textbf{不是高斯時，還剩下什麼規律？}
+第一個答案：步長的分布尾巴太肥（二階動差發散）時，中央極限定理不管用，寬度長得比 $\sqrt N$ 快、分布的尾巴是冪次。第二個答案是\textbf{標度}：
+靠近臨界逸度 $z_c$ 時只剩一個長度 $\xi\propto(z_c-z)^{-\nu}$，用它當尺，所有曲線疊成一條；由標度形式用最陡下降法可以讀出
+$C(N;\vec r)\sim\exp[-(r/N^\nu)^{1/(1-\nu)}]$——只有 $\nu=\frac12$ 才是高斯。最後用「放大鏡」（重新標度）重新推出第 7 章 Flory 的 $\nu=\frac3{d+2}$。本章只有 10 頁，卻是第 9--12 章（臨界現象、重整化群）的入口。
+
+\textbf{記號}：步數 $N$、條數 $C(N;\vec r)$、一步的結構函數 $\chi(\vec q)$、生成函數 $g(z;\vec q)$（傅立葉）與 $G(z;\vec r)$（實空間）、逸度 $z$（簡單立方 $z_c=\frac1{2d}$）、
+標度指數 $\nu,\eta$（普通漫步 $\frac12$、0）、$\gamma$、連接常數 $\mu$。長尾巴步伐：步長 $r\ge1$、$P(\text{步長}>r)=r^{-y}$（三維空間密度 $\propto r^{-3-y}$，書上寫 $r^{-5+\delta}$，即 $y=2-\delta$）。
+8.2 節的 $a$ 是 $\chi(\vec 0)$（簡單立方 $a=2d$、$b=1$），\textbf{不是格距}。重新標度：$s'=l_2s$、$\vec r\,'=l_1\vec r$。
+
+\textbf{全章的主例}：長尾巴（$\delta=1$）1000 步的寬度 1822，步長 1 只有 28.06；一維塌縮 $(z_c-z)g\to\frac2{4+x^2}$；一維 $N=20$、$x=8$ 的比值：精確 0.2098、更正的 (8.20) 0.2179、書上 0.0475。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+8.1--8.1.1 & 普適性的例外、長尾巴 & W801 & 8.1.2（後半） & 最陡下降、$\gamma$、比值法 & W803\\
+8.1.2（前半） & 生成函數的標度形式 & W802 & 8.1.3 & 重新標度、Flory、回顧 & W804\\
+\bottomrule
+\end{tabular}
+\end{center}
+（上表是書上的節號；本講義 8.1--8.4 依序對應。）數字一律由 \texttt{codes/utils/walk\_scale.py} 重算；逐式校對見 \texttt{ref/md/ch08\_formulas.md}；
+圖表由 \texttt{ch8/make\_figs.py} 產生並先做數字檢查。連續播放：\texttt{Ch8Demo}（W801--W804）。
+\end{keybox}
+
+% =====================================================================
+\subsection{普適性與它的例外：長尾巴的步伐}
+\leavevmode\bk{pp.~193--195}\ \anim{W801}\par\nopagebreak
+
+\textbf{問}：如果醉漢偶爾來一個超大步，走 1000 步之後，還是一團高斯的霧嗎？
+
+\textbf{直觀}：第 2 章的高斯只用到一件事——一步的結構函數能展開成 $\chi(\vec q)=A-B|\vec q|^2+\cdots$，而 $B$ 就是步長的二階動差。
+步長分布的細節（格子、連續、每步長短不一）全部被忘掉，只剩 $B$：這就是\textbf{普適性}。反過來，二階動差一發散，$\chi$ 就不能展開到 $q^2$，高斯也就沒了。
+
+\textbf{二階動差發散}（(8.1)(8.2)）：三維裡步長的密度 $p(|\vec r|)\propto|\vec r|^{-\alpha}$，則
+\[\int p(|\vec r|)\,|\vec r|^2\,d\vec r\ \propto\ \int|\vec r|^{4-\alpha}\,d|\vec r|,\tag{8.2}\]
+$\alpha\le5$ 時在大 $r$ 發散。〔注〕書上寫「$\alpha$ 小於 5」；$\alpha=5$ 是對數發散，也不行。
+\textbf{算到底}：本講義（與動畫）的主例 $P(\text{步長}>r)=r^{-1}$（$y=1$、$\alpha=4$、$\delta=1$），徑向密度 $r^{-2}$；截到 $R$ 的二階動差
+$\langle r^2\rangle_R=\int_1^Rr^{-2}\,r^2\,dr=R-1$：$R=10,100,1000$ 得 9、99、999——截得越遠越大，沒有極限。
+
+\textbf{結構函數不能展開}（(8.3)(8.4)）：$p\propto|\vec r|^{-5+\delta}$（$0<\delta<2$）時
+\[\chi(\vec q)\approx A-B|\vec q|^{2-\delta}.\tag{8.4}\]
+主例 $\delta=1$：$\chi(q)=1-\frac\pi4q+\cdots$，$B=\frac\pi4=0.7854$；數值積分 $\frac{1-\chi(q)}q=0.7687,\ 0.7837,\ 0.7852$（$q=0.1,0.01,0.001$），
+$\chi(0.01)=0.99216$ 對 $1-\frac\pi4(0.01)=0.99215$。在對數圖上 $1-\chi$ 的斜率是 $2-\delta$：$\delta=1$ 量到 1.00、$\delta=\frac12$ 量到 1.49，步長 1 的步伐是 2（圖 \ref{eight-fig-levy} 左）。
+
+\textbf{寬度不是 $\sqrt N$}：三維、各 2000 人（種子 801），$|R_N|$ 的中位數（圖 \ref{eight-fig-levy} 右上）。長尾巴 $N=10,100,1000$：18、172、1822，除以 $N$ 是 1.77、1.72、1.82，
+趨近理論 $\frac\pi4\times2.2644=1.7785$（$\chi^N\approx e^{-NBq}$ 正是三維 Cauchy 分布，2.2644 是它的徑向中位數）；步長 1：2.86、8.98、28.06，除以 $\sqrt N$ 是 0.90、0.90、0.89，
+趨近 $1.5382/\sqrt3=0.8881$。log--log 斜率 1.01 對 0.50：寬度 $\propto N^{1/(2-\delta)}$，主例長得像 $N$。
+
+\textbf{冪次的尾巴}（(8.5)）：
+\[C(N;\vec x-\vec y)=\int e^{i\vec q\cdot(\vec x-\vec y)}A^Ne^{-N(B/A)|\vec q|^{2-\delta}}d\vec q\ \propto\ |\vec x-\vec y|^{-5+\delta}.\tag{8.5}\]
+數值逆 Fourier 除以換變數得的尾巴（$NB/A=1$）：$\delta=1$ 在 $r=10,30,100$ 是 0.9803、0.9978、0.9998；$\delta=\frac12$ 是 1.1755、1.0316、1.0051；
+$r=100$ 的局部斜率 $-4.00$、$-4.51$，就是 $-5+\delta=-4,\ -\frac92$（圖 \ref{eight-fig-levy} 右下）。$\delta=1$ 就是第 2 章 Cauchy 的尾巴 $\frac{N}{\pi^2r^4}$（(2.31)）。
+〔注〕(8.5) 說的是尾巴（$r\gg N^{1/(2-\delta)}$），前面還有一個因子 $N$（$N$ 加倍，尾巴加倍：遠處多半是「一大跳」造成的）；一般 $d$ 維是 $r^{-(d+2-\delta)}$。
+
+\textbf{換變數的技巧}（(8.6)(8.7)）：想知道 $\int e^{ikr}k^y\,dk$ 怎麼隨 $r$ 變，令 $w=kr$（$k=w/r$、$dk=dw/r$）：
+\[\int e^{ikr}k^y\,dk=r^{-(y+1)}\int e^{iw}w^y\,dw .\tag{8.6, 8.7}\]
+右邊的積分是一個與 $r$ 無關的數，$r$ 的冪次一眼讀出。\textbf{核對}：$y=\frac12$，$\big|\int_0^\infty e^{iw}w^{1/2}dw\big|=\Gamma(\frac32)=0.8862$；
+數值上 $r=2$ 與 $r=1$ 的積分之比 0.3536，正是 $2^{-3/2}$。練習 8.1 就是用這一招得到 $r^{-5+\delta}$。
+\begin{errbox}[p.~195，(8.6)$\to$(8.7)]
+書上說「replace $k$ by $w=k/r$」；應為 $w=kr$。照書上 $k=rw$，積分變成 $r^{y+1}\int e^{ir^2w}w^y\,dw$，$r$ 還留在指數裡，提不出來。
+\end{errbox}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.46\linewidth}\centering\EightFigChi\end{minipage}\hfill
+\begin{minipage}[c]{0.52\linewidth}\centering\footnotesize\setlength{\tabcolsep}{4pt}\EightTabWidth\\[6pt]\EightTabTail\end{minipage}
+\caption{長尾巴的步伐（三維）。左：$1-\chi(q)$ 的對數圖，斜率 $2-\delta$（點是數值積分；虛線是步長 1 的 $1-\frac{\sin q}q$，斜率 2）。
+右上：$|R_N|$ 的中位數，長尾巴 $\propto N$、步長 1 $\propto\sqrt N$。右下：(8.5) 數值逆 Fourier 與冪次尾巴之比，及 $r=100$ 的局部斜率}\label{eight-fig-levy}
+\end{figure}
+
+\textbf{揭曉}：會跳的醉漢不是一團高斯的霧，而是幾團霧被長跳連起來；寬度 $\propto N^{1/(2-\delta)}$，尾巴是冪次 $r^{-5+\delta}$。
+
+% =====================================================================
+\subsection{生成函數的標度形式}
+\leavevmode\bk{pp.~195--197}\ \anim{W802}\par\nopagebreak
+
+\textbf{問}：$z$ 越靠近 $z_c$，$g(z;q)$ 越尖越高；不同 $z$ 的曲線，能不能換個座標疊成一條？
+
+\textbf{靠近 $z_c$ 的生成函數}（(8.8)）：普通的步伐 $\chi(\vec q)=a-b|\vec q|^2+O(|\vec q|^4)$，所以
+\[g(z;\vec q)=\frac1{1-z\chi(\vec q)}\approx\frac1{1-az+zb|\vec q|^2}\approx\frac1a\,\frac1{z_c-z+(b/a^2)|\vec q|^2},\qquad z_c=\frac1a=\frac1{2d}.\tag{8.8}\]
+\begin{errbox}[p.~196，第一段]
+書上說 $z_c$「turns out to be the coordination number」；應為配位數的\textbf{倒數}，$z_c=\frac1{2d}$（同頁 (8.8c) 後面也寫 $1/2d$）。
+照書上一維 $z_c=2$，可是 $z>\frac12$ 時 $\sum_N(2z)^N$ 早就發散了。
+\end{errbox}
+
+\textbf{算到底}（一維，$a=2$、$b=1$，$g=\frac1{1-2z\cos q}$）：$z=0.4,\ 0.45,\ 0.49$（$z_c-z=0.1,\ 0.05,\ 0.01$）時 $g(z;0)=\frac1{1-2z}=5,\ 10,\ 50$，曲線越來越尖（圖 \ref{eight-fig-collapse} 左）。
+記 $\varepsilon=z_c-z$，令 $q=x\sqrt\varepsilon$：$1-2z\cos q\approx(1-2z)+zq^2\approx2\varepsilon+\frac12\varepsilon x^2$，所以
+\[(z_c-z)\,g\ \approx\ \frac{\varepsilon}{2\varepsilon+\frac12\varepsilon x^2}=\frac2{4+x^2},\]
+$\varepsilon$ 消掉了。以 $x=2$ 為例：三個 $z$ 的 $(z_c-z)g$ 是 0.2819、0.2652、0.2529，趨近 $\frac2{4+4}=0.25$。三條曲線疊成一條（圖 \ref{eight-fig-collapse} 中）——這叫\textbf{資料塌縮}。
+
+\textbf{標度形式}（(8.9)(8.10)）：把 (8.8) 改寫成
+\[g(z;\vec q)=|\vec q|^{-2}f\big(q(z_c-z)^{-1/2}\big),\tag{8.9}\]
+意思是：$g$ 只透過「$q$ 和 $(z_c-z)^{1/2}$ 的比」依賴 $z$。普遍的假設是把兩個 $\frac12$、$-2$ 換成未知的指數：
+\[g(z;\vec q)=|\vec q|^{-2+\eta}f\big(q(z_c-z)^{-\nu}\big)\qquad(\text{普通漫步 }\nu=\tfrac12,\ \eta=0;\ \text{自迴避漫步不同}).\tag{8.10}\]
+
+\textbf{回到實空間}（(8.11)--(8.14)）：$G(z;\vec r)=\int g(z;\vec q)e^{i\vec q\cdot\vec r}d^dq$，令 $\vec q=\vec\kappa/|\vec r|$，$d^dq$ 給 $|\vec r|^{-d}$、$|\vec q|^{-2+\eta}$ 給 $|\vec r|^{2-\eta}$：
+\[G(z;\vec r)=|\vec r|^{-d+2-\eta}F\big(|\vec r|(z_c-z)^\nu\big),\qquad F(x)\equiv\int|\vec\kappa|^{-2+\eta}f(\kappa/|x|)\,e^{i\vec\kappa\cdot\vec x/|\vec x|}d^d\kappa .\tag{8.13, 8.14}\]
+〔注〕(8.11) 省略了 $(2\pi)^{-d}$。書上假設 $F$ 在 $x\to0$ 趨於常數、$x\to\infty$ 指數衰減；前者只在 $d>2$ 成立（一維 $F(u)=e^{-2u}/2u$，$u\to0$ 發散）。
+
+\textbf{三維實例}（簡單立方 $a=6$、$b=1$）：(8.8) 的逆 Fourier 是 Yukawa 形式
+\[G(z;r)\approx\frac3{2\pi}\,\frac{e^{-r/\xi}}r,\qquad\xi=\frac1{\sqrt{6(1-z/z_c)}}\propto(z_c-z)^{-1/2},\]
+即 $rG=F(u)=\frac3{2\pi}e^{-6u}$、$u=r\sqrt{z_c-z}$，$F(0)=\frac3{2\pi}=0.4775$——兩個假設都滿足。$z/z_c=0.96$：$\xi=2.0412$（格子上的精確衰減長度 2.0205）；
+$z/z_c=0.99$：$\xi=4.0825$（4.0722）。$z_c-z$ 變成 $\frac14$，$\xi$ 變成 2 倍；$r=8$ 處格子精確 $G$ 與 Yukawa 之比 1.0231、1.0178（圖 \ref{eight-fig-collapse} 下）。
+
+\begin{figure}[htbp]
+\centering
+\EightFigRawG\hfill\EightFigCollapse\\[6pt]
+{\footnotesize\setlength{\tabcolsep}{3.5pt}\EightTabCollapse\hfill\EightTabXi}
+\caption{標度形式。左上：一維 $g(z;q)=\frac1{1-2z\cos q}$，$z=0.4,0.45,0.49$。右上：縱軸乘 $z_c-z$、橫軸用 $x=q/\sqrt{z_c-z}$，三條曲線疊在虛線 $\frac2{4+x^2}$ 上。
+左下：塌縮的數值。右下：三維的關聯長度 $\xi$，(8.8c) 與格子精確值}\label{eight-fig-collapse}
+\end{figure}
+
+\textbf{揭曉}：靠近 $z_c$ 只剩一個長度 $\xi\propto(z_c-z)^{-\nu}$；用 $\xi$ 當尺，所有曲線疊成一條。
+
+% =====================================================================
+\subsection{最陡下降：從標度形式讀出分布}
+\leavevmode\bk{pp.~197--199}\ \anim{W803}\par\nopagebreak
+
+\textbf{問}：知道 $G(z;\vec r)$ 的標度形式，怎麼拿回「$N$ 步走到 $\vec r$」的條數？
+
+\textbf{Cauchy 公式＋鞍點}（(8.15)--(8.17)）：$C(N;\vec r)$ 是 $G$ 裡 $z^N$ 的係數，
+\[C(N;\vec r)=\frac1{2\pi i}\oint\frac{G(z;\vec r)}{z^{N+1}}dz\approx|\vec r|^{-d+2-\eta}F\big(|\vec r|(z_c-z)^\nu\big)z^{-(N+1)}\Big|_{z\text{ 取極值}} .\tag{8.15, 8.16}\]
+要極值化的是 $A\big(|\vec r|(z_c-z)^\nu\big)-(N+1)\ln z$，$A=\ln F$；$F$ 指數衰減，所以 $x\gg1$ 時 $A(x)\approx-Bx$。對 $z$ 微分（$\frac{d}{dz}(z_c-z)^\nu=-\nu(z_c-z)^{\nu-1}$）：
+\[-\nu|\vec r|(z_c-z)^{\nu-1}A'-\frac{N+1}z=0\quad\Rightarrow\quad\delta\equiv z_c-z\approx\Big(\frac{N+1}{\nu Bz_c|\vec r|}\Big)^{1/(\nu-1)}.\tag{8.18, 8.19}\]
+\begin{errbox}[p.~198，(8.18)]
+第一項沒有負號：$\nu|\vec r|(z_c-z)^{\nu-1}A'-\frac{N+1}z=0$。照書上，$A'=-B$ 時兩項都是負的，沒有解。
+\end{errbox}
+代回去：$-(N+1)\ln(z_c-\delta)\approx-(N+1)\ln z_c+\frac{(N+1)\delta}{z_c}$，而 (8.19) 說 $B|\vec r|\delta^\nu=\frac{(N+1)\delta}{\nu z_c}$，兩項合起來是 $-\frac{(1-\nu)(N+1)\delta}{\nu z_c}$：
+\[C(N;\vec r)\approx z_c^{-(N+1)}e^{-B|\vec r|\delta^\nu+(N+1)\delta/z_c}\propto\exp\Big[-(1-\nu)\big((\nu z_c)^\nu B\big)^{\frac1{1-\nu}}(N+1)^{-\frac{\nu}{1-\nu}}|\vec r|^{\frac1{1-\nu}}\Big],\tag{8.20}\]
+也就是 $C\sim\exp\big[-c\,(r/N^\nu)^{1/(1-\nu)}\big]$。\textbf{檢驗}：簡單立方 $\nu=\frac12$、$B=2d$、$z_c=\frac1{2d}$，係數 $\frac12\cdot\big(\sqrt{1/4d}\cdot2d\big)^2=\frac d2$，
+指數 $-\frac{d\,r^2}{2N}$——正是第 2 章的高斯 (2.20)（$d=3$：係數 $\frac32$）。
+\begin{errbox}[p.~198，(8.20)]
+第一行印成 $\exp\big(-B|\vec r|\delta^\nu-(N+1)/z_c\big)$，應為 $z_c^{-(N+1)}\exp\big(-B|\vec r|\delta^\nu+(N+1)\delta/z_c\big)$；
+第二行的指數少了因子 $(1-\nu)$。照書上 $\nu=\frac12$ 得 $e^{-dr^2/N}$，變異數少一半（一維 $e^{-x^2/N}$）。
+\end{errbox}
+
+\textbf{算到底}（一維 $N=20$、$x=8$；$\nu=\frac12$、$B=2$、$z_c=\frac12$）：(8.19) 給 $\delta=\big(\frac{21}{\frac12\cdot2\cdot\frac12\cdot8}\big)^{-2}=\big(\frac{21}4\big)^{-2}=\frac{16}{441}$，$\delta^{1/2}=\frac4{21}$。
+指數的兩項：$-B x\delta^{1/2}=-2\cdot8\cdot\frac4{21}=-\frac{64}{21}$，$+\frac{(N+1)\delta}{z_c}=21\cdot\frac{16}{441}\cdot2=+\frac{32}{21}$，和是 $-\frac{32}{21}=-\frac{64}{42}$，
+即 $e^{-x^2/2(N+1)}=e^{-64/42}=0.2179$；精確的 $\binom{20}{14}/\binom{20}{10}=0.2098$。照書上只剩第一項：$e^{-64/21}=0.0475$，差了四倍多（圖 \ref{eight-fig-sd}）。
+$N=100$ 時更正版和精確值幾乎一樣（$x=8$：0.7285 對 0.7282；$x=12$：0.4902 對 0.4894）。〔注〕一維 $G$ 在 $z=\pm\frac12$ 各有一個鞍點，完整的條數要乘 2（$N+x$ 偶數時），取比值時消掉。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.5\linewidth}\centering\EightFigSD\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\EightTabSD\end{minipage}\\[8pt]
+{\footnotesize\setlength{\tabcolsep}{4pt}\EightTabFisher\hfill\EightTabRatio}
+\caption{最陡下降。左上：一維 $N=20$ 的 $C(20;x)/C(20;0)$（長條），更正的 (8.20)（綠）與書上的 (8.20)（紅虛線）。右上：$N=20$、100 的比較。
+左下：指數 $\frac1{1-\nu}$（Fisher）。右下：二維自迴避 $c_N$ 的比值法（$c_{15},c_{16}$ 是文獻值）}\label{eight-fig-sd}
+\end{figure}
+
+\textbf{不是高斯}：$C\sim e^{-(r/N^\nu)^{1/(1-\nu)}}$ 的指數 $\frac1{1-\nu}$（Fisher）：$\nu=\frac12\to2$（高斯）、$\frac35\to\frac52$、二維自迴避 $\frac34\to4$；三維 $\nu\approx0.588$（數值，只引用）$\to2.43$。
+自迴避漫步的分布在遠處掉得比高斯快得多。
+
+\textbf{總條數與 $\gamma$}（練習 8.3、8.4）：對 $\vec r$ 求和就是 $g(z;\vec 0)$，(8.10) 給 $g(z;0)\propto(z_c-z)^{-\gamma}$，$\gamma=(2-\eta)\nu$。普通漫步 $(2-0)\cdot\frac12=1$；
+二維自迴避 $\eta=\frac5{24}$、$\nu=\frac34$ 得 $\gamma=\frac{43}{32}$（已知值，只引用）。取 $z^N$ 的係數：條數 $\propto x^NN^p$，$x=\frac1{z_c}$、$p=\gamma-1$；
+二維自迴避 $x=\mu\approx2.638$、$p=\frac{11}{32}=0.34375$。\textbf{和精確計數比}（比值法，第 7 章的 $c_N$）：$\hat\mu_N=\frac{Nr_N-(N-2)r_{N-2}}2$（$r_N=c_N/c_{N-1}$）、
+$\hat\gamma_N=1+\frac N2\big(\frac{c_N}{c_{N-2}\mu^2}-1\big)$；$N=10,12,14,16$：$\hat\mu=2.6592,\ 2.6529,\ 2.6483,\ 2.6454\to2.638$，$\hat\gamma=1.3552,\ 1.3519,\ 1.3496,\ 1.3483\to1.34375$。
+
+\textbf{揭曉}：$\nu=\frac12$ 才是高斯；$\nu\ne\frac12$ 時分布是 $\exp[-(r/N^\nu)^{1/(1-\nu)}]$。
+
+% =====================================================================
+\subsection{放大鏡：重新標度與 Flory}
+\leavevmode\bk{pp.~199--202}\ \anim{W804}\par\nopagebreak
+
+\textbf{問}：把漫步「縮小來看」——步數變少、長度變短——自迴避的效果會變大還是變小？
+
+\textbf{路徑積分}（(8.21)，第 7 章的 (7.16)）：指數裡有兩項，動能項與自迴避項，
+\[C(N;\vec x,\vec y)\propto\prod_s\int d\vec r(s)\exp\Big[-\frac3{2a^2}\int_0^N\Big|\frac{d\vec r}{ds}\Big|^2ds-\frac{v_0}2\int_0^N\!\!\int_0^Nds_1ds_2\,\delta\big(\vec r(s_1)-\vec r(s_2)\big)\Big].\tag{8.21}\]
+\textbf{放大鏡}：$s'=l_2s$、$\vec r\,'(s')=l_1\vec r(s'/l_2)$（$l_1,l_2<1$：縮小）。動能項：$\frac{d\vec r}{ds}=\frac{l_2}{l_1}\frac{d\vec r\,'}{ds'}$、$ds=ds'/l_2$，乘上 $\frac{l_2}{l_1^2}$；
+自迴避項：$ds_1ds_2=ds_1'ds_2'/l_2^2$、$\delta(\vec r\,'/l_1)=l_1^d\delta(\vec r\,')$，乘上 $\frac{l_1^d}{l_2^2}$：
+\[-\frac3{2a^2}\frac{l_2}{l_1^2}\int_0^{l_2N}\Big|\frac{d\vec r\,'}{ds'}\Big|^2ds'-\frac{v_0}2\frac{l_1^d}{l_2^2}\int_0^{l_2N}\!\!\int_0^{l_2N}ds_1'ds_2'\,\delta\big(\vec r\,'(s_1')-\vec r\,'(s_2')\big).\tag{8.22}\]
+\textbf{核對}：$d=3$、$l_1=\frac12$、$l_2=\frac14$：$\frac{l_2}{l_1^2}=1$、$\frac{l_1^3}{l_2^2}=\frac{1/8}{1/16}=2$；離散高斯鏈的數值量到 1.00、2.00。
+\begin{errbox}[p.~200，(8.22) 前]
+書上寫 $\vec r(s)\to\vec r\,'(s')=l_1\vec r(l_2s)$；應為 $l_1\vec r(s)=l_1\vec r(s'/l_2)$：新曲線在 $s'$ 的位置，是舊曲線在 $s=s'/l_2$ 的位置放大 $l_1$ 倍。
+\end{errbox}
+
+\textbf{上臨界維度 4}（練習 8.6、8.7）：取 $l_1=\sqrt{l_2}$，動能項不變（步長 $a'=a$），自迴避項乘上 $l_2^{(d-4)/2}$。把漫步縮到只剩一步（$l_2=\frac1N$）：
+沒有自迴避時那一步長 $a$，放大回去 $R=a/l_1=a\sqrt N$；自迴避卻被放大 $N^{(4-d)/2}$ 倍。$N=100$、$d=1..5$：1000、100、10、1、0.1（圖 \ref{eight-fig-flory} 左）。
+$d<4$ 越縮越重要，$d>4$ 越縮越不重要——和第 7 章微擾的冪次表（$d=4$ 那列全是 1）同一個分界。
+\begin{errbox}[p.~200，練習 8.6]
+說自迴避項「rescaled by a factor $l_1^d/l_2$」；應為 $l_1^d/l_2^2$（同頁正文與 (8.22)）。照書上會得 $l_2^{(d-2)/2}$，上臨界維度變成 2。
+〔注〕題目說的「first term in the double integral」指指數裡的第一項（動能項）。
+\end{errbox}
+
+\textbf{讓兩項一起縮放}（(8.23)--(8.25)）：要兩項保持同樣的比例，
+\[\frac{l_2}{l_1^2}=\frac{l_1^d}{l_2^2}\quad\Rightarrow\quad l_1=l_2^{3/(d+2)};\qquad l_2=\frac1N:\ R\sim l_1^{-1}=N^{3/(d+2)},\quad\nu=\frac3{d+2}.\tag{8.24, 8.25}\]
+\textbf{算到底}：$d=3$、$l_2=0.01$（100 步縮成 1 步）：$l_1=0.01^{3/5}=0.0631$，$1/l_1=15.85=100^{3/5}$。$d=1..4$：$\nu=1,\frac34,\frac35,\frac12$，
+和第 7 章 Flory 的「拔河」一模一樣（圖 \ref{eight-fig-flory} 右）：一次是熵與排斥拔河，一次是放大鏡底下兩項同比例，兩條路得到同一個 $\frac3{d+2}$。
+
+\begin{figure}[htbp]
+\centering
+{\footnotesize\setlength{\tabcolsep}{4pt}\EightTabAmp\hfill\EightTabNu}
+\caption{重新標度。左：$l_1=\sqrt{l_2}$、$l_2=\frac1N$ 時自迴避項的放大倍數 $N^{(4-d)/2}$，上臨界維度 4。右：兩項同比例得到的 $\nu=\frac3{d+2}$、第 7 章 Flory 的拔河與已知值}\label{eight-fig-flory}
+\end{figure}
+
+\textbf{揭曉}：放大鏡底下，四維以下自迴避越看越重要；讓兩項一起縮放，就得到 Flory 的 $\frac3{d+2}$。
+
+% =====================================================================
+\subsection{練習 8.1--8.8 解答}
+{\small
+\begin{enumerate}[label=\textbf{8.\arabic*},itemsep=0.05em]
+\item 冪次的尾巴。\quad 答：三維 $\int d^3q\,e^{i\vec q\cdot\vec r}f(q)=\frac{4\pi}r\int_0^\infty q\sin(qr)f(q)\,dq$。遠處把 $A^Ne^{-N(B/A)q^{2-\delta}}\approx A^N\big(1-N\frac BAq^{2-\delta}\big)$：
+第一項只給 $\vec r=0$；第二項 $\frac{4\pi}r\int q^{3-\delta}\sin(qr)\,dq$，令 $w=qr$ 得 $r^{-1}\cdot r^{-(4-\delta)}=r^{-5+\delta}$。含 $(2\pi)^{-3}$ 的係數是
+$\frac{NB}{A}A^N\frac{\Gamma(4-\delta)\sin(\pi(2-\delta)/2)}{2\pi^2}$；$\delta=1$ 即 Cauchy 的 $\frac{N}{\pi^2r^4}$（數值比 0.9803、0.9978、0.9998）。
+\item 最陡下降。\quad 答：$\frac{d}{dz}\big[A(|\vec r|\delta^\nu)-(N+1)\ln z\big]=-\nu|\vec r|\delta^{\nu-1}A'-\frac{N+1}z=0$，$A'=-B$、$z\approx z_c$ 得 (8.19)。代回：$-Br\delta^\nu=-\frac{(N+1)\delta}{\nu z_c}$，
+加上 $+\frac{(N+1)\delta}{z_c}$，指數 $-(1-\nu)\big((\nu z_c)^\nu B\big)^{1/(1-\nu)}(N+1)^{-\nu/(1-\nu)}r^{1/(1-\nu)}$。$\nu=\frac12$、簡單立方得 $-\frac{dr^2}{2N}$；
+書上少了 $1-\nu$，得 $-\frac{dr^2}N$（一維 $N=20$、$x=8$：0.0475，精確 0.2098）。
+\item $\gamma=(2-\eta)\nu$。\quad 答：$\sum_{\vec r}G(z;\vec r)=g(z;\vec 0)$。(8.10) 若一直用到 $q\to0$，而 $z<z_c$ 時 $g(z;0)$ 有限，必須 $f(x)\approx c\,x^{2-\eta}$（$x\to0$），
+於是 $g(z;0)=|\vec q|^{-2+\eta}c\,q^{2-\eta}(z_c-z)^{-(2-\eta)\nu}=c\,(z_c-z)^{-(2-\eta)\nu}$，$\gamma=(2-\eta)\nu$（普通 1；二維自迴避 $\frac{43}{32}$）。
+\item 總條數。\quad 答：用第 2 章的 (2:S3-10)，$(z_c-z)^{-\gamma}$ 裡 $z^N$ 的係數 $\approx\frac{N^{\gamma-1}}{\Gamma(\gamma)}z_c^{-N-\gamma}$，所以條數 $\propto x^NN^p$，$x=\frac1{z_c}$、$p=\gamma-1$。
+普通漫步 $x=2d$、$p=0$；二維自迴避 $x=\mu\approx2.638$、$p=\frac{11}{32}$（$N=1000\to2000$ 的局部斜率 0.3436）；比值法見圖 \ref{eight-fig-sd}。
+\item 小 $r$ 的條數。\quad 答：固定 $r$、$N\to\infty$ 時條數應 $\sim z_c^{-N}N^{-d\nu}$（終點散在 $N^{d\nu}$ 的體積裡）。$F(x)=F_0+F_1x^s+\cdots$ 的非解析項給 $(z_c-z)^{\nu s}$，
+它的 $z^N$ 係數 $\propto N^{-\nu s-1}$；令 $=N^{-d\nu}$ 得 $s=d-\frac1\nu$。$r$ 的依賴 $r^{-d+2-\eta+s}=r^\theta$，$\theta=\frac{\gamma-1}\nu$。普通漫步 $\theta=0$、
+$C(N;0)\propto(2d)^NN^{-d/2}$（$d=1,2,3$，$N=200\to400$ 的局部斜率 $-0.50$、$-1.00$、$-1.50$）；二維自迴避 $\theta=\frac{11}{24}$（$s=\frac23$）。
+\item 動能項不變。\quad 答：(8.22) 的動能項寫成 $\frac3{2a'^2}$，$a'=a\,l_1/\sqrt{l_2}$；自迴避項乘 $\frac{l_1^d}{l_2^2}$。取 $l_1=\sqrt{l_2}$（$a'=a$），自迴避項乘 $l_2^{d/2-2}=l_2^{(d-4)/2}$。
+\item 縮到一步。\quad 答：$l_2=\frac1N$ 時 $N'=1$、$a'=a$，$R'\sim a$，放大回去 $R=R'/l_1=a\sqrt N$；同時自迴避被乘上 $N^{(4-d)/2}$（$N=100$：1000、100、10、1、0.1）。
+$d<4$ 時它隨 $N$ 變大，$\sqrt N$ 不可能是答案；$d>4$ 時它趨於 0，普通漫步的 $\sqrt N$ 是對的：上臨界維度 4。
+\item 冪次型交互作用。\quad 答：$v_0|\vec r(s_1)-\vec r(s_2)|^{-q}$ 給 $\frac{l_1^q}{l_2^2}$，$l_1=\sqrt{l_2}$ 時 $l_2^{(q-4)/2}$，與 $d$ 無關：$q$ 取代了 $\delta$ 函數的 $d$。
+$q<d$ 時是長程的，$q<4$ 就在任何維度都重要；$q>d$ 時短距離部分主導，等於接觸作用，又回到 $d_c=4$。合起來：重要 $\Leftrightarrow\min(d,q)<4$；Flory 版 $\nu=\frac3{q+2}$（$q<d$）。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 8 章的回顧與筆誤一覽}
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+主題 & 結果 & 書上的式子 & 動畫\\
+\midrule
+長尾巴 & 寬度 $\propto N^{1/(2-\delta)}$（1000 步：1822 對 28.06）、尾巴 $r^{-5+\delta}$ & (8.1)--(8.7) & W801\\
+標度形式 & 塌縮 $(z_c-z)g\to\frac2{4+x^2}$；$\xi\propto(z_c-z)^{-\nu}$；$G=r^{-d+2-\eta}F(r(z_c-z)^\nu)$ & (8.8)--(8.14) & W802\\
+最陡下降 & $C\sim e^{-(r/N^\nu)^{1/(1-\nu)}}$，Fisher 2 與 4；$\gamma=(2-\eta)\nu=\frac{43}{32}$ & (8.15)--(8.20) & W803\\
+重新標度 & 自迴避項 $\times l_2^{(d-4)/2}$，上臨界維度 4；$\nu=\frac3{d+2}$（＝第 7 章 Flory） & (8.21)--(8.25) & W804\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{筆誤一覽}（給 2004 年版；〔注〕見各節）：下表在文中都用紅框標出，每一條都用程式核對過。
+\begin{center}
+\footnotesize\renewcommand{\arraystretch}{0.9}
+\EightTabErrata
+\end{center}
