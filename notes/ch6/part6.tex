@@ -1,0 +1,337 @@
+\input{ch6/figs}
+
+\section{漫步的形狀（第 6 章）}
+
+\begin{keybox}[先看這裡]
+前五章只問醉漢「停在哪裡」。這一章問：他走過的那一串足跡\textbf{長什麼樣子}？
+\textbf{平均起來是圓的}（1000 條疊起來是一團圓雲），\textbf{單獨一條卻幾乎總是長條}。描述一條漫步的形狀要用\textbf{迴轉半徑張量} $\mathbf T$（像轉動慣量的矩陣）：
+特徵向量是延伸最長、最短的方向，特徵值 $R_1^2\ge R_2^2\ge\cdots$ 是那些方向的平方寬度。把它們合成一個數，就是\textbf{非球度}：0 是圓球、1 是一條線。
+\textbf{結論}：$d$ 維的平均非球度 $A_d=\frac{4+2d}{4+5d}$，三維是 $\frac{10}{19}=0.5263$；維度比步數多得多時，每條漫步都是同一座「樓梯」，$R_k^2=\frac{N+1}{\pi^2k^2}$、非球度 $\frac25$；
+有限的 $d$ 用 $1/d$ 展開：尖峰相對地往右移 $\frac{3}{4d}$、相對寬度 $\sqrt{2/d}$。總整理在 6.4 節。
+
+\textbf{記號}：$N$ 步的漫步走過 $N+1$ 個點 $\vec r_0=0,\vec r_1,\dots,\vec r_N$；步伐 $\vec\eta_\alpha=\vec r_\alpha-\vec r_{\alpha-1}$，$\langle|\vec\eta|^2\rangle=l^2=1$；維度 $d$。
+格子漫步＝每步沿 $2d$ 個方向之一走 1；高斯步伐＝每個分量是常態、變異數 $\frac1d$。Kramers 矩陣 $a_{\alpha\beta}$；$A_d$＝平均的比，$A'_d$＝個別值的平均。
+
+\textbf{全章的主例}：4 步「東、東、北、西」：$\mathbf T=\frac1{25}\big(\begin{smallmatrix}14&3\\3&6\end{smallmatrix}\big)$、$R_1^2=\frac35$、$R_2^2=\frac15$、非球度 $\frac14$；
+固定種子的二維 1000 步（書上 Fig.~6.4 的樣子）：$R_1^2=258.8$、$R_2^2=31.6$；$N=3$ 的樓梯：$\mathbf T=\frac1{16}\big(\begin{smallmatrix}3&2&1\\2&4&2\\1&2&3\end{smallmatrix}\big)$。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+6.1--6.1.1 & 一團雲、一條長條 & W601 & 6.2 & $d\gg N$：樓梯 & W604\\
+6.1.2--6.1.4 & 迴轉半徑張量、主軸 & W602 & 6.2.1 & Kramers 恆等式、配對 & W605\\
+6.1.4 & 非球度 & W603 & 6.2.2--6.2.5 & $1/d$ 展開 & W606\\
+ & & & 6.2.6--6.3 & 分布、Fixman、自迴避 & W607\\
+\bottomrule
+\end{tabular}
+\end{center}
+（上表是書上的節號。）數字一律由 \texttt{codes/utils/walk\_shape.py} 重算，圖表由 \texttt{ch6/make\_figs.py} 產生並先做數字檢查；逐式校對見 \texttt{ref/md/ch06\_formulas.md}。
+連續播放：\texttt{Ch6Demo}（W601--W607）。
+\end{keybox}
+
+% =====================================================================
+\subsection{迴轉半徑張量與非球度}
+\leavevmode\bk{pp.~127--135}\quad 終點只是一個點；這一節要描述整串足跡的形狀，而且要用\textbf{轉一轉也不變}的量。
+
+\subsubsection{一團雲與一條長條}
+\leavevmode\bk{pp.~127--129}\ \anim{W601}\par\nopagebreak
+
+\textbf{問}：1000 個醉漢各走 100 步（二維），疊起來是一團圓雲（書上 Fig.~6.1）。單獨一條也是圓的嗎？先猜。
+
+\textbf{小例子}：4 步「東、東、北、西」走過 5 個點 $(0,0),(1,0),(2,0),(2,1),(1,1)$。重心是這些點的平均 $(\frac65,\frac25)$；
+五個點到重心的平方距離是 $\frac85,\frac15,\frac45,1,\frac25$，平均起來
+\[R_g^2=\frac15\Big(\frac85+\frac15+\frac45+1+\frac25\Big)=\frac15\cdot\frac{20}{5}=\frac45 .\]
+這就是\textbf{迴轉半徑的平方}：每個點當成質量 1，$R_g^2$ 是繞重心的轉動慣量除以總質量（圖 \ref{six-fig-shape} 左）。
+
+\textbf{一大群}：種子 601 的 1000 條 100 步。把每一條的張量 $\mathbf T$（下一小節）平均起來，得 $\bar T_{11}=8.35$、$\bar T_{22}=8.59$、$\bar T_{12}=0.03$
+（理論值 $\frac{N(N+2)}{12(N+1)}=8.42$、$8.42$、$0$），兩個特徵值 8.60、8.34：平均起來幾乎是圓的。
+\textbf{揭曉}：單獨一條卻幾乎都是長條。書上 Fig.~6.3 那種 6 條 1000 步（種子 603）的 $R_1^2/R_2^2$ 是 2.1、3.0、6.7、5.5、14.5、4.6；
+上面那 1000 條 100 步的平均 $\langle R_1^2\rangle=14.14$、$\langle R_2^2\rangle=2.80$，比 5.05。雲是圓的，只是因為每一條往不同的方向長；
+要描述「一條」的形狀，得用不隨旋轉改變的量。
+
+\subsubsection{迴轉半徑張量：形狀的指紋}
+\leavevmode\bk{pp.~129--133}\ \anim{W602}\par\nopagebreak
+
+\textbf{問}：怎麼用幾個數字說出「這條漫步往哪個方向長、長多少」？提示：轉動慣量。
+
+\textbf{定義}（$N+1$ 個點、除以 $N+1$）：
+\[T_{kl}=\frac{1}{N+1}\sum_{j=0}^{N}\big(r_{jk}-\langle r_k\rangle\big)\big(r_{jl}-\langle r_l\rangle\big),\qquad
+\langle r_k\rangle=\frac{1}{N+1}\sum_{j=0}^{N}r_{jk}.\tag{6.1, 6.2}\]
+二維就是 $2\times2$ 的共變異矩陣 (6.3)：對角線是 $x$、$y$ 方向的平方寬度，非對角線量 $x$ 與 $y$ 一起變的程度；$\mathrm{Tr}\,\mathbf T=R_g^2$。
+〔注〕書上 (6.1)(6.2) 寫「$N$ 個足跡、除以 $N$」，(6.22) 起才改成「$N$ 步、$N+1$ 個點」；本講義一律用後者（$N$ 大時沒有差別）。
+
+\textbf{算到底}：小例子對重心的座標是 $x-\frac65=-\frac65,-\frac15,\frac45,\frac45,-\frac15$、$y-\frac25=-\frac25,-\frac25,-\frac25,\frac35,\frac35$；
+乘積的分母都是 25，再除以 5 個點：
+\[T_{11}=\tfrac{36+1+16+16+1}{125}=\frac{14}{25},\qquad T_{22}=\tfrac{4+4+4+9+9}{125}=\frac{6}{25},\qquad
+T_{12}=\tfrac{12+2-8+12-3}{125}=\frac{3}{25}.\]
+$\big(\begin{smallmatrix}14&3\\3&6\end{smallmatrix}\big)$ 的特徵值是 $\frac{20\pm\sqrt{8^2+4\cdot3^2}}{2}=15,\ 5$，對角化 $\mathbf T=\mathrm{diag}(R_1^2,R_2^2)$：
+\[R_1^2=\frac{15}{25}=\frac35,\qquad R_2^2=\frac15,\qquad\text{主軸 }(3,1)\ \ \big(\arctan\tfrac13=18.43^\circ\big).\tag{6.4}\]
+不變量 (6.6)--(6.9)：$\mathrm{Tr}\,\mathbf T=\frac45$、$\mathrm{Tr}\,\mathbf T^2=\frac{9+1}{25}=\frac25$、$\det\mathbf T=\frac3{25}=\frac35\cdot\frac15$
+（二維 $\det\mathbf T=\frac12[(\mathrm{Tr}\,\mathbf T)^2-\mathrm{Tr}\,\mathbf T^2]$；三維 $\det\mathbf T=\frac16[(\mathrm{Tr}\,\mathbf T)^3+2\,\mathrm{Tr}\,\mathbf T^3-3\,\mathrm{Tr}\,\mathbf T\,\mathrm{Tr}\,\mathbf T^2]$）。
+它們都只用特徵值寫得出來，所以轉一轉不會變。
+
+\textbf{特徵向量是什麼方向？}（補充 1）沿單位向量 $\vec n=(\cos\varphi,\sin\varphi)$ 的平方寬度是 $\vec n\cdot\mathbf T\cdot\vec n$。小例子在 $\varphi=18.43^\circ$ 時最大，是 $\frac35$；
+$\varphi=108.43^\circ$ 時最小，是 $\frac15$。所以特徵向量＝延伸最長、最短的方向，特徵值＝那個方向的平方寬度。
+\textbf{旋轉}：$\mathbf T'=\mathbf R\,\mathbf T\,\mathbf R^{-1}$（(6:S1-17)），矩陣會變、特徵值不變。對所有方向平均，$\langle\mathbf T\rangle=\bar T\,\mathbf I$（(6.5)）——形狀的資訊被抹掉，這就是那團圓雲。
+
+\textbf{主例}（書上 Fig.~6.4 的樣子；種子 643 的二維 1000 步，圖 \ref{six-fig-shape} 右）：重心 $(-17.9,-8.9)$，
+$T_{11}=207.5$、$T_{22}=82.9$、$T_{12}=95.0$；$R_1^2=258.8$、$R_2^2=31.6$（$R_1=16.09$、$R_2=5.62$，$R_1^2/R_2^2=8.18$），主軸 $28.4^\circ$。
+整條繞重心轉 $30^\circ$：$T_{11}=94.1$、$T_{22}=196.3$、$T_{12}=101.4$，特徵值仍是 258.8、31.6，主軸變成 $58.4^\circ$。
+〔注〕Fig.~6.4 說兩條線的長度「正比於特徵值」；本講義與動畫畫成半長 $2R_i$（長度的單位）。
+
+\begin{figure}[htbp]
+\centering
+\SixFigSmall\hfill\SixFigMain\\[6pt]
+{\small\SixTabMain}
+\caption{迴轉半徑張量。左上：「東、東、北、西」的 5 個點（數字是到重心的平方距離）、重心（十字）、兩條主軸（半長 $2R_i$）與半軸 $2R_1$、$2R_2$ 的橢圓。
+右上：種子 643 的二維 1000 步（書上 Fig.~6.4 的樣子；$\circ$ 是起點，比例尺 10 步）。下：數字；轉 $30^\circ$ 之後矩陣全變了，特徵值與非球度不變}\label{six-fig-shape}
+\end{figure}
+
+\subsubsection{非球度：0 是圓球、1 是一條線}
+\leavevmode\bk{pp.~133--135}\ \anim{W603}\par\nopagebreak
+
+\textbf{問}：三維漫步平均起來有多扁？在 0（圓球）到 1（一條線）之間猜一個數。
+
+\textbf{一條的非球度}：特徵值兩兩相減的平方和，用不變量寫就不必對角化（三維：$3\,\mathrm{Tr}\,\mathbf T^2-(\mathrm{Tr}\,\mathbf T)^2$）：
+\[\sum_{i<j}(R_i^2-R_j^2)^2=d\,\mathrm{Tr}\,\mathbf T^2-(\mathrm{Tr}\,\mathbf T)^2,\qquad
+\hat A=\frac{\sum_{i<j}(R_i^2-R_j^2)^2}{(d-1)\big(\sum_iR_i^2\big)^2}\tag{6.10, 6.13}\]
+（$\hat A$ 是本講義的記號）。分母的 $d-1$ 讓「一條線」剛好是 1。\textbf{例子}：圓球 $(1,1,1)$：0；線 $(1,0,0)$：$\frac{1+1+0}{2\cdot1}=1$；
+雪茄 $(4,1,1)$：$\frac{9+9+0}{2\cdot36}=\frac14$；扁盤 $(1,1,0)$：$\frac{0+1+1}{2\cdot4}=\frac14$——雪茄和扁盤分不出來，一個數只能說「有多不圓」。
+二維小例子 $(\frac35,\frac15)$：$\frac{(2/5)^2}{(4/5)^2}=\frac14$；主例 0.6117。
+
+\textbf{平均非球度}：書上把分子、分母\textbf{各自平均再相除}（平均的比），再用 $\mathbf T$ 的分量寫（補充 2）：
+\[A_d=\frac{\sum_{i<j}\langle(R_i^2-R_j^2)^2\rangle}{(d-1)\big\langle(\sum_iR_i^2)^2\big\rangle}
+=\frac{\langle T_{11}^2\rangle-\langle T_{11}T_{22}\rangle+d\langle T_{12}^2\rangle}{\langle T_{11}^2\rangle+(d-1)\langle T_{11}T_{22}\rangle}
+=\frac{4+2d}{4+5d}.\tag{6.12, 6.14, 6.15}\]
+最後一步要知道三個平均，\ref{six-sec-kramers} 節用高斯步伐算出來。\textbf{揭曉}：三維 $A_3=\frac{10}{19}=0.5263$——大約「一半扁」（圖 \ref{six-fig-a} 上）。
+
+\textbf{模擬}（書上 Fig.~6.5 的樣子；三維格子 2 萬條 100 步，種子 605，圖 \ref{six-fig-a} 下）：平均的比 0.5231（$N=100$ 格子漫步的精確值 0.5235，$N\to\infty$ 是 0.5263）；
+但個別的 $\hat A$ 從 0 到 1 都有，小於 0.5 的占 69.3\%：平均不代表典型。
+\textbf{個別值的平均}（(6.16)--(6.18)）：
+\[A'_d=\Big\langle\frac{\sum_{i<j}(R_i^2-R_j^2)^2}{(d-1)\big(\sum_{k=1}^{d}R_k^2\big)^2}\Big\rangle=\frac d4\Big[3+\frac4d-\frac d2M_{d/2}\Big],\qquad M_p=\int_0^\infty x^{p+1}\sinh^{-p}x\,dx .\]
+$A'_2=\frac12(5-\frac72\zeta(3))=0.396400$、$A'_3=0.394274$、$A'_4=4-3\zeta(3)=0.393829$；模擬的 $\hat A$ 平均是 0.3939。
+比 $\frac{10}{19}$ 小很多：$A_d$ 其實是用 $(\mathrm{Tr}\,\mathbf T)^2$ 加權的平均，張得開的漫步權重大——兩者差這麼多，表示張得越開的漫步通常也越長條。
+\begin{errbox}[p.~135，(6.16)]
+書上分母寫成 $(d-1)\sum_{k=1}^{N}R_k^2$：沒有平方、上限是 $N$。應為 $(d-1)\big(\sum_{k=1}^{d}R_k^2\big)^2$。照書上的寫法，分子是長度的 4 次方、分母是 2 次方，
+整條漫步放大 2 倍，小例子的值就從 0.2 變成 0.8——量的就不是形狀了。
+\end{errbox}
+
+\begin{figure}[htbp]
+\centering
+{\small\SixTabA}\\[6pt]
+\SixFigHist
+\caption{非球度。上：平均的比 $A_d$（(6.15)）與個別值的平均 $A'_d$（(6.17)）。下：三維格子 2 萬條 100 步的個別非球度 $\hat A$
+（書上 Fig.~6.5 的樣子，20 格、寬 0.05）；虛線是平均的比，點線是個別值的平均}\label{six-fig-a}
+\end{figure}
+
+% =====================================================================
+\subsection{很高的維度：樓梯、Kramers 恆等式與 \texorpdfstring{$1/d$}{1/d} 展開}
+\leavevmode\bk{pp.~135--154}\quad $A_d$ 的最後一步要算 $\mathbf T$ 分量的平均。書上的辦法：先看維度很高的極限（每條漫步形狀都一樣），
+再把 $\mathbf T$ 寫成步伐的二次式，用 $1/d$ 一階一階地修正。
+
+\subsubsection{\texorpdfstring{$d\gg N$}{d >> N}：每條漫步都是同一座樓梯}
+\leavevmode\bk{pp.~135--138}\ \anim{W604}\par\nopagebreak
+
+\textbf{問}：空間有 100 維，醉漢走 10 步，會不會走回已經走過的方向（同一條軸）？
+
+\textbf{數一數}（練習 6.2）：第一步有 $2d$ 種走法；要和前面都垂直，第二步只剩 $2d-2$ 種……所以每一步都換新軸的比例是
+\[\frac{(2d)(2d-2)\cdots(2d-2N+2)}{(2d)^N}=\prod_{k<N}\Big(1-\frac kd\Big)\approx e^{-N^2/2d}\qquad(N\ll\sqrt d).\]
+$d=100$、$N=10$：精確 0.6282，近似 $e^{-1/2}=0.6065$。$d\gg N^2$ 時幾乎每一步都垂直於之前所有步；轉一轉、照照鏡子，就能讓第 $n$ 步沿第 $n$ 軸走 $l$——
+\textbf{每條漫步都是同一座樓梯}，形狀不再隨機。
+
+\textbf{$N=3$ 的樓梯（算到底）}：點 $(0,0,0),(1,0,0),(1,1,0),(1,1,1)$。第 $n$ 個座標在前 $n$ 個點是 0、其餘是 1，所以重心 $\langle x_n\rangle=\frac{N+1-n}{N+1}=\frac34,\frac12,\frac14$（練習 6.3(a)）。
+例如 $x_1=0,1,1,1$ 對平均的偏差是 $-\frac34,\frac14,\frac14,\frac14$，$T_{11}=\frac14(\frac9{16}+\frac3{16})=\frac3{16}$；同樣算出
+\[\mathbf T=\frac1{16}\begin{pmatrix}3&2&1\\2&4&2\\1&2&3\end{pmatrix},\qquad R_k^2=\frac{2+\sqrt2}8,\ \frac18,\ \frac{2-\sqrt2}8=0.4268,\ 0.1250,\ 0.0732,\]
+特徵向量 $(1,\sqrt2,1)$、$(1,0,-1)$、$(1,-\sqrt2,1)$：正好是 $\sin\frac{k\pi n}{4}$ 在 $n=1,2,3$ 的值。
+一般的 $N$（練習 6.3）：$T_{nm}=\frac{\min(n,m)\,(N+1-\max(n,m))}{(N+1)^2}$，特徵向量精確是 $\sin\frac{k\pi n}{N+1}$；$N$ 大時
+\[R_k^2=\frac{N+1}{\pi^2k^2},\qquad A_\infty=\frac{\sum_k(R_k^2)^2}{(\sum_kR_k^2)^2}=\frac{\sum k^{-4}}{(\sum k^{-2})^2}=\frac{\pi^4/90}{(\pi^2/6)^2}=\frac{1.0823}{2.7058}=\frac25\tag{6.19, 6.20}\]
+（$d\to\infty$ 時 (6.13) 只剩 $\mathrm{Tr}\,\mathbf T^2$ 與 $(\mathrm{Tr}\,\mathbf T)^2$；$\sum k^{-2}=1.6449$）。$N=3$ 用大 $N$ 公式是 0.4053、0.1013、0.0450：最大的特徵值只差 5\%，小的差得多（表 \ref{six-tab-stair}）。
+〔注〕(6.19) 是大 $N$ 的極限；精確值 $R_k^2=\frac{1}{4(N+1)\sin^2\frac{k\pi}{2(N+1)}}$。有限 $N$ 的樓梯非球度 $\frac{\mathrm{Tr}\,\mathbf T^2}{(\mathrm{Tr}\,\mathbf T)^2}$：
+$N=3$ 是 $\frac{13}{25}=0.5200$，$N=10$ 是 0.4150，$N=100$ 是 0.4002 $\to\frac25$。
+\begin{errbox}[p.~138，練習 6.3(b)(c)]
+點的編號前後不一致：(b) 的 $j<n$／$j\ge n$ 是點 $j=0..N$ 的編號，(c) 的和要寫 $\sum_{j=0}^{N}$。照書上的 $\sum_{j=1}^{N+1}$ 配 (b)，平均會變成 $\frac{N+2-n}{N+1}$。
+\end{errbox}
+
+\textbf{和三維比}：(6.19) 的比是 $1:\frac14:\frac19$，即 $\langle R_1^2\rangle:\langle R_2^2\rangle:\langle R_3^2\rangle=9:2.25:1$（(6.53)）；三維格子 2 萬條 100 步的模擬是 11.95 : 2.69 : 1——
+差不多，三維的漫步更長條一些。
+\begin{errbox}[p.~146，(6.54)]
+書上引 Bishop \& Michels 的模擬寫 $\langle R_1^2\rangle:\langle R_2^2\rangle:\langle R_3^2\rangle=13.76:3.03:1$，應為 $\approx11.9:2.7:1$（上面的模擬；
+書上自己的 (6.69)--(6.71) 換算出 $1.01\cdot9/0.75=12.12$、$0.91\cdot2.25/0.75=2.73$，也一致）。
+13.76 : 3.03 比較接近\textbf{比值的平均} $\langle R_1^2/R_3^2\rangle:\langle R_2^2/R_3^2\rangle$（模擬 13.69 : 2.98）：又是「平均的比 $\ne$ 比值的平均」。
+\end{errbox}
+
+\begin{table}[htbp]
+\centering
+\small
+\SixTabStair
+\caption{上：樓梯（$N=3$）與 Kramers 矩陣（$N=4$）的特徵值，精確值與大 $N$ 公式 $\frac{N+1}{\pi^2k^2}$（$k$ 小時接近）。
+下左：$d\to\infty$ 的樓梯非球度 $\to\frac25$；下右：三維的主迴轉半徑比（模擬是三維格子 2 萬條 100 步）}\label{six-tab-stair}
+\end{table}
+
+\subsubsection{Kramers 恆等式：形狀是步伐的二次式}\label{six-sec-kramers}
+\leavevmode\bk{pp.~138--142}\ \anim{W605}\par\nopagebreak
+
+\textbf{問}：$\mathbf T$ 是 $N+1$ 個點的平均。能不能直接寫成「步伐乘步伐」？
+
+\textbf{兩兩差}（練習 6.1）：$T_{kl}=\frac{1}{2(N+1)^2}\sum_i\sum_j(r_{ik}-r_{jk})(r_{il}-r_{jl})$，不必先算重心。點 $p<q$ 的差 $\vec r_q-\vec r_p=\sum_{\alpha=p+1}^{q}\vec\eta_\alpha$ 是步伐的和，展開就得
+\[T_{ij}=\sum_{\alpha,\beta=1}^{N}a_{\alpha\beta}\,\eta_{\alpha,i}\eta_{\beta,j},\qquad
+a_{\alpha\beta}=\frac{\min(\alpha,\beta)\,\big(N+1-\max(\alpha,\beta)\big)}{(N+1)^2}.\tag{6.21, 6.22}\]
+\textbf{為什麼是這個數}（補充 3）：$\eta_m\eta_n$（$m\le n$）出現在點對 $p<q$ 的差裡，條件是 $p<m$、$q\ge n$：$p$ 有 $m$ 種、$q$ 有 $N+1-n$ 種，共 $m(N+1-n)$ 對。
+\textbf{算到底}（$N=4$）：
+\[\mathbf a=\frac1{25}\begin{pmatrix}4&3&2&1\\3&6&4&2\\2&4&6&3\\1&2&3&4\end{pmatrix},\qquad \mathrm{Tr}\,\mathbf a=\frac{20}{25}=\frac45 .\]
+「東東北西」的 $x$ 分量 $(1,1,0,-1)$、$y$ 分量 $(0,0,1,0)$。$25\,\mathbf a$ 乘 $x$ 分量得 $(6,7,3,-1)$，所以 $T_{11}=\frac{6+7+0+1}{25}=\frac{14}{25}$、$T_{12}=\frac3{25}$，
+$T_{22}=a_{33}=\frac6{25}$——和定義式一樣。樓梯的步伐是單位向量 $\vec e_\alpha$，代入立刻得 $T_{nm}=a_{nm}$。
+\begin{errbox}[p.~139，(6.22)(6.23)]
+(6.22) 只寫 $\alpha<\beta$、$\alpha>\beta$ 兩種情形，應為 $\alpha\le\beta$、$\alpha>\beta$：對角線 $a_{\alpha\alpha}=\frac{\alpha(N+1-\alpha)}{(N+1)^2}$ 不可少——少了它，「東東北西」會算出 $T_{11}=T_{22}=0$。
+(6.23) 少了 $\frac1{(N+1)^2}$：$a_{x_1,x_2}=\frac{x_<(N+1-x_>)}{(N+1)^2}$，才接得上 (6.24) 的 $x(1-y)$（$x<y$）。
+\end{errbox}
+
+\textbf{正弦模態}（(6.24)--(6.27)）：令 $x=\frac{\alpha}{N+1}$，$a_{\alpha\beta}=x_<(1-x_>)$ 是 $-\frac{d^2}{dx^2}$（兩端為 0）的反算子，特徵函數 $\sin k\pi x$、特徵值 $\frac1{\pi^2k^2}$（練習 6.4）；
+對 $\beta$ 求和約等於 $(N+1)\int dy$，所以 $\mathbf a$ 的特徵值 $\approx\frac{N+1}{\pi^2k^2}$，而特徵向量\textbf{精確}就是 $\sin\frac{k\pi\alpha}{N+1}$。
+$N=4$：特徵值 0.5236、0.1447、0.0764、0.0553，大 $N$ 公式 0.5066、0.1267、0.0563、0.0317（表 \ref{six-tab-stair}）。〔注〕(6.26a) 的和寫到 $N+1$；那一項是 0，不影響。
+
+\textbf{高斯步伐與配對}：每個分量獨立、常態、變異數 $\frac1d$（(6.28)--(6.30)）：
+\[P(\eta_{\alpha,i})=\Big(\frac{d}{2\pi}\Big)^{1/2}e^{-d\eta_{\alpha,i}^2/2},\qquad \sum_i\langle\eta_{\alpha,i}^2\rangle=1,\qquad \langle\eta_{\alpha,i}\eta_{\beta,j}\rangle=\frac1d\delta_{\alpha\beta}\delta_{ij}.\]
+高斯的四次平均可以「配對」（Wick）：$\langle\eta_1\eta_2\eta_3\eta_4\rangle=\langle\eta_1\eta_2\rangle\langle\eta_3\eta_4\rangle+\langle\eta_1\eta_3\rangle\langle\eta_2\eta_4\rangle+\langle\eta_1\eta_4\rangle\langle\eta_2\eta_3\rangle$
+（一維特例 $\langle x^4\rangle=3\langle x^2\rangle^2$）。$T_{11}^2=\sum a_{\alpha\beta}a_{\gamma\delta}\eta_{\alpha,1}\eta_{\beta,1}\eta_{\gamma,1}\eta_{\delta,1}$ 的三種配對給 $(\mathrm{Tr}\,\mathbf a)^2$、$\mathrm{Tr}\,\mathbf a^2$、$\mathrm{Tr}\,\mathbf a^2$：
+\[\langle T_{11}^2\rangle=\frac{(\mathrm{Tr}\,\mathbf a)^2+2\,\mathrm{Tr}\,\mathbf a^2}{d^2},\qquad \langle T_{11}T_{22}\rangle=\frac{(\mathrm{Tr}\,\mathbf a)^2}{d^2},\qquad
+\langle T_{12}^2\rangle=\frac{\mathrm{Tr}\,\mathbf a^2}{d^2}\tag{6.33, 6.36, 6.37}\]
+（高斯步伐時是精確的）。$N$ 大時 $\mathrm{Tr}\,\mathbf a=\sum_kR_k^2\to\frac N6$、$\mathrm{Tr}\,\mathbf a^2\to\frac{N^2}{90}$（就是 (6.19) 的 $\sum k^{-2}$、$\sum k^{-4}$），所以
+\[\langle T_{11}^2\rangle=\frac{N^2}{\pi^4d^2}\Big[\frac{\pi^4}{36}+\frac{2\pi^4}{90}\Big]=\frac{N^2}{20d^2},\qquad \langle T_{11}T_{22}\rangle=\frac{N^2}{36d^2},\qquad \langle T_{12}^2\rangle=\frac{N^2}{90d^2}.\tag{6.35--6.37}\]
+比值 $\frac95$、$\frac92$；代入 (6.14)，分子分母乘 180：$\frac{9-5+2d}{9+5(d-1)}=\frac{4+2d}{4+5d}$。\textbf{揭曉}：(6.15) 就這樣算出來了。
+\begin{errbox}[p.~141，(6.33a)(6.35a)(6.35b)]
+(6.33a) 的和寫成 $\sum_{\alpha,\gamma}a_{\alpha\alpha}a_{\delta\delta}$，應為 $\sum_{\alpha,\delta}$。(6.35a) 多一個 $d^2$，$(\sum_n\frac1{n^2})$ 也少了平方。
+(6.35b) 寫 $\frac{\pi^4}{36}+\frac{\pi^4}{90}$，少了 2：照書上得 $\frac{7N^2}{180d^2}$，不是 $\frac{N^2}{20d^2}$。
+\end{errbox}
+
+\textbf{對照}（$d=3$）：$N=4$ 的精確 $A=0.6013$，$N=100$ 是 0.5265，$N\to\infty$ 是 $\frac{10}{19}=0.5263$。高斯步伐 2 萬條 $N=100$ 的模擬：
+$\langle T_{11}^2\rangle=56.09$、$\langle T_{11}T_{22}\rangle=31.31$、$\langle T_{12}^2\rangle=12.56$（精確 56.67、31.48、12.60），$A=0.5261$。
+格子漫步的步伐不是高斯，四次平均多一項（同一步的四次累積量），$N=100$ 的精確值變成 0.5235——就是 Fig.~6.5 那組模擬的對照值。
+\textbf{補充 2 的大要}（pp.~159--165）：不用 Kramers 恆等式、直接展開也行：$\langle T_{11}\rangle=\frac{Nl^2}{6d}$、$\langle\mathrm{Tr}\,\mathbf T\rangle=\frac{Nl^2}6$；
+$\langle T_{11}^2\rangle$ 的三張圖係數 $2+16+18=36$，$\frac{36}{720}=\frac1{20}$，與上面一致。
+\begin{errbox}[p.~159，(6:S2-1)；p.~164]
+(6:S2-1) 用比值寫 $A_d$ 時，分母少乘 $\frac{\langle T_{11}T_{22}\rangle}{\langle T_{12}^2\rangle}$。正確是
+$A_d=\big[\frac{\langle T_{11}^2\rangle-\langle T_{11}T_{22}\rangle}{\langle T_{12}^2\rangle}+d\big]\big/\big[\big(\frac{\langle T_{11}^2\rangle}{\langle T_{11}T_{22}\rangle}+d-1\big)\frac{\langle T_{11}T_{22}\rangle}{\langle T_{12}^2\rangle}\big]$；
+照書上，$d=3$ 得 $\frac{25}{19}$（是 $\frac{10}{19}$ 的 $\frac52$ 倍）。p.~164（(6:S2-25) 前）的「Adding (6:S2-16), (6:S2-21), and (6:S2-23)」應為 (6:S2-24)。
+\end{errbox}
+
+\subsubsection{\texorpdfstring{$1/d$}{1/d} 展開：尖峰變寬}
+\leavevmode\bk{pp.~142--152}\ \anim{W606}\par\nopagebreak
+
+\textbf{問}：在 100 維，最大的三個主迴轉半徑是固定的數嗎？20 維、3 維呢？
+
+\textbf{配對數}（練習 6.7）：$2m$ 個 $\eta$ 配成 $m$ 對的方法數是 $(2m-1)!!=\frac{(2m)!}{2^mm!}$：$m=1..5$ 是 1、3、15、105、945，正是標準高斯的 $\langle x^{2m}\rangle$。
+算 $\langle\mathrm{Tr}\,\mathbf T^n\rangle$ 要把 $2n$ 個 $\eta$ 配對；書上把這些配對按 $\frac1d$ 的次方分類。
+
+\textbf{預解式}：特徵值的分布可以從
+\[\mathcal R(\lambda)=\mathrm{Tr}\frac{1}{\lambda\mathbf I-\mathbf T}=\sum_{j=1}^{d}\frac{1}{\lambda-\lambda_j},\qquad
+\frac{1}{x-i\epsilon}=P\frac1x+i\pi\delta(x),\qquad \mathrm{Im}\,\mathcal R(\lambda-i\epsilon)=\pi\sum_j\delta(\lambda-\lambda_j)\tag{6.38--6.42}\]
+讀出來：虛部在每個特徵值上有一根 $\delta$ 尖峰（$\frac{\epsilon}{x^2+\epsilon^2}$ 底下的面積是 $\pi=3.1416$）。把 $\frac1{\lambda-\mathbf T}=\sum_n\frac{\mathbf T^n}{\lambda^{n+1}}$ 展開、逐項平均，就得到平均的分布。
+\begin{errbox}[p.~146，(6.52)]
+書上寫 $\mathrm{Im}\,\mathcal R(\lambda-i\epsilon)=\sum_i\delta(\lambda-\lambda_i)+O(1/d)$，漏了 $\pi$（同 (6.42)）：應為 $\pi\sum_i\delta(\lambda-\lambda_i)$。
+\end{errbox}
+\textbf{零階}（只配相鄰的 $\eta$，(6.50)）：$\langle\mathrm{Tr}(\mathbf T/\lambda)^n\rangle=\mathrm{Tr}(\mathbf a/\lambda)^n$，特徵值就是 $\mathbf a$ 的特徵值——又是樓梯，$\delta$ 尖峰在
+$\frac{N+1}{\pi^2k^2}$（除以 $N+1$：0.1013、0.0253、0.0113）。
+\textbf{一階}（(6.55)--(6.62)）：尖峰移動、變寬，
+\[\langle\Lambda_k\rangle=\frac{N+1}{\pi^2k^2}\Big(1+\frac{3}{4d}\Big),\qquad \big\langle(\Lambda_k-\langle\Lambda_k\rangle)^2\big\rangle=\frac2d\Big(\frac{N+1}{\pi^2k^2}\Big)^2.\tag{6.61, 6.62}\]
+位移來自 $\frac1d\sum_{j\ne k}\frac{\lambda_j}{\lambda_k-\lambda_j}=\frac1d\sum_{j\ne k}\frac{k^2}{j^2-k^2}=\frac{3}{4d}$（和 $k$ 無關；$k=1$ 時 $\sum_{j\ge2}\frac1{j^2-1}=\frac12(1+\frac12)=\frac34$）。
+相對位移 $\frac3{4d}$：$d=100,20,3$ 是 0.0075、0.0375、0.2500；相對寬度 $\sqrt{2/d}$：0.1414、0.3162、0.8165。
+
+\textbf{模擬}（書上 Fig.~6.12--6.14 的樣子；高斯步伐、$N=50$，$d=100$、20 各 2000 條，$d=3$ 有 2 萬條；圖 \ref{six-fig-oned}）。
+\textbf{揭曉}：$d=100$ 的平均與變異數都和 (6.61)(6.62) 吻合到幾個百分點；$d=20$ 的 $k=2,3$ 變異數開始偏小；$d=3$ 只有最大的 $R_1^2$ 還準（平均比 1.01、變異數比 1.01），
+$R_2^2$、$R_3^2$ 的變異數只有預測的 0.47、0.23——尖峰寬到互相重疊，排序 $R_1^2\ge R_2^2\ge R_3^2$ 把下面兩個夾住了。
+書上 (6.63)--(6.71) 的數字（$d=100$ 變異數比 0.97、0.93、0.95；$d=3$ 是 0.98、0.48、0.23，平均比 1.01、0.91、0.75）和表裡的差都不到 0.05。
+
+\begin{figure}[htbp]
+\centering
+\SixFigOneDee\\[4pt]
+{\footnotesize\SixTabOneDee}
+\caption{$1/d$ 展開與模擬（高斯步伐、$N=50$，數值都除以 $N+1$）。上：$\Lambda_k$ 除以零階值的直方圖（藍 $k=1$、橙 $k=2$、綠 $k=3$；縱軸是密度，各圖自己的比例），
+灰虛線是零階的 1，黑點線是一階的 $1+\frac3{4d}$：維度越低越寬。下：平均與變異數對 (6.61)(6.62) 的比}\label{six-fig-oned}
+\end{figure}
+
+\subsubsection{主迴轉半徑的分布、Fixman、自迴避}
+\leavevmode\bk{pp.~152--154}\ \anim{W607}\par\nopagebreak
+
+\textbf{問}：三維漫步最大的 $R_1^2$ 分布長什麼樣子？三個加起來（$R_g^2=\mathrm{Tr}\,\mathbf T$）呢？
+
+\textbf{一個 $R_i^2$}：(6.72) 的積分用最陡下降法估計，得 (6.73)：
+\[P(R_i^2)=\frac1{2\pi}\int_{-\infty}^{\infty}\exp\Big[-\frac d2\ln\Big(1+\frac{2ix\alpha_i}{d}\Big)+ixR_i^2\Big]dx,\qquad
+P(R_i^2)\propto(R_i^2)^{d/2-1}e^{-dR_i^2/2\alpha_i}.\tag{6.72, 6.73}\]
+〔注〕(6.73) 不只是近似：(6.72) 的積分恰好就是這個 Gamma 分布，平均 $\alpha_i$、變異數 $\frac{2\alpha_i^2}d$（練習 6.8）。
+$d=3$、$\alpha_1=\frac{N+1}{\pi^2}$（除以 $N+1$ 是 0.1013）：峰在 $\frac{\alpha_1}3$，即 0.0338、高 7.16（圖 \ref{six-fig-fix} 左）。
+但模擬的平均是 0.1280——(6.61) 的 0.1267 比 $\alpha_1$ 準得多：三維時峰的位置與寬度都要 $1/d$ 修正。
+
+\textbf{三個加起來：Fixman 的精確結果}（(6.74)--(6.76)）：
+\[P(R^2)=\frac1{2\pi}\int_{-\infty}^{\infty}e^{isR^2}K(s)\,ds,\qquad R^2=\sum_{i=1}^dR_i^2,\qquad K(s)=\prod_{n=1}^{N}\Big(1+\frac{2is\alpha_n}{d}\Big)^{-d/2}.\]
+為什麼是乘積：$\mathrm{Tr}\,\mathbf T=\sum_n\alpha_n|\vec\xi_n|^2$（$\vec\xi_n$ 是步伐在第 $n$ 個正弦模態上的分量，彼此獨立的高斯），獨立的量相加，特徵函數相乘（練習 6.9）。
+用 $\alpha_n=\frac{1}{\pi^2n^2}$（除以 $N+1$）與 $\prod_n(1+\frac{z}{\pi^2n^2})=\frac{\sinh\sqrt z}{\sqrt z}$，得 $K(s)=\big[\sqrt z/\sinh\sqrt z\big]^{d/2}$，$z=\frac{2is}{d}$。
+\textbf{算到底}（$d=3$）：平均 $\sum\alpha_n=\frac16=0.1667$、變異數 $\frac2d\sum\alpha_n^2=\frac{1}{45d}=\frac1{135}=0.0074$（標準差 0.0861）。
+數值反轉的密度峰在 0.111（高 6.20），$x=0.1,0.2,0.3$ 是 6.078、3.281、1.011；把它積分回去，總和 1.0000、平均 0.1667、變異數 0.0074。
+高斯步伐 $N=50$ 的 2 萬條模擬：平均 0.1671、變異數 0.0076（$N=50$ 的精確值 0.1666、0.0074；圖 \ref{six-fig-fix} 右）。
+\begin{errbox}[p.~153，(6.76)]
+書上寫 $K(R)=\prod_n\big(1-\frac{2is\alpha_n}{d}\big)^{-d/2}$，應為 $K(s)=\prod_n\big(1+\frac{2is\alpha_n}{d}\big)^{-d/2}$（和 (6.72) 同號）。照書上的號，$R^2>0$ 的地方算出來全是 0——密度跑到負的 $R^2$ 去了。
+〔注〕要「精確」須用精確的 $\alpha_n$（上面的 $\sin^2$ 公式）；$\alpha_n=\frac{N+1}{\pi^2n^2}$ 是大 $N$ 的極限。
+\end{errbox}
+
+\begin{figure}[htbp]
+\centering
+\SixFigFixman
+\caption{三維（$d=3$）主迴轉半徑的分布，高斯步伐 $N=50$ 的 2 萬條模擬，數值除以 $N+1$（30 格、寬 0.02）。
+左：最大的 $R_1^2$ 與零階的 Gamma 分布 (6.73)（$\alpha_1=\frac1{\pi^2}$）：寬度差不多，但模擬整個往右移（平均 0.1280 對 $\alpha_1=0.1013$）。右：$R_g^2=\mathrm{Tr}\,\mathbf T$ 與 Fixman 的精確分布 (6.74)：完全吻合}\label{six-fig-fix}
+\end{figure}
+
+\textbf{自迴避漫步}（(6.77)，只引用）：不能走回已經走過的點時，$\epsilon=4-d$ 展開的一階結果是
+\[A_d=\frac{2d+4}{5d+4}+0.008\,\epsilon,\qquad \epsilon=4-d;\tag{6.77}\]
+三維 $0.5263+0.008=0.5343$：自迴避讓漫步稍微更不圓，但影響不大。第 7--12 章會回到自迴避漫步。
+
+% =====================================================================
+\subsection{練習 6.1--6.9 解答}
+{\small
+\begin{enumerate}[label=\textbf{6.\arabic*},itemsep=0.05em]
+\item 兩兩差的寫法。\quad 答：記 $n=N+1$ 個點，$\sum_i\sum_j(\vec r_i-\vec r_j)(\vec r_i-\vec r_j)^{\mathsf T}=2n\sum_i\vec r_i\vec r_i^{\mathsf T}-2\big(\sum_i\vec r_i\big)\big(\sum_j\vec r_j\big)^{\mathsf T}$，
+除以 $2n^2$ 得 $\frac1n\sum_i\vec r_i\vec r_i^{\mathsf T}-\langle\vec r\rangle\langle\vec r\rangle^{\mathsf T}$，就是 (6.1)。小例子：$\sum_{i<j}(x_i-x_j)^2=14$，除以 $n^2=25$ 正是 $T_{11}=\frac{14}{25}$。
+\item 每一步都垂直。\quad 答：$(2d)(2d-2)\cdots(2d-2N+2)=(2d)^N\prod_{k<N}(1-\frac kd)$，$\ln\prod\approx-\sum_{k<N}\frac kd\approx-\frac{N^2}{2d}$；
+$d=100$、$N=10$：0.6282 對 0.6065。$N\ll\sqrt d$ 時幾乎全部垂直。
+\item 樓梯。\quad 答：(a) $\langle x_n\rangle=\frac{l(N+1-n)}{N+1}$；(b)(c) $n\le m$ 時 $\sum_{j=0}^{N}(x_{j,n}-\langle x_n\rangle)(x_{j,m}-\langle x_m\rangle)=l^2(N+1)\frac{n}{N+1}\big(1-\frac{m}{N+1}\big)$，
+除以 $N+1$ 就是 $l^2a_{nm}$；(d) 連續化後積分核 $x_<(1-x_>)$ 的特徵函數 $\sin k\pi y$，特徵值 $\frac{l^2(N+1)}{\pi^2k^2}$（精確 $\frac{l^2}{4(N+1)\sin^2\frac{k\pi}{2(N+1)}}$）；
+(e) 所以 $R_k^2=\frac{l^2(N+1)}{\pi^2k^2}$。
+\item 反算子。\quad 答：$x<y$ 時 $L=x(1-y)$、$x>y$ 時 $L=y(1-x)$，兩段的二次微分都是 0，在 $x=y$ 斜率從 $1-y$ 跳到 $-y$（跳 $-1$），所以 $-\partial_x^2L=\delta(x-y)$，且 $L(0,y)=L(1,y)=0$。
+離散版：$(N+1)\mathbf a$ 是三對角矩陣 $(-1,2,-1)$ 的反矩陣（$N=3$：$\big(\begin{smallmatrix}2&-1&0\\-1&2&-1\\0&-1&2\end{smallmatrix}\big)\cdot\frac14\big(\begin{smallmatrix}3&2&1\\2&4&2\\1&2&3\end{smallmatrix}\big)=\mathbf I$）。
+\item 閉合漫步（$\sum_\alpha\vec\eta_\alpha=0$）。\quad 答：把自由步伐扣掉平均步伐就閉合了，共變異變成 $\frac1d(\mathbf I-\frac1N\mathbf J)$（$\mathbf J$ 全是 1）：
+$\langle\eta_{\alpha,i}\eta_{\beta,j}\rangle=-\frac{\delta_{ij}}{Nd}$（$\alpha\ne\beta$），對角線 $\frac1d(1-\frac1N)$；每一列加起來是 0，正是 $\sum_\beta\langle\eta_{\alpha,i}\eta_{\beta,j}\rangle=0$。
+\item 配對。\quad 答：$\langle T_{11}T_{22}\rangle$ 裡 1 方向和 2 方向的 $\eta$ 不能互配，只剩一種配對：$\frac{(\mathrm{Tr}\,\mathbf a)^2}{d^2}\to\frac{N^2}{36d^2}$；
+$\langle T_{12}^2\rangle$ 也只剩一種：$\frac{\mathrm{Tr}\,\mathbf a^2}{d^2}\to\frac{N^2}{90d^2}$。
+\item 配對數。\quad 答：第一個 $\eta$ 有 $2m-1$ 個對象可配，剩下的 $2m-2$ 個再配，所以 $(2m-1)(2m-3)\cdots1=\frac{(2m)!}{2^mm!}$：1、3、15、105、945；
+高斯的 $\langle x^{2m}\rangle$ 裡每一種配對貢獻 $\langle x^2\rangle^m=1$。
+\item Gamma 分布。\quad 答：$P\propto x^{d/2-1}e^{-dx/2\alpha}$ 是形狀 $\frac d2$、尺度 $\frac{2\alpha}d$ 的 Gamma 分布：平均 $\frac d2\cdot\frac{2\alpha}d=\alpha$、變異數 $\frac d2(\frac{2\alpha}d)^2=\frac{2\alpha^2}d$。
+\item Fixman。\quad 答：$R^2=\sum_n\alpha_n|\vec\xi_n|^2$ 是獨立的量相加，$\langle e^{-isR^2}\rangle$ 是各自的乘積；每一項是 $\big(1+\frac{2is\alpha_n}d\big)^{-d/2}$（上一題的 Gamma），
+所以 $K(s)=\prod_n\big(1+\frac{2is\alpha_n}d\big)^{-d/2}$。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 6 章的回顧與筆誤一覽}
+\textbf{回顧}：漫步沒有「標準形狀」，但形狀有統計——三維平均一半扁，維度越高越確定。
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+主題 & 結果 & 書上的式子 & 動畫\\
+\midrule
+形狀 & $\mathbf T$ 的特徵值 $R_i^2$ 與主軸；轉一轉不變 & (6.1)--(6.9) & W601--W602\\
+非球度 & $A_d=\frac{4+2d}{4+5d}$，三維 $\frac{10}{19}$；個別值的平均 $A'_3=0.3943$ & (6.13)--(6.17) & W603\\
+$d\gg N$ & 樓梯，$R_k^2=\frac{N+1}{\pi^2k^2}$，非球度 $\frac25$ & (6.19)、(6.20) & W604\\
+Kramers & $T_{ij}=\sum a_{\alpha\beta}\eta_{\alpha,i}\eta_{\beta,j}$；配對算出 $A_d$ & (6.21)--(6.37) & W605\\
+$1/d$ 展開 & 相對位移 $\frac3{4d}$、相對寬度 $\sqrt{2/d}$ & (6.42)、(6.61)、(6.62) & W606\\
+分布 & Gamma (6.73)；Fixman 的 $K(s)$；自迴避 0.5343 & (6.72)--(6.77) & W607\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{筆誤一覽}（給 2004 年版）：$N$ 與 $N+1$、Fig.~6.4 的線長、(6.19) 的精確 $\sin^2$ 公式、(6.26a) 的和寫到 $N+1$、(6.73) 其實是精確的 Gamma、Fixman 要用精確的 $\alpha_n$ 是〔注〕；
+其餘在文中用紅框，每一條都用程式核對過。(6.54) 書上的數字比較像「比值的平均」，不是式子寫的「平均的比」。
+\begin{center}
+\footnotesize
+\SixTabErrata
+\end{center}
