@@ -127,6 +127,10 @@ def main():
     ok = code == 0 and "walk_saw（第 7 章）" in out and "全部驗證通過" in out
     report("數學驗證 utils/walk_saw.py（第 7 章）", ok, "切段＝公式＝暴力列舉、自迴避的 DFS＝文獻＝暴力、1−f 展開三種算法＝c_N、Dyson、平均場與 Flory 的數值＝解析、筆誤的更正、場景卡的數字全部一致"
            if ok else out[-300:])
+    code, out = run([sys.executable, str(HERE / "utils" / "walk_scale.py")])
+    ok = code == 0 and "walk_scale（第 8 章）" in out and "全部驗證通過" in out
+    report("數學驗證 utils/walk_scale.py（第 8 章）", ok, "χ(q) 數值＝閉式、模擬寬度＝穩定分布、逆 Fourier＝換變數的尾巴、塌縮、格子 G＝級數＝Yukawa、最陡下降＝數值極值＝精確二項式、比值法、重新標度的因子、筆誤的更正、場景卡的數字全部一致"
+           if ok else out[-300:])
 
     notes = HERE.parent / "notes"
     code, out = run([sys.executable, str(notes / "ch1" / "make_figs.py")], cwd=notes)
