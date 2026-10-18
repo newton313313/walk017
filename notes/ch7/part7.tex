@@ -1,0 +1,306 @@
+\input{ch7/figs}
+
+\section{路徑積分與自迴避（第 7 章）}
+
+\begin{keybox}[先看這裡]
+前六章的醉漢沒有記憶：每一步都和以前無關。這一章先換個角度看漫步——\textbf{把所有路徑加起來}（路徑和、路徑積分）；
+再讓醉漢\textbf{不准踩到自己走過的點}（自迴避漫步，高分子的最簡單模型）。有了記憶，問題就難了：書上先把自迴避\textbf{一階一階展開}
+（$1-f$ 展開、費曼圖、Dyson 方程），發現四維以下低階的展開一定失效；再用\textbf{平均場}（只留一個模態）與 \textbf{Flory 的論證}
+（熵與排斥拔河）得到 $R\propto m^{3/(d+2)}$：二維的 $\frac34$ 剛好是精確值，三維的 0.6 也很接近數值的 0.588。總整理在 7.4 節。
+
+\textbf{記號}：$C(N;\vec x,\vec y)$＝從 $\vec x$ 走 $N$ 步到 $\vec y$ 的走法數，格距 $a$；一條 $N$ 步的漫步走過 $N+1$ 個點 $\vec w_0=\vec x,\dots,\vec w_N$，
+「嚴格」自迴避＝這 $N+1$ 個點兩兩不同。$c_N$＝二維 $N$ 步自迴避漫步的條數，$\langle R^2\rangle$＝終點平方距離的平均（普通漫步 $=N$）。
+逸度 $z$（$z_c=\frac1{2d}$）、傳播子 $g_0=\frac1{1-z\chi(\vec q)}$、自能 $\Sigma$。平均場與 Flory 的步數寫 $m$，格點數寫 $\mathcal N$（書上 §7.2.6 起也寫成 $N$）。
+
+\textbf{全章的主例}：二維 4 步回原點 36 條；4 步自迴避 100 條＝部分和 $256\to28\to124\to96\to100$；Flory 的 $d=2$、$m=1000$：$R^*=177.83$。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+7.1 & 路徑和、高斯、路徑積分 & W701 & 7.2.3--7.2.4 & 生成函數、費曼規則、Dyson & W704\\
+7.2--7.2.1 & 自迴避漫步、精確計數 & W702 & 7.2.5--7.2.6 & 微擾失效、平均場 & W705\\
+7.2.2 & $1-f$ 展開、弧線圖 & W703 & 7.2.7 & Flory 的論證、回顧 & W706\\
+\bottomrule
+\end{tabular}
+\end{center}
+（上表是書上的節號，本講義 7.1、7.2.1--7.2.7 與它一一對應。）數字一律由 \texttt{codes/utils/walk\_saw.py} 重算，圖表由 \texttt{ch7/make\_figs.py} 產生並先做數字檢查；
+逐式校對見 \texttt{ref/md/ch07\_formulas.md}。連續播放：\texttt{Ch7Demo}（W701--W706）。
+\end{keybox}
+
+% =====================================================================
+\subsection{漫步＝路徑的和}
+\leavevmode\bk{pp.~167--171}\ \anim{W701}\par\nopagebreak
+
+\textbf{問}：從原點走 4 步回到原點，一維有幾條？二維呢？先猜。
+
+\textbf{路徑的和}（(7.1)）：走法數就是「每條路徑的權重加起來」，格子上每條路徑的權重都是 1。把 $N$ 步切成兩段：先走 $M$ 步到中間點 $\vec r$，
+再走 $N-M$ 步到 $\vec y$，然後對中間點求和——像轉機：從台北到紐約的走法，就是「經過每一個轉機城市」的走法加起來：
+\[C(N;\vec x,\vec y)=\sum_{\vec r}C(M;\vec x,\vec r)\,C(N-M;\vec r,\vec y).\tag{7.3}\]
+
+\textbf{算到底}（圖 \ref{seven-fig-split}）：一維 $N=4$、$M=2$。走 2 步能到的中間點是 $r=-2,0,2$，進來的走法 $C(2;r)=1,2,1$，出去（從 $r$ 再走 2 步回 0）也是 $1,2,1$，
+所以 $C(4;0,0)=1\cdot1+2\cdot2+1\cdot1=6=\binom42$。二維：2 步能到 9 個中間點。中心 $C(2;\vec 0)=4$（出去又回來，4 個方向）、四個 $(\pm2,0),(0,\pm2)$ 各 1 種、四個 $(\pm1,\pm1)$ 各 2 種（先橫後直或先直後橫）；
+回程的走法和進來一樣，所以
+\[C(4;\vec0,\vec0)=4^2+4\cdot1^2+4\cdot2^2=16+4+16=36=\tbinom42^2 .\]
+\textbf{揭曉}：6 與 36；暴力列舉 $2^4$、$4^4$ 條也是這兩個數。切在哪裡都一樣：$M=N-1$ 就是第 2 章的遞迴 (2.7)
+（一維 2 個鄰居、各 $C(3;\pm1)=3$ 種：$3+3=6$；二維 $4\cdot9=36$）。切成 $k$ 段 (7.4)(7.5) 就對 $k-1$ 個中間點求和：6 步回原點切 $2+2+2$，一維 $20=\binom63$、二維 $400=\binom63^2$。
+
+\textbf{每段都很長：高斯}（(7.6)）。每段走很多步時換成第 2 章的高斯；三維簡單立方格子走 $M$ 步，一個直角分量的變異數是 $Ma^2/3$：
+\[C(N;\vec x,\vec y)=\int\!\!\cdots\!\!\int d\vec r_1\cdots d\vec r_{k-1}\prod_{l=1}^{k}\Big(\frac{2\pi M_la^2}{3}\Big)^{-3/2}e^{-3|\vec r_{l-1}-\vec r_l|^2/2M_la^2},
+\qquad\vec r_0=\vec x,\ \vec r_k=\vec y.\tag{7.6}\]
+兩段高斯接起來還是高斯，而且\textbf{變異數相加}（練習 7.1）。例：$M_1=3$、$M_2=6$（$a=1$）：一個分量的變異數 1、2，峰高 0.3989、0.2821；
+摺積的變異數 $1+2=3$、峰高 $0.2303=1/\sqrt{2\pi\cdot3}$（圖 \ref{seven-fig-split} 右，點是數值摺積）。
+\begin{errbox}[p.~169--173，(7.6)(7.11)、練習 7.1]
+前因子都寫成 $(2\pi Ma^2)^{-3/2}$，少了 3：應為 $(2\pi Ma^2/3)^{-3/2}$。照書上，每做一次摺積就多出 $3^{-3/2}=0.1925$（一個分量 $3^{-1/2}=0.5774$），練習 7.1 就證不出來。
+〔注〕(7.6) 也省略了每段的 $6^{M_l}$（乘起來是 $6^N$）與「格點和 $\to$ 積分」的 $a^{-3}$；只看形狀時無妨。
+\end{errbox}
+
+\textbf{切成無限多段：路徑積分}（(7.7)(7.8)）。令 $\Delta s=\Delta N_i$，每段的指數 $-\frac{3}{2a^2}\frac{|\Delta\vec r_i|^2}{\Delta N_i}=-\frac{3}{2a^2}\big|\frac{\Delta\vec r_i}{\Delta s}\big|^2\Delta s$
+像「速度平方」，全部加起來變成積分：
+\[C(N;\vec x,\vec y)\propto\prod_s\int d\vec r(s)\,\exp\Big[-\frac{3}{2a^2}\int_0^N\Big|\frac{d\vec r}{ds}\Big|^2ds\Big],\qquad\vec r(0)=\vec x,\ \vec r(N)=\vec y.\tag{7.8}\]
+這就是 Feynman 的路徑積分：$s$ 是「時間」，$|d\vec r/ds|^2$ 是「動能」。〔注〕$\Delta N_i$ 必須 $\gg1$ 高斯才成立，所以 $d\vec r/ds$ 只是記號；(7.8) 的比例常數是無限大（紫外發散）。
+
+\begin{figure}[htbp]
+\centering
+\SevenFigGrid\hfill{\footnotesize\setlength{\tabcolsep}{4pt}\SevenTabSplit}\hfill\SevenFigGauss
+\caption{路徑的和。左：二維 4 步回原點（起點＝終點＝中心），9 個中間點上寫 $C(2;\vec r)$，「進來 × 出去」$=C(2;\vec r)^2$。
+中：切法不同、答案相同。右：練習 7.1，變異數 1、2 的高斯（虛線，數字是峰高）摺積成變異數 3（實線），黑點是數值摺積}\label{seven-fig-split}
+\end{figure}
+
+% =====================================================================
+\subsection{自迴避漫步}
+\leavevmode\bk{pp.~171--192}\quad 高分子是一串單體連成的長鏈，兩個單體不能佔同一個位置。最簡單的模型：格子上的漫步，不准踩到自己走過的點。
+這一節的難處全在「漫步有了記憶」。
+
+\subsubsection{自迴避漫步與交互作用}
+\leavevmode\bk{pp.~171--172}\ \anim{W702}\par\nopagebreak
+
+\textbf{問}：如果醉漢不准踩到自己走過的點，10 步之後離起點會比較遠還是比較近？
+
+\textbf{三種自迴避}：嚴格（踩到走過的點就停，那條路徑不算）、溫和（越靠近越可能停）、「真」自迴避（偏向不踩，但一直走）。本章用嚴格的。
+寫成路徑和，就是每條路徑乘上權重 $\prod_{i>j}e^{-v(|\vec w_i-\vec w_j|)}$（(7.9)）：
+兩點重合時 $v=+\infty$、權重 0，那條路徑被刪掉；不重合時 $v=0$、權重 1。(7.10) 再乘上與起點、終點的因子 $e^{-v(|\vec w_i-\vec x|)-v(|\vec w_i-\vec y|)}$。
+
+\textbf{數一數}（二維，圖 \ref{seven-fig-saw}）：2 步的 16 條中，4 條第二步原地折返，剩 12 條；3 步的 64 條剩 36 條（第一步向東的 9 條 $\times4$）；4 步的 256 條剩 100 條。
+存活的比例 $c_N/4^N$ 一路掉，$N=14$ 只剩 0.0088（$c_{14}=2374444$）；每多一步條數大約乘 $c_{14}/c_{13}=2.6936$（連接常數 $\mu\approx2.638$，只引用），比普通漫步的 4 小。
+\textbf{揭曉}：條數雖少，剩下的卻走得遠：$\langle R^2\rangle$ 在 $N=14$ 是 42.79，普通漫步只有 14。種子 702 抽一條 10 步的自迴避漫步，終點 $(-3,3)$、$R^2=18$；
+同一個種子的普通漫步終點 $(1,-1)$、$R^2=2$，中間踩回走過的點 3 次。自迴避漫步被自己的足跡推著走：在對數圖上 $\langle R^2\rangle\propto N^{2\nu}$ 的斜率比 1 大，往 $\frac32$ 爬（7.2.7 節）。
+
+\begin{figure}[htbp]
+\centering
+\SevenFigTwoStep\\[6pt]
+\begin{minipage}[c]{0.6\linewidth}\centering\footnotesize\setlength{\tabcolsep}{2.5pt}\SevenTabSaw\end{minipage}\hfill
+\begin{minipage}[c]{0.38\linewidth}\centering\SevenFigLogLog\end{minipage}
+\caption{二維自迴避漫步。上：16 條 2 步漫步，按第一步分四組；橙色 12 條自迴避，灰色 4 條原地折返（$\times$）。
+左下：精確列舉 $N=1..14$（條數、存活比例、平均平方距離）。右下：$\langle R^2\rangle$ 對 $N$ 的對數圖：藍點是自迴避，虛線是普通漫步，點線是斜率 $\frac32$ 的參考線}\label{seven-fig-saw}
+\end{figure}
+
+\subsubsection{路徑積分與 \texorpdfstring{$1-f$}{1-f} 展開}
+\leavevmode\bk{pp.~172--176}\ \anim{W703}\par\nopagebreak
+
+\textbf{問}：「不准踩到自己」很難直接算。能不能先算普通漫步，再一點一點扣掉？
+
+\textbf{連續版}（(7.11)--(7.16)）：把 (7.9) 的權重放進 (7.6)；交互作用取極短程的 $\delta$ 型，(7.8) 的指數多一項：
+\[C(N;\vec x,\vec y)\propto\prod_s\int d\vec r(s)\exp\Big[-\frac{3}{2a^2}\int_0^N\Big|\frac{d\vec r}{ds}\Big|^2ds-v_0\int_0^N\!\!\int_0^{s_1}ds_1ds_2\,\delta\big(\vec r(s_1)-\vec r(s_2)\big)\Big].\tag{7.16}\]
+〔注〕書上 (7.13)(7.14) 寫 $-v_0\int\!\!\int v(\cdots)$；$v_0$ 應只出現在 $\delta$ 的版本 (7.15)(7.16)。
+\begin{errbox}[p.~173，(7.11)]
+兩個指數印成 $-3|\vec x-\vec r_1|^2/3M_1a^2$、$-3|\vec r_k-\vec y|^2/3M_ka^2$；分母應為 $2M_1a^2$、$2M_ka^2$（同 (7.6)）。
+照書上，一個分量的變異數變成 $Ma^2/2$（$M=6$：3），格子漫步卻是 $Ma^2/3$（2）。
+\end{errbox}
+
+\textbf{$1-f$ 展開}：令
+\[e^{-v(x)}=1+\big(e^{-v(x)}-1\big)\equiv1-f(x),\qquad0\le f\le1,\tag{7.17}\]
+$f$ 只在 $x\approx0$ 附近不是 0；嚴格自迴避時「重合」$f=1$、否則 $f=0$。每一對點乘一個 $(1-f)$（(7.18)），再乘開：0 階是普通漫步；
+一階是「挑一對點、要它們重合」，扣掉：
+\[-\sum_{M_1+M_2+M_3=N}\ \sum_{\vec u_1,\vec u_2}C(M_1;\vec x,\vec u_1)C(M_2;\vec u_1,\vec u_2)C(M_3;\vec u_2,\vec y)\,f(|\vec u_1-\vec u_2|),\tag{7.19}\]
+畫成一條線加一條虛線弧（Fig.~7.2；圖 \ref{seven-fig-chord}）：走到 $\vec u_1$、繞一圈回到 $\vec u_2\approx\vec u_1$、再走到終點。
+二階有 3 種（Fig.~7.3）：(a) 巢狀、(b) 並排、(c) 交叉；三階有 15 種（練習 7.2）。一般是 $2k$ 個點配成 $k$ 條弧，$(2k-1)!!=1,3,15,105$ 種——和第 6 章的 Wick 配對一樣。
+
+\textbf{算到底}（二維 $N=4$）：嚴格自迴避的 $f$ 非 0 即 1，所以第 $k$ 階 $T_k$＝「每條漫步從它的重合點對中挑 $k$ 對」的方法數總和，而
+$c_N=\sum_k(-1)^kT_k$——這就是排容原理。5 個點 $\vec w_0..\vec w_4$ 中可能重合的只有隔偶數步的：隔 2 步的 3 對 $(0,2),(1,3),(2,4)$，隔 4 步的 1 對 $(0,4)$。
+一階：隔 2 步的一對要重合，中間 2 步得走回原處（$C(2;\vec0)=4$ 種），另外 2 步隨便走（$4^2$ 種）；隔 4 步的一對要 $C(4;\vec0)=36$ 種，所以
+$T_1=3\cdot4^2\cdot4+36=192+36=228$。全部是 $T_k=256,228,96,28,4$，部分和
+\[256\ \to\ 256-228=28\ \to\ 28+96=124\ \to\ 124-28=96\ \to\ 96+4=100=c_4 .\]
+二階的 96 依兩對點的位置分：巢狀 16、交叉 32、共用一個點 48（格子上兩條弧可以共用端點；$N=4$ 沒有並排的）。
+\textbf{揭曉}（圖 \ref{seven-fig-chord} 下）：$N=8$ 的部分和是 $65536\to-119332\to190940\to-222036\to\cdots\to5916$，共 17 項，前幾項連正負號都不對；
+要全部加完才剛好是 $c_8=5916$。只取前幾階，數字可能錯得離譜——7.2.5 節會說明這不是偶然。
+
+\begin{figure}[htbp]
+\centering
+\SevenFigChords\hfill\SevenFigThird\\[6pt]
+{\footnotesize\setlength{\tabcolsep}{4pt}\SevenTabIE}
+\caption{$1-f$ 展開。左上：實線是漫步、點是漫步上的位置、虛線弧＝要求兩點重合的 $-f$；一階一種、二階三種（書上 Fig.~7.2、7.3）。
+右上：三階 15 種（練習 7.2），橙色 10 種不可約、灰色 5 種可約。下：二維嚴格自迴避的第 $K$ 階 $T_K$ 與部分和 $P_K=\sum_{k\le K}(-1)^kT_k$；粗體的最後一項就是 $c_N$}\label{seven-fig-chord}
+\end{figure}
+
+\subsubsection{生成函數的微擾展開與費曼規則}
+\leavevmode\bk{pp.~176--182}\ \anim{W704}\par\nopagebreak
+
+\textbf{問}：展開的每一項都是「切段再求和」的摺積，越高階越難算。有沒有辦法把摺積變成乘法？
+
+\textbf{摺積變乘積}（(7.20)--(7.22)）：令 $h(z)=\sum_KH(K)z^K$。因為 $z^N=z^{M_1}z^{N-M_1}$，$z$ 的次方會自己相加，所以
+$\sum_Nz^N\sum_{M_1=0}^{N}\allowbreak H_1(M_1)H_2(N-M_1)=h_1(z)h_2(z)$。
+\textbf{例}：$H_1=H_2=2^K=1,2,4,8,16$（一維 $K$ 步的走法數），摺積是 $1,4,12,32,80=(N+1)2^N$，
+而 $h_1h_2=\frac1{(1-2z)^2}$；$z=0.1$ 時兩邊都是 1.5625（圖 \ref{seven-fig-dyson} 的表）。
+Fourier 也一樣（(7.23)--(7.25)）：空間的摺積 $\int F_1(\vec x-\vec w)F_2(\vec w-\vec y)\,d^dw$ 變成乘積 $f_1(\vec q)f_2(\vec q)$。
+\begin{errbox}[p.~176，(7.21)]
+第二、三行印成 $Z^{N-M_1}$、$Z^{K_2}$（大寫），應為 $z^{N-M_1}$、$z^{K_2}$：大寫的 $Z$ 成了另一個變數，乘積就拆不開。
+\end{errbox}
+
+\textbf{一階的 Fourier 版}（(7.26)）：對步數取生成函數、對位置取 Fourier 之後，每段實線變成傳播子 $g_0(z;\vec q)=\frac1{1-z\chi(\vec q)}$（$\chi$ 是一步的結構函數），虛線變成 $F$：
+\[g_0(z;\vec q)\Big[\sum_{\vec Q}F(\vec q-\vec Q)g_0(z;\vec Q)\Big]g_0(z;\vec q).\tag{7.26}\]
+並排的兩個圈（Fig.~7.3(b)）就是兩個方括號 $g_0[\cdots]g_0[\cdots]g_0$（(7.27)）。
+\textbf{費曼規則}（p.~180，摘要）：實線＝傳播子 $g_0$；虛線＝交互作用 $-F(\vec Q)$；每個頂點動量守恆；外動量 $\vec q$ 固定，其餘動量求和。
+〔注〕規則說虛線是 $-F$，(7.26)--(7.34) 卻沒寫負號（把負號併進了 $F$）。
+\begin{errbox}[p.~178，(7.27) 前]
+書上說 (7.27) 是「Figure 7.3(a)」；(a) 是巢狀，(7.27) 是並排的 (b)。
+\end{errbox}
+\textbf{只用一階的圈、全部串起來}（(7.28)--(7.30)）：$\Sigma_1=\sum_{\vec Q}F(\vec q-\vec Q)g_0(z;\vec Q)$，
+\[g\approx\sum_{n=0}^\infty g_0\big[\Sigma_1g_0\big]^n=\frac{1}{g_0^{-1}-\Sigma_1}=\frac1{1-z\chi(\vec q)-\Sigma_1(z;\vec q)}.\tag{7.30}\]
+
+\subsubsection{Dyson 方程}
+\leavevmode\bk{pp.~182--184}\ \anim{W704}\par\nopagebreak
+
+\textbf{問}：所有的圖都要一張一張算嗎？能不能只算「剪不開的塊」，再自動串起來？
+
+\textbf{自能}：剪斷一條實線就分成兩半的圖叫\textbf{可約}；剪不開的叫\textbf{不可約}（1PI）。不可約的圖（去掉兩端的傳播子）加起來就是自能 $\Sigma$；
+$m$ 階有 $2m$ 個頂點、$m$ 條虛線、$2m-1$ 條實線、$m$ 個動量和。二階有兩種：巢狀 (7.34) 與交叉（Fig.~7.9、(7.31)），式子見練習 7.3。
+〔注〕Fig.~7.10 畫的二階自能是交叉圖，(7.34) 寫的卻是巢狀圖；完整的二階自能兩個都要。
+每一張圖都是一串不可約的塊用 $g_0$ 接起來，所以
+\[g=g_0+g_0\Sigma g_0+g_0\Sigma g_0\Sigma g_0+\cdots=\frac{g_0}{1-\Sigma g_0}=\frac{1}{g_0^{-1}(z;\vec q)-\Sigma(z;\vec q)}.\tag{7.36, 7.37}\]
+這是 \textbf{Dyson 方程}——像火車：車廂 $\Sigma$ 用連結器 $g_0$ 一節節接上（圖 \ref{seven-fig-dyson}）。
+\textbf{算到底}：玩具數字 $g_0=2$、$\Sigma=\frac14$（所以 $\Sigma g_0=\frac12$）：部分和 $2,\ 3,\ \frac72,\ \frac{15}4,\ \frac{31}8\to4=\frac1{1/2-1/4}$。
+\textbf{計數版}：把每條弧都換成數字 1，(7.37) 就變成「全部的弧線圖 $(2k-1)!!$＝不可約的 $1,2,10,74$ 排成一串」：
+$\sum_{k\ge0}(2k-1)!!\,x^k=1/\big(1-(x+2x^2+10x^3+74x^4+\cdots)\big)$；右邊展開的係數是 $1,\ 1,\ 1+2=3,\ 3+2+10=15,\ 15+2\cdot3+10+74=105$。
+\begin{errbox}[p.~183，(7.33)(7.35)]
+(7.33) 第三項印成 $g_0[\Sigma_1+\Sigma_2]^2g_0$（少了中間的 $g_0$）；(7.35) 左邊印成 $\frac{g_0}{1+(\Sigma_1+\Sigma_2)g_0}$，應為 $1-$。
+玩具數字照 (7.35) 得 $\frac43$、照 (7.33) 得 $\frac{10}3$，都不是 4。
+\end{errbox}
+〔注〕幾何級數只在 $|\Sigma g_0|<1$ 時收斂（一維接觸作用 $f=0.05$、$q=0.5$：$z=0.4$ 時 $|\Sigma g_0|=0.28$，收斂；$z=0.49$ 時是 1.80，發散），但閉式 (7.37) 仍然可用。
+
+\begin{figure}[htbp]
+\centering
+\SevenFigDyson\hfill\SevenFigDysonBars\\[2pt]
+{\footnotesize\setlength{\tabcolsep}{4pt}\SevenTabDyson}
+\caption{生成函數與 Dyson 方程。左上：$g$ 是一串用實線 $g_0$ 接起來的自能 $\Sigma$；右上：玩具數字的部分和，逼近虛線 4。
+左下：摺積變乘積的例子與 Dyson 的部分和（書上 (7.35) 的號給 $\frac43$）。右下：計數版的 Dyson 方程}\label{seven-fig-dyson}
+\end{figure}
+
+\subsubsection{微擾論為什麼失效}
+\leavevmode\bk{pp.~184--186}\ \anim{W705}\par\nopagebreak
+
+\textbf{問}：自能的每一階都帶一個小小的 $f$。是不是只要算前幾階就夠了？
+
+\textbf{數冪次}（(7.38)(7.39)）：靠近 $z_c$、$q$ 小時 $g_0\approx\frac{1}{(z_c-z)+q^2}$（係數略去）。$l$ 階自能有 $2l-1$ 條傳播子、$l$ 個 $d^dq$ 積分，
+$f^l\int\big(\frac1{(z_c-z)+q_i^2}\big)^{2l-1}\big(d^dq_i\big)^l$（(7.38)）。令 $q_i\to(z_c-z)^{1/2}q_i$：每條傳播子給 $(z_c-z)^{-1}$、每個積分給 $(z_c-z)^{d/2}$，
+\[(z_c-z)^{-(2l-1)+dl/2}=(z_c-z)^{1-l(4-d)/2}.\tag{7.39}\]
+圖 \ref{seven-fig-mf} 左上列出 $d=1..5$、$l=0..4$。$d=3$：$1,\frac12,0,-\frac12,-1$——每多一階冪次少 $\frac12$，高階比低階更奇異，$f$ 再小也壓不住；
+$d=4$ 全是 1；$d=5$ 反而越來越不奇異。\textbf{四維是分界。}數值積分量出來的冪次：$l=1,d=1$：$-0.50$；$l=1,d=3$（截斷後的奇異部分）：$0.50$；
+$l=2,d=1$（巢狀）：$-2.00$，和表一致。
+\textbf{一維一階自能算到底}：$\int_{-\pi}^{\pi}\frac{dq}{2\pi}\frac1{1-2z\cos q}=\frac1{\sqrt{1-4z^2}}$；$z=0.4,\ 0.49,\ 0.499$ 得 1.6667、5.0252、15.8193：
+離 $z_c=\frac12$ 每近 10 倍就大 $\sqrt{10}$ 倍（冪次 $-\frac12$）。
+\textbf{後果}（(7.40)--(7.42)）：展開真正的參數是 $f(z_c-z)^{-(4-d)/2}$，$d<4$ 時 $z\to z_c$ 它趨於無窮；截到 $n_h$ 階，$g(z;0)$ 的奇點 $(z_c-z)^{-p}$、
+$p=1-n_h(4-d)/2$ 每多算一階就變——低階微擾對長漫步一定失效。〔注〕(7.42) 第一行書上寫 $\Sigma(z_c-z;0)$，意思是 $\Sigma(z;0)$。
+
+\subsubsection{平均場}
+\leavevmode\bk{pp.~186--191}\ \anim{W705}\par\nopagebreak
+
+\textbf{問}：既然一階一階加不起來，能不能找一個粗糙、但一次顧到全部的近似？
+
+\textbf{模態展開}（(7.43)--(7.50) 的摘要）：在體積 $V$ 裡 $G(z;\vec x,\vec y)=\sum_i\psi_i(\vec x)\frac{z_c}{z_i-z}\psi_i^*(\vec y)$，模態是平面波 $\psi_{\vec q}=e^{i\vec q\cdot\vec x}/\sqrt V$，
+$z_{\vec q}\approx z_c(1+z_ca^2q^2)$；連續極限滿足 $(1-z/z_c)\,G-za^2\nabla^2G=a^d\delta(\vec x-\vec y)$（(7.47)）。
+\begin{errbox}[p.~188，(7.47)(7.48)、(7.50) 後]
+(7.47) 印成 $za^2\nabla^2G-(z/z_c-1)G=a^d\delta$，$\nabla^2$ 那一項的號錯了：一維格子的精確 $G$ 代入，$z=0.4$、$x=1$ 兩邊差 0.3333，更正版差 0。
+(7.48) 的 $\psi_i=e^{-\vec q\cdot\vec r}$ 應為 $e^{i\vec q\cdot\vec r}/\sqrt V$（否則 $\nabla^2\psi=+q^2\psi$，和 $\lambda_i=q^2$ 矛盾）。「equivalent to (7.43dd)」應為 (7.43d)。
+\end{errbox}
+\textbf{只留一個模態}：$z\to z_c$ 時最低的模態 $\psi_0=1/\sqrt{\mathcal N}$（$\mathcal N$ 個格點，$z_0=z_c$）主導，$G\approx G_0=z_c\frac{\psi_0(\vec x)\psi_0^*(\vec y)}{z_0-z}$（(7.51)）。每插入一條虛線是一個算子 $O=-\frac f2\int(\psi\psi^*)^2d^dw\,\frac{d^2}{dz^2}$（(7.52)），全部插入是 $e^{O}$（(7.54)）；把 $\frac{z_c}{z_0-z}=\int_0^\infty dt\,e^{-t(z_0-z)/z_c}$ (7.55) 代入，
+$\frac{d^2}{dz^2}$ 就變成乘 $t^2$：
+\[G_{MF}(z)=\frac1{\mathcal N}\int_0^\infty\exp\Big[-\frac{ft^2}{\mathcal N}-t(1-z/z_c)\Big]dt=\int_0^\infty\exp\big[\mathcal N\big(-f\lambda^2-\lambda(1-z/z_c)\big)\big]d\lambda .\tag{7.57}\]
+〔注〕$\frac{d^2}{dz^2}e^{tz/z_c}=\frac{t^2}{z_c^2}e^{tz/z_c}$，所以 (7.52) 要多一個 $z_c^2$ 才得到 (7.53)(7.56)；(7.57) 又把 $\frac12$ 併進 $f$。$f$ 是唯象參數，結論不變。
+\begin{errbox}[p.~189--190，(7.55) 前、(7.58)]
+p.~189 說這個積分是 $1/(z_0-z)$；其實是 $z_c/(z_0-z)$（$z_c=\frac14$、$z_0=z_c$、$z=\frac15$：積分是 5，不是 20）。
+p.~190 寫「展開 $e^{-\mathcal Nz\lambda/z_c}$」，(7.58) 第一行寫 $z^m$、$\lambda^n$；應為 $e^{+\mathcal Nz\lambda/z_c}$、$(z/z_c)^m$、$\lambda^m$。
+\end{errbox}
+\textbf{取出 $z^m$ 的係數}（(7.58)--(7.60)）：展開 $e^{+\mathcal N\lambda z/z_c}$，
+\[C_{MF}(m)=\frac{1}{z_c^m}\frac{\mathcal N^m}{m!}\int_0^\infty e^{-\mathcal N(f\lambda^2+\lambda)+m\ln\lambda}d\lambda\approx\frac1{\mathcal N}z_c^{-m}e^{-fm^2/\mathcal N}.\tag{7.59, 7.60}\]
+$f=0$ 時積分正好是 $m!/\mathcal N^{m+1}$，回到普通漫步的 $z_c^{-m}/\mathcal N$（$(2d)^m$ 條平均分到 $\mathcal N$ 個終點）；自迴避再乘 $e^{-fm^2/\mathcal N}$：
+約 $\frac{m^2}2$ 對點、每對碰在一起的機率約 $\frac1{\mathcal N}$。\textbf{算到底}（練習 7.4，$fm^2/\mathcal N=1$）：$\mathcal Nz_c^mC_{MF}(m)$ 的精確積分在
+$(m,\mathcal N)=(10,100)$：0.3385；$(100,10^4)$：0.3643；$(1000,10^6)$：0.3675，趨近 $e^{-1}=0.3679$（圖 \ref{seven-fig-mf} 右上）。
+\begin{errbox}[p.~190，(7.59)]
+指數印成 $-\mathcal N(f\lambda^2+\mathcal N\lambda)$，應為 $-\mathcal N(f\lambda^2+\lambda)$：照書上，$f=0$ 時多出 $\mathcal N^{-(m+1)}$ 倍，回不到普通漫步的 $z_c^{-m}/\mathcal N$。
+\end{errbox}
+\textbf{$z<z_c$ 時看不到自迴避}（練習 7.5）：$z/z_c=\frac12$ 時 $\mathcal N(1-z/z_c)G_{MF}$ 在 $\mathcal N=10,10^2,10^3,10^4$ 是 0.6899、0.9341、0.9922、0.9992，
+趨近 1，和沒有自迴避一樣；$z/z_c=\frac32$ 時 $\ln G_{MF}/\mathcal N$ 是 0.0452、0.0596、0.0621，趨近 $\frac{(z/z_c-1)^2}{4f}=0.0625$。自迴避只在 $z\ge z_c$（長漫步主導）時才顯出來。
+
+\subsubsection{Flory 的論證}
+\leavevmode\bk{pp.~191--192}\ \anim{W706}\par\nopagebreak
+
+\textbf{問}：$m$ 個單體的高分子（自迴避漫步），大小 $R$ 怎麼隨 $m$ 變大？普通漫步是 $R\propto m^{1/2}$。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.3\linewidth}\centering\small\setlength{\tabcolsep}{4pt}\SevenTabPower\end{minipage}\hfill
+\begin{minipage}[c]{0.68\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3.5pt}\SevenTabMF\end{minipage}\\[8pt]
+\begin{minipage}[c]{0.42\linewidth}\centering\SevenFigFlory\end{minipage}\hfill
+\begin{minipage}[c]{0.56\linewidth}\centering\footnotesize\setlength{\tabcolsep}{4pt}\SevenTabFlory\end{minipage}
+\caption{微擾、平均場與 Flory。左上：$l$ 階自能的冪次 $1-l(4-d)/2$（(7.39)）。右上：練習 7.4、7.5 的精確積分。
+左下：$d=2$、$m=1000$、$u=1$ 的熵（藍）、排斥（橙）與和（綠），最大在 $R^*$。右下：Flory 指數、數值最大化的斜率與已知值；二維精確列舉的局部斜率 $2\nu_{\rm eff}$}\label{seven-fig-mf}
+\end{figure}
+
+\textbf{排斥}（(7.61)）：把平均場用在半徑 $R$ 的一團上：$\mathcal N=\alpha R^d$、$u=f/\alpha$、$z_c=\frac1{2d}$，得
+$C_{MF}(m;\vec x,\vec y)=\frac{(2d)^m}{\mathcal N}e^{-um^2/R^d}$——$R$ 越大越好。
+\begin{errbox}[p.~191，(7.61)]
+左邊印成 $C_{MF}(N;\vec x,\vec y)$，應為 $C_{MF}(m;\vec x,\vec y)$：步數是 $m$，而書上 §7.2.6 起的 $N$ 是格點數。
+\end{errbox}
+\textbf{熵}（(7.62)）：普通漫步走到 $R$ 的機率 $\propto e^{-R^2/m}$——$R$ 越小越好。兩者相乘就是拔河，最可能的 $R$ 讓指數最大：
+\[\frac{d}{dR}\Big(-\frac{R^2}m-\frac{um^2}{R^d}\Big)=0\ \Rightarrow\ R^{d+2}=\frac{du}{2}m^3,\qquad R\propto m^{\nu_F},\quad\nu_F=\frac3{d+2}.\tag{7.63, 7.64}\]
+\textbf{算到底}（$d=2$、$m=1000$、$u=1$，圖 \ref{seven-fig-mf} 下）：$R^{*4}=10^9$，$R^*=177.83$；此時兩項都是 $-31.62$、和是 $-63.25$
+（$d=2$ 時極值條件 $\frac{2R}m=\frac{2um^2}{R^3}$ 正好就是「兩項相等」）。$d=1,2,3,4$：$\nu_F=1,\frac34,\frac35,\frac12$（$m=10^3\to10^6$ 數值最大化的斜率 1.0000、0.7500、0.6000、0.5000）。
+已知值（只引用）：一維 1、二維 $\frac34$（精確）、三維約 0.588（數值）、四維以上 $\frac12$（四維有對數修正）。〔注〕熵因子正確是 $e^{-dR^2/2m}$（第 2 章的高斯），係數不影響指數。
+
+\textbf{和精確計數比}：二維精確列舉的局部斜率 $2\nu_{\rm eff}=\ln(\langle R^2\rangle_N/\langle R^2\rangle_{N-2})/\ln\frac N{N-2}$，$N=6,8,10,12,14$：1.4306、1.4372、1.4442、1.4505、1.4556，
+慢慢爬向 $2\nu=\frac32$（奇數 $N$：1.4459、1.4528、1.4562、1.4593）。\textbf{揭曉}：熵和排斥拔河，拔出 $R\propto m^{3/(d+2)}$；二維剛好是精確的 $\frac34$，三維的 0.6 也很接近 0.588。
+
+% =====================================================================
+\subsection{練習 7.1--7.5 解答}
+{\small
+\begin{enumerate}[label=\textbf{7.\arabic*},itemsep=0.05em]
+\item 高斯的摺積。\quad 答：三個分量各自配方：$\int e^{-\alpha(x-r)^2-\beta(r-y)^2}dr=\sqrt{\frac{\pi}{\alpha+\beta}}\,e^{-\frac{\alpha\beta}{\alpha+\beta}(x-y)^2}$，
+$\alpha=\frac{3}{2M_1a^2}$、$\beta=\frac3{2M_2a^2}$，所以 $\frac{\alpha\beta}{\alpha+\beta}=\frac{3}{2(M_1+M_2)a^2}$；前因子 $\sqrt{\frac\alpha\pi}\sqrt{\frac\beta\pi}\sqrt{\frac{\pi}{\alpha+\beta}}=\big(\frac{2\pi Na^2}{3}\big)^{-1/2}$，
+$N=M_1+M_2$。三個分量相乘得 $\big(\frac{2\pi Na^2}{3}\big)^{-3/2}e^{-3|\vec x-\vec y|^2/2Na^2}$，對段數歸納得 $k$ 段；前因子必須用 $(2\pi Ma^2/3)^{-3/2}$（書上少 3）。
+\item 三階的圖。\quad 答：6 個點配成 3 條弧，$5\cdot3\cdot1=15$ 種（圖 \ref{seven-fig-chord}）。不可約 10 種；可約 5 種：三個一階的圈並排 1 種（$1\cdot1\cdot1$），
+一階圈接二階不可約圖（巢狀或交叉）2 種（$1\cdot2$），倒過來 2 種（$2\cdot1$）。若把頭尾倒過來的算同一種，剩 11 種（二階仍是 3 種）。
+\item 二階的三張圖。\quad 答（每條虛線 $-F$，兩條相乘為正）：(a) 巢狀 $g_0(\vec q)\Big[\sum_{\vec Q_1,\vec Q_2}F(\vec q-\vec Q_1)g_0(\vec Q_1)F(\vec Q_1-\vec Q_2)g_0(\vec Q_2)g_0(\vec Q_1)\Big]g_0(\vec q)$；
+(b) 並排 $g_0\Big[\sum_{\vec Q}F(\vec q-\vec Q)g_0(\vec Q)\Big]g_0\Big[\sum_{\vec Q}F(\vec q-\vec Q)g_0(\vec Q)\Big]g_0$（可約，不屬於自能）；
+(c) 交叉 $g_0(\vec q)\Big[\sum_{\vec Q_1,\vec Q_2}F(\vec q-\vec Q_1)F(\vec Q_1-\vec Q_2)g_0(\vec Q_1)g_0(\vec q+\vec Q_2-\vec Q_1)g_0(\vec Q_2)\Big]g_0(\vec q)$。
+\item 平均場的漸近式。\quad 答：令 $t=\mathcal N\lambda$，$\mathcal Nz_c^mC_{MF}(m)=\frac1{m!}\int_0^\infty t^me^{-t}e^{-ft^2/\mathcal N}dt=\langle e^{-fT^2/\mathcal N}\rangle$，
+$T$ 是 Gamma$(m+1)$ 分布（平均 $m+1$、標準差 $\sqrt{m+1}$）。$m$ 大時 $T\approx m$，得 $e^{-fm^2/\mathcal N}$，即 (7.60)；修正約 $f^2m^3/\mathcal N^2$
+（$fm^2/\mathcal N=1$ 時相對修正約 $\frac1m$：表裡的 0.3385、0.3643、0.3675 比 $e^{-1}$ 小 8.0\%、1.0\%、0.1\%）。
+\item $z<z_c$ 與 $z>z_c$。\quad 答：記 $\varepsilon=1-z/z_c>0$，指數在 $\lambda=0$ 最大，展開 $e^{-\mathcal Nf\lambda^2}$ 得 $G_{MF}\approx\frac{1}{\mathcal N\varepsilon}-\frac{2f}{\mathcal N^2\varepsilon^3}$；
+主項 $\frac1{\mathcal N}\sum_m(z/z_c)^m$ 表示條數是 $z_c^{-m}/\mathcal N$，自迴避沒有效果；$\mathcal N\varepsilon G_{MF}\approx1-\frac{2f}{\mathcal N\varepsilon^2}$ 在 $\mathcal N=10^3,10^4$ 是 0.992、0.9992，和表一致。
+$z>z_c$ 時最大在 $\lambda^*=\frac{z/z_c-1}{2f}$，$G_{MF}\sim e^{\mathcal N(z/z_c-1)^2/4f}$，所以 $\ln G_{MF}/\mathcal N\to0.0625$。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 7 章的回顧與筆誤一覽}
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+主題 & 結果 & 書上的式子 & 動畫\\
+\midrule
+路徑和 & 切段求和：4 步回原點一維 6、二維 36；高斯變異數相加 & (7.1)--(7.8) & W701\\
+自迴避 & $c_{14}=2374444$、存活 0.0088、$\langle R^2\rangle=42.79$ 對普通漫步的 14 & (7.9)(7.10) & W702\\
+$1-f$ 展開 & 弧線圖 $(2k-1)!!$；$N=4$ 部分和 256、28、124、96、100 & (7.11)--(7.19) & W703\\
+Dyson & 摺積變乘積；$g=1/(g_0^{-1}-\Sigma)$；計數版 $1,2,10,74\to1,3,15,105$ & (7.20)--(7.37) & W704\\
+微擾、平均場 & 冪次 $1-l(4-d)/2$，四維是分界；$C_{MF}\approx\frac1{\mathcal N}z_c^{-m}e^{-fm^2/\mathcal N}$ & (7.38)--(7.61) & W705\\
+Flory & $R\propto m^{3/(d+2)}$：二維 $\frac34$（精確）、三維 0.6（數值 0.588） & (7.62)--(7.64) & W706\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{筆誤一覽}（給 2004 年版；〔注〕見各節）：下表在文中都用紅框標出，每一條都用程式核對過。
+\begin{center}
+\footnotesize\renewcommand{\arraystretch}{0.9}
+\SevenTabErrata
+\end{center}

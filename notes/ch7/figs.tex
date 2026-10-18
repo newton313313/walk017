@@ -1,0 +1,539 @@
+% figs.tex —— 由 ch7/make_figs.py 產生，請勿手動修改。
+% 重新產生：python ch7/make_figs.py（第 7 章，動畫 W701–W706）
+
+\newcommand{\SevenFigGrid}{%
+\begin{tikzpicture}[x=0.5cm,y=0.5cm,font=\scriptsize,baseline=(current bounding box.center)]
+\draw[gray!30] (-2.5,-2.5) grid (2.5,2.5);
+\draw[gray!60,->] (-2.7,0) -- (2.8,0); \draw[gray!60,->] (0,-2.7) -- (0,2.8);
+\node[circle,draw=cBar,fill=cBar!10,inner sep=1.2pt,minimum size=11pt] at (-2,0) {$1$};
+\node[circle,draw=cBar,fill=cBar!25,inner sep=1.2pt,minimum size=11pt] at (-1,-1) {$2$};
+\node[circle,draw=cBar,fill=cBar!25,inner sep=1.2pt,minimum size=11pt] at (-1,1) {$2$};
+\node[circle,draw=cBar,fill=cBar!10,inner sep=1.2pt,minimum size=11pt] at (0,-2) {$1$};
+\node[circle,draw=cBar,fill=cBar!45,inner sep=1.2pt,minimum size=11pt] at (0,0) {$4$};
+\node[circle,draw=cBar,fill=cBar!10,inner sep=1.2pt,minimum size=11pt] at (0,2) {$1$};
+\node[circle,draw=cBar,fill=cBar!25,inner sep=1.2pt,minimum size=11pt] at (1,-1) {$2$};
+\node[circle,draw=cBar,fill=cBar!25,inner sep=1.2pt,minimum size=11pt] at (1,1) {$2$};
+\node[circle,draw=cBar,fill=cBar!10,inner sep=1.2pt,minimum size=11pt] at (2,0) {$1$};
+\node at (0,-3.2) {$\sum_{\vec r}C(2;\vec r)^2=36$};
+\end{tikzpicture}}
+
+\newcommand{\SevenFigGauss}{%
+\begin{tikzpicture}[x=0.36cm,y=6.2cm,>=Stealth,font=\scriptsize,baseline=(current bounding box.center)]
+\draw[->] (-6.4,0) -- (6.6,0) node[right] {$x$};
+\draw[->] (0,0) -- (0,0.47);
+\foreach \x in {-6,-3,3,6} {\draw (\x,0) -- (\x,-0.012); \node[below] at (\x,-0.01) {$\x$};}
+\foreach \y in {0.1,0.2,0.3,0.4} {\draw (0,\y) -- (-0.2,\y); \node[left] at (-0.2,\y) {$\y$};}
+\draw[cBar,densely dashed,thick] plot coordinates {(-6.000,0.0000) (-5.833,0.0000) (-5.667,0.0000) (-5.500,0.0000) (-5.333,0.0000) (-5.167,0.0000) (-5.000,0.0000) (-4.833,0.0000) (-4.667,0.0000) (-4.500,0.0000) (-4.333,0.0000) (-4.167,0.0001) (-4.000,0.0001) (-3.833,0.0003) (-3.667,0.0005) (-3.500,0.0009) (-3.333,0.0015) (-3.167,0.0027) (-3.000,0.0044) (-2.833,0.0072) (-2.667,0.0114) (-2.500,0.0175) (-2.333,0.0262) (-2.167,0.0382) (-2.000,0.0540) (-1.833,0.0743) (-1.667,0.0995) (-1.500,0.1295) (-1.333,0.1640) (-1.167,0.2020) (-1.000,0.2420) (-0.833,0.2819) (-0.667,0.3194) (-0.500,0.3521) (-0.333,0.3774) (-0.167,0.3934) (0.000,0.3989) (0.167,0.3934) (0.333,0.3774) (0.500,0.3521) (0.667,0.3194) (0.833,0.2819) (1.000,0.2420) (1.167,0.2020) (1.333,0.1640) (1.500,0.1295) (1.667,0.0995) (1.833,0.0743) (2.000,0.0540) (2.167,0.0382) (2.333,0.0262) (2.500,0.0175) (2.667,0.0114) (2.833,0.0072) (3.000,0.0044) (3.167,0.0027) (3.333,0.0015) (3.500,0.0009) (3.667,0.0005) (3.833,0.0003) (4.000,0.0001) (4.167,0.0001) (4.333,0.0000) (4.500,0.0000) (4.667,0.0000) (4.833,0.0000) (5.000,0.0000) (5.167,0.0000) (5.333,0.0000) (5.500,0.0000) (5.667,0.0000) (5.833,0.0000) (6.000,0.0000)};
+\draw[cWalk,densely dashed,thick] plot coordinates {(-6.000,0.0000) (-5.833,0.0001) (-5.667,0.0001) (-5.500,0.0001) (-5.333,0.0002) (-5.167,0.0004) (-5.000,0.0005) (-4.833,0.0008) (-4.667,0.0012) (-4.500,0.0018) (-4.333,0.0026) (-4.167,0.0037) (-4.000,0.0052) (-3.833,0.0072) (-3.667,0.0098) (-3.500,0.0132) (-3.333,0.0175) (-3.167,0.0230) (-3.000,0.0297) (-2.833,0.0379) (-2.667,0.0477) (-2.500,0.0591) (-2.333,0.0723) (-2.167,0.0872) (-2.000,0.1038) (-1.833,0.1217) (-1.667,0.1409) (-1.500,0.1607) (-1.333,0.1809) (-1.167,0.2007) (-1.000,0.2197) (-0.833,0.2371) (-0.667,0.2524) (-0.500,0.2650) (-0.333,0.2744) (-0.167,0.2801) (0.000,0.2821) (0.167,0.2801) (0.333,0.2744) (0.500,0.2650) (0.667,0.2524) (0.833,0.2371) (1.000,0.2197) (1.167,0.2007) (1.333,0.1809) (1.500,0.1607) (1.667,0.1409) (1.833,0.1217) (2.000,0.1038) (2.167,0.0872) (2.333,0.0723) (2.500,0.0591) (2.667,0.0477) (2.833,0.0379) (3.000,0.0297) (3.167,0.0230) (3.333,0.0175) (3.500,0.0132) (3.667,0.0098) (3.833,0.0072) (4.000,0.0052) (4.167,0.0037) (4.333,0.0026) (4.500,0.0018) (4.667,0.0012) (4.833,0.0008) (5.000,0.0005) (5.167,0.0004) (5.333,0.0002) (5.500,0.0001) (5.667,0.0001) (5.833,0.0001) (6.000,0.0000)};
+\draw[cExact,very thick] plot coordinates {(-6.000,0.0006) (-5.833,0.0008) (-5.667,0.0011) (-5.500,0.0015) (-5.333,0.0020) (-5.167,0.0027) (-5.000,0.0036) (-4.833,0.0047) (-4.667,0.0061) (-4.500,0.0079) (-4.333,0.0101) (-4.167,0.0128) (-4.000,0.0160) (-3.833,0.0199) (-3.667,0.0245) (-3.500,0.0299) (-3.333,0.0361) (-3.167,0.0433) (-3.000,0.0514) (-2.833,0.0604) (-2.667,0.0704) (-2.500,0.0813) (-2.333,0.0930) (-2.167,0.1053) (-2.000,0.1183) (-1.833,0.1315) (-1.667,0.1450) (-1.500,0.1583) (-1.333,0.1713) (-1.167,0.1836) (-1.000,0.1950) (-0.833,0.2052) (-0.667,0.2139) (-0.500,0.2209) (-0.333,0.2261) (-0.167,0.2293) (0.000,0.2303) (0.167,0.2293) (0.333,0.2261) (0.500,0.2209) (0.667,0.2139) (0.833,0.2052) (1.000,0.1950) (1.167,0.1836) (1.333,0.1713) (1.500,0.1583) (1.667,0.1450) (1.833,0.1315) (2.000,0.1183) (2.167,0.1053) (2.333,0.0930) (2.500,0.0813) (2.667,0.0704) (2.833,0.0604) (3.000,0.0514) (3.167,0.0433) (3.333,0.0361) (3.500,0.0299) (3.667,0.0245) (3.833,0.0199) (4.000,0.0160) (4.167,0.0128) (4.333,0.0101) (4.500,0.0079) (4.667,0.0061) (4.833,0.0047) (5.000,0.0036) (5.167,0.0027) (5.333,0.0020) (5.500,0.0015) (5.667,0.0011) (5.833,0.0008) (6.000,0.0006)};
+\draw[cBar,densely dashed,thick] (2.0,0.440) -- (3.2,0.440) node[right,black] {變異數 1：0.3989};
+\draw[cWalk,densely dashed,thick] (2.0,0.385) -- (3.2,0.385) node[right,black] {變異數 2：0.2821};
+\draw[cExact,very thick] (2.0,0.330) -- (3.2,0.330) node[right,black] {變異數 3：0.2303};
+\fill (-5,0.0036) circle (1.1pt);
+\fill (-4,0.0160) circle (1.1pt);
+\fill (-3,0.0514) circle (1.1pt);
+\fill (-2,0.1183) circle (1.1pt);
+\fill (-1,0.1950) circle (1.1pt);
+\fill (0,0.2303) circle (1.1pt);
+\fill (1,0.1950) circle (1.1pt);
+\fill (2,0.1183) circle (1.1pt);
+\fill (3,0.0514) circle (1.1pt);
+\fill (4,0.0160) circle (1.1pt);
+\fill (5,0.0036) circle (1.1pt);
+\end{tikzpicture}}
+
+\newcommand{\SevenTabSplit}{%
+\begin{tabular}{@{}lll@{}}
+\toprule
+回原點 & 一維 & 二維\\
+\midrule
+4 步，$M=2$ & $1+4+1=6$ & $16+4+16=36$\\
+4 步，$M=3$ & $2\cdot3=6$ & $4\cdot9=36$\\
+6 步，$2+2+2$ & 20 & 400\\
+暴力列舉 & 6，20 & 36，400\\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\SevenFigTwoStep}{%
+\begin{tikzpicture}[x=0.17cm,y=0.17cm,font=\scriptsize]
+\draw[gray!25] (-2.2,-2.2) rectangle (2.2,2.2);
+\fill (0.0,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (0.0,0) -- (1.0,0) -- (2.0,0);
+\draw[gray!25] (2.8,-2.2) rectangle (7.2,2.2);
+\fill (5.0,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (5.0,0) -- (6.0,0) -- (6.0,1);
+\draw[gray!25] (7.8,-2.2) rectangle (12.2,2.2);
+\fill (10.0,0) circle (0.45);
+\draw[gray,thick] (10.0,0) -- (11.0,0) -- (11.00,0.45) -- (10.00,0.45);
+\node[cWrong,font=\small,inner sep=0pt] at (11.60,0.45) {$\times$};
+\draw[gray!25] (12.8,-2.2) rectangle (17.2,2.2);
+\fill (15.0,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (15.0,0) -- (16.0,0) -- (16.0,-1);
+\node at (7.5,3.4) {第一步向東：3＋1};
+\draw[gray!25] (20.4,-2.2) rectangle (24.8,2.2);
+\fill (22.6,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (22.6,0) -- (22.6,1) -- (23.6,1);
+\draw[gray!25] (25.4,-2.2) rectangle (29.8,2.2);
+\fill (27.6,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (27.6,0) -- (27.6,1) -- (27.6,2);
+\draw[gray!25] (30.4,-2.2) rectangle (34.8,2.2);
+\fill (32.6,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (32.6,0) -- (32.6,1) -- (31.6,1);
+\draw[gray!25] (35.4,-2.2) rectangle (39.8,2.2);
+\fill (37.6,0) circle (0.45);
+\draw[gray,thick] (37.6,0) -- (37.6,1) -- (37.15,1.00) -- (37.15,0.00);
+\node[cWrong,font=\small,inner sep=0pt] at (37.15,1.60) {$\times$};
+\node at (30.1,3.4) {向北：3＋1};
+\draw[gray!25] (43.0,-2.2) rectangle (47.4,2.2);
+\fill (45.2,0) circle (0.45);
+\draw[gray,thick] (45.2,0) -- (44.2,0) -- (44.20,-0.45) -- (45.20,-0.45);
+\node[cWrong,font=\small,inner sep=0pt] at (43.60,-0.45) {$\times$};
+\draw[gray!25] (48.0,-2.2) rectangle (52.4,2.2);
+\fill (50.2,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (50.2,0) -- (49.2,0) -- (49.2,1);
+\draw[gray!25] (53.0,-2.2) rectangle (57.4,2.2);
+\fill (55.2,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (55.2,0) -- (54.2,0) -- (53.2,0);
+\draw[gray!25] (58.0,-2.2) rectangle (62.4,2.2);
+\fill (60.2,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (60.2,0) -- (59.2,0) -- (59.2,-1);
+\node at (52.7,3.4) {向西：3＋1};
+\draw[gray!25] (65.6,-2.2) rectangle (70.0,2.2);
+\fill (67.8,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (67.8,0) -- (67.8,-1) -- (68.8,-1);
+\draw[gray!25] (70.6,-2.2) rectangle (75.0,2.2);
+\fill (72.8,0) circle (0.45);
+\draw[gray,thick] (72.8,0) -- (72.8,-1) -- (73.25,-1.00) -- (73.25,0.00);
+\node[cWrong,font=\small,inner sep=0pt] at (73.25,-1.60) {$\times$};
+\draw[gray!25] (75.6,-2.2) rectangle (80.0,2.2);
+\fill (77.8,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (77.8,0) -- (77.8,-1) -- (76.8,-1);
+\draw[gray!25] (80.6,-2.2) rectangle (85.0,2.2);
+\fill (82.8,0) circle (0.45);
+\draw[cWalk,thick,-{Stealth[length=2.5pt]}] (82.8,0) -- (82.8,-1) -- (82.8,-2);
+\node at (75.3,3.4) {向南：3＋1};
+\end{tikzpicture}}
+
+\newcommand{\SevenTabSaw}{%
+\begin{tabular}{@{}l*{7}{r}@{}}
+\toprule
+$N$ & 1 & 2 & 3 & 4 & 5 & 6 & 7\\
+\midrule
+$c_N$ & 4 & 12 & 36 & 100 & 284 & 780 & 2172\\
+$c_N/4^N$ & 1.0000 & 0.7500 & 0.5625 & 0.3906 & 0.2773 & 0.1904 & 0.1326\\
+$\langle R^2\rangle$ & 1.0000 & 2.6667 & 4.5556 & 7.0400 & 9.5634 & 12.5744 & 15.5562\\
+\midrule
+$N$ & 8 & 9 & 10 & 11 & 12 & 13 & 14\\
+\midrule
+$c_N$ & 5916 & 16268 & 44100 & 120292 & 324932 & 881500 & 2374444\\
+$c_N/4^N$ & 0.0903 & 0.0621 & 0.0421 & 0.0287 & 0.0194 & 0.0131 & 0.0088\\
+$\langle R^2\rangle$ & 19.0128 & 22.4114 & 26.2425 & 30.0177 & 34.1870 & 38.3043 & 42.7864\\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\SevenFigLogLog}{%
+\begin{tikzpicture}[x=1.0cm,y=0.6cm,>=Stealth,font=\scriptsize]
+\draw[->] (0,0) -- (4.3,0) node[right] {$N$};
+\draw[->] (0,0) -- (0,6.4) node[above] {$\langle R^2\rangle$};
+\foreach \x/\l in {0/1,1/2,2/4,3/8,4/16} {\draw (\x,0) -- (\x,-0.12); \node[below] at (\x,-0.1) {$\l$};}
+\foreach \y/\l in {0/1,2/4,4/16,6/64} {\draw (0,\y) -- (-0.06,\y); \node[left] at (-0.06,\y) {$\l$};}
+\draw[gray,densely dashed] (0,0) -- (4,4) node[below=1pt] {普通漫步 $N$};
+\draw[cWalk,densely dotted,thick] (1.0,1.208) -- (4.0,5.708) node[above] {斜率 $\frac32$};
+\fill[cBar] (0.000,0.000) circle (1.4pt);
+\fill[cBar] (1.000,1.415) circle (1.4pt);
+\fill[cBar] (1.585,2.188) circle (1.4pt);
+\fill[cBar] (2.000,2.816) circle (1.4pt);
+\fill[cBar] (2.322,3.258) circle (1.4pt);
+\fill[cBar] (2.585,3.652) circle (1.4pt);
+\fill[cBar] (2.807,3.959) circle (1.4pt);
+\fill[cBar] (3.000,4.249) circle (1.4pt);
+\fill[cBar] (3.170,4.486) circle (1.4pt);
+\fill[cBar] (3.322,4.714) circle (1.4pt);
+\fill[cBar] (3.459,4.908) circle (1.4pt);
+\fill[cBar] (3.585,5.095) circle (1.4pt);
+\fill[cBar] (3.700,5.259) circle (1.4pt);
+\fill[cBar] (3.807,5.419) circle (1.4pt);
+\node[cBar,left] at (3.707,5.519) {自迴避 42.79};
+\end{tikzpicture}}
+
+\newcommand{\SevenFigChords}{%
+\begin{tikzpicture}[font=\scriptsize]
+\draw[thick] (0.000,0) -- (0.990,0);
+\draw[cWrong,densely dashed,thick] (0.330,0) arc[start angle=180,end angle=0,radius=0.165];
+\fill (0.330,0) circle (1.2pt);
+\fill (0.660,0) circle (1.2pt);
+\node[below] at (0.495,-0.05) {一階 (7.19)};
+\draw[thick] (1.440,0) -- (3.090,0);
+\draw[cWrong,densely dashed,thick] (1.770,0) arc[start angle=180,end angle=0,radius=0.495];
+\draw[cWrong,densely dashed,thick] (2.100,0) arc[start angle=180,end angle=0,radius=0.165];
+\fill (1.770,0) circle (1.2pt);
+\fill (2.100,0) circle (1.2pt);
+\fill (2.430,0) circle (1.2pt);
+\fill (2.760,0) circle (1.2pt);
+\node[below] at (2.265,-0.05) {(a) 巢狀};
+\draw[thick] (3.540,0) -- (5.190,0);
+\draw[cWrong,densely dashed,thick] (3.870,0) arc[start angle=180,end angle=0,radius=0.165];
+\draw[cWrong,densely dashed,thick] (4.530,0) arc[start angle=180,end angle=0,radius=0.165];
+\fill (3.870,0) circle (1.2pt);
+\fill (4.200,0) circle (1.2pt);
+\fill (4.530,0) circle (1.2pt);
+\fill (4.860,0) circle (1.2pt);
+\node[below] at (4.365,-0.05) {(b) 並排};
+\draw[thick] (5.640,0) -- (7.290,0);
+\draw[cWrong,densely dashed,thick] (5.970,0) arc[start angle=180,end angle=0,radius=0.330];
+\draw[cWrong,densely dashed,thick] (6.300,0) arc[start angle=180,end angle=0,radius=0.330];
+\fill (5.970,0) circle (1.2pt);
+\fill (6.300,0) circle (1.2pt);
+\fill (6.630,0) circle (1.2pt);
+\fill (6.960,0) circle (1.2pt);
+\node[below] at (6.465,-0.05) {(c) 交叉};
+\end{tikzpicture}}
+
+\newcommand{\SevenFigThird}{%
+\begin{tikzpicture}[font=\tiny]
+\begin{scope}[yshift=0.00cm]
+\draw[thick] (0.000,0) -- (1.260,0);
+\draw[gray,densely dashed,thick] (0.180,0) arc[start angle=180,end angle=0,radius=0.090];
+\draw[gray,densely dashed,thick] (0.540,0) arc[start angle=180,end angle=0,radius=0.090];
+\draw[gray,densely dashed,thick] (0.900,0) arc[start angle=180,end angle=0,radius=0.090];
+\fill (0.180,0) circle (0.9pt);
+\fill (0.360,0) circle (0.9pt);
+\fill (0.540,0) circle (0.9pt);
+\fill (0.720,0) circle (0.9pt);
+\fill (0.900,0) circle (0.9pt);
+\fill (1.080,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=0.00cm]
+\draw[thick] (1.600,0) -- (2.860,0);
+\draw[gray,densely dashed,thick] (1.780,0) arc[start angle=180,end angle=0,radius=0.090];
+\draw[gray,densely dashed,thick] (2.140,0) arc[start angle=180,end angle=0,radius=0.180];
+\draw[gray,densely dashed,thick] (2.320,0) arc[start angle=180,end angle=0,radius=0.180];
+\fill (1.780,0) circle (0.9pt);
+\fill (1.960,0) circle (0.9pt);
+\fill (2.140,0) circle (0.9pt);
+\fill (2.320,0) circle (0.9pt);
+\fill (2.500,0) circle (0.9pt);
+\fill (2.680,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=0.00cm]
+\draw[thick] (3.200,0) -- (4.460,0);
+\draw[gray,densely dashed,thick] (3.380,0) arc[start angle=180,end angle=0,radius=0.090];
+\draw[gray,densely dashed,thick] (3.740,0) arc[start angle=180,end angle=0,radius=0.270];
+\draw[gray,densely dashed,thick] (3.920,0) arc[start angle=180,end angle=0,radius=0.090];
+\fill (3.380,0) circle (0.9pt);
+\fill (3.560,0) circle (0.9pt);
+\fill (3.740,0) circle (0.9pt);
+\fill (3.920,0) circle (0.9pt);
+\fill (4.100,0) circle (0.9pt);
+\fill (4.280,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=0.00cm]
+\draw[thick] (4.800,0) -- (6.060,0);
+\draw[gray,densely dashed,thick] (4.980,0) arc[start angle=180,end angle=0,radius=0.180];
+\draw[gray,densely dashed,thick] (5.160,0) arc[start angle=180,end angle=0,radius=0.180];
+\draw[gray,densely dashed,thick] (5.700,0) arc[start angle=180,end angle=0,radius=0.090];
+\fill (4.980,0) circle (0.9pt);
+\fill (5.160,0) circle (0.9pt);
+\fill (5.340,0) circle (0.9pt);
+\fill (5.520,0) circle (0.9pt);
+\fill (5.700,0) circle (0.9pt);
+\fill (5.880,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=0.00cm]
+\draw[thick] (6.400,0) -- (7.660,0);
+\draw[cWalk,densely dashed,thick] (6.580,0) arc[start angle=180,end angle=0,radius=0.180];
+\draw[cWalk,densely dashed,thick] (6.760,0) arc[start angle=180,end angle=0,radius=0.270];
+\draw[cWalk,densely dashed,thick] (7.120,0) arc[start angle=180,end angle=0,radius=0.180];
+\fill (6.580,0) circle (0.9pt);
+\fill (6.760,0) circle (0.9pt);
+\fill (6.940,0) circle (0.9pt);
+\fill (7.120,0) circle (0.9pt);
+\fill (7.300,0) circle (0.9pt);
+\fill (7.480,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-0.85cm]
+\draw[thick] (0.000,0) -- (1.260,0);
+\draw[cWalk,densely dashed,thick] (0.180,0) arc[start angle=180,end angle=0,radius=0.180];
+\draw[cWalk,densely dashed,thick] (0.360,0) arc[start angle=180,end angle=0,radius=0.360];
+\draw[cWalk,densely dashed,thick] (0.720,0) arc[start angle=180,end angle=0,radius=0.090];
+\fill (0.180,0) circle (0.9pt);
+\fill (0.360,0) circle (0.9pt);
+\fill (0.540,0) circle (0.9pt);
+\fill (0.720,0) circle (0.9pt);
+\fill (0.900,0) circle (0.9pt);
+\fill (1.080,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-0.85cm]
+\draw[thick] (1.600,0) -- (2.860,0);
+\draw[gray,densely dashed,thick] (1.780,0) arc[start angle=180,end angle=0,radius=0.270];
+\draw[gray,densely dashed,thick] (1.960,0) arc[start angle=180,end angle=0,radius=0.090];
+\draw[gray,densely dashed,thick] (2.500,0) arc[start angle=180,end angle=0,radius=0.090];
+\fill (1.780,0) circle (0.9pt);
+\fill (1.960,0) circle (0.9pt);
+\fill (2.140,0) circle (0.9pt);
+\fill (2.320,0) circle (0.9pt);
+\fill (2.500,0) circle (0.9pt);
+\fill (2.680,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-0.85cm]
+\draw[thick] (3.200,0) -- (4.460,0);
+\draw[cWalk,densely dashed,thick] (3.380,0) arc[start angle=180,end angle=0,radius=0.270];
+\draw[cWalk,densely dashed,thick] (3.560,0) arc[start angle=180,end angle=0,radius=0.270];
+\draw[cWalk,densely dashed,thick] (3.740,0) arc[start angle=180,end angle=0,radius=0.270];
+\fill (3.380,0) circle (0.9pt);
+\fill (3.560,0) circle (0.9pt);
+\fill (3.740,0) circle (0.9pt);
+\fill (3.920,0) circle (0.9pt);
+\fill (4.100,0) circle (0.9pt);
+\fill (4.280,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-0.85cm]
+\draw[thick] (4.800,0) -- (6.060,0);
+\draw[cWalk,densely dashed,thick] (4.980,0) arc[start angle=180,end angle=0,radius=0.270];
+\draw[cWalk,densely dashed,thick] (5.160,0) arc[start angle=180,end angle=0,radius=0.360];
+\draw[cWalk,densely dashed,thick] (5.340,0) arc[start angle=180,end angle=0,radius=0.180];
+\fill (4.980,0) circle (0.9pt);
+\fill (5.160,0) circle (0.9pt);
+\fill (5.340,0) circle (0.9pt);
+\fill (5.520,0) circle (0.9pt);
+\fill (5.700,0) circle (0.9pt);
+\fill (5.880,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-0.85cm]
+\draw[thick] (6.400,0) -- (7.660,0);
+\draw[cWalk,densely dashed,thick] (6.580,0) arc[start angle=180,end angle=0,radius=0.360];
+\draw[cWalk,densely dashed,thick] (6.760,0) arc[start angle=180,end angle=0,radius=0.090];
+\draw[cWalk,densely dashed,thick] (7.120,0) arc[start angle=180,end angle=0,radius=0.180];
+\fill (6.580,0) circle (0.9pt);
+\fill (6.760,0) circle (0.9pt);
+\fill (6.940,0) circle (0.9pt);
+\fill (7.120,0) circle (0.9pt);
+\fill (7.300,0) circle (0.9pt);
+\fill (7.480,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-1.70cm]
+\draw[thick] (0.000,0) -- (1.260,0);
+\draw[cWalk,densely dashed,thick] (0.180,0) arc[start angle=180,end angle=0,radius=0.360];
+\draw[cWalk,densely dashed,thick] (0.360,0) arc[start angle=180,end angle=0,radius=0.180];
+\draw[cWalk,densely dashed,thick] (0.540,0) arc[start angle=180,end angle=0,radius=0.270];
+\fill (0.180,0) circle (0.9pt);
+\fill (0.360,0) circle (0.9pt);
+\fill (0.540,0) circle (0.9pt);
+\fill (0.720,0) circle (0.9pt);
+\fill (0.900,0) circle (0.9pt);
+\fill (1.080,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-1.70cm]
+\draw[thick] (1.600,0) -- (2.860,0);
+\draw[cWalk,densely dashed,thick] (1.780,0) arc[start angle=180,end angle=0,radius=0.360];
+\draw[cWalk,densely dashed,thick] (1.960,0) arc[start angle=180,end angle=0,radius=0.360];
+\draw[cWalk,densely dashed,thick] (2.140,0) arc[start angle=180,end angle=0,radius=0.090];
+\fill (1.780,0) circle (0.9pt);
+\fill (1.960,0) circle (0.9pt);
+\fill (2.140,0) circle (0.9pt);
+\fill (2.320,0) circle (0.9pt);
+\fill (2.500,0) circle (0.9pt);
+\fill (2.680,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-1.70cm]
+\draw[thick] (3.200,0) -- (4.460,0);
+\draw[cWalk,densely dashed,thick] (3.380,0) arc[start angle=180,end angle=0,radius=0.450];
+\draw[cWalk,densely dashed,thick] (3.560,0) arc[start angle=180,end angle=0,radius=0.090];
+\draw[cWalk,densely dashed,thick] (3.920,0) arc[start angle=180,end angle=0,radius=0.090];
+\fill (3.380,0) circle (0.9pt);
+\fill (3.560,0) circle (0.9pt);
+\fill (3.740,0) circle (0.9pt);
+\fill (3.920,0) circle (0.9pt);
+\fill (4.100,0) circle (0.9pt);
+\fill (4.280,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-1.70cm]
+\draw[thick] (4.800,0) -- (6.060,0);
+\draw[cWalk,densely dashed,thick] (4.980,0) arc[start angle=180,end angle=0,radius=0.450];
+\draw[cWalk,densely dashed,thick] (5.160,0) arc[start angle=180,end angle=0,radius=0.180];
+\draw[cWalk,densely dashed,thick] (5.340,0) arc[start angle=180,end angle=0,radius=0.180];
+\fill (4.980,0) circle (0.9pt);
+\fill (5.160,0) circle (0.9pt);
+\fill (5.340,0) circle (0.9pt);
+\fill (5.520,0) circle (0.9pt);
+\fill (5.700,0) circle (0.9pt);
+\fill (5.880,0) circle (0.9pt);
+\end{scope}
+\begin{scope}[yshift=-1.70cm]
+\draw[thick] (6.400,0) -- (7.660,0);
+\draw[cWalk,densely dashed,thick] (6.580,0) arc[start angle=180,end angle=0,radius=0.450];
+\draw[cWalk,densely dashed,thick] (6.760,0) arc[start angle=180,end angle=0,radius=0.270];
+\draw[cWalk,densely dashed,thick] (6.940,0) arc[start angle=180,end angle=0,radius=0.090];
+\fill (6.580,0) circle (0.9pt);
+\fill (6.760,0) circle (0.9pt);
+\fill (6.940,0) circle (0.9pt);
+\fill (7.120,0) circle (0.9pt);
+\fill (7.300,0) circle (0.9pt);
+\fill (7.480,0) circle (0.9pt);
+\end{scope}
+\end{tikzpicture}}
+
+\newcommand{\SevenTabIE}{%
+\begin{tabular}{@{}l*{9}{r}@{}}
+\toprule
+$K$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+\midrule
+$T_K$（$N=4$） & $256$ & $228$ & $96$ & $28$ & $4$ &  &  &  & \\
+$P_K$（$N=4$） & $256$ & $28$ & $124$ & $96$ & $\mathbf{100}$ &  &  &  & \\
+$P_K$（$N=6$） & $4096$ & $-3152$ & $4116$ & $-1492$ & $1996$ & $268$ & $928$ & $748$ & $784$\\
+$P_K$（$N=8$） & $65536$ & $-119332$ & $190940$ & $-222036$ & $248468$ & $-219088$ & $186604$ & $-119052$ & $79824$\\
+\midrule
+$K$ & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & \\
+\midrule
+$P_K$（$N=6$） & $\mathbf{780}$ &  &  &  &  &  &  &  & \\
+$P_K$（$N=8$） & $-31528$ & $22296$ & $-216$ & $7784$ & $5496$ & $5976$ & $5912$ & $\mathbf{5916}$ & \\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\SevenFigDyson}{%
+\begin{tikzpicture}[font=\small,baseline=(current bounding box.center)]
+\node[anchor=east] at (0,0) {$g=$};
+\draw[thick] (0.10,0) -- (0.65,0);
+\node at (0.95,0) {$+$};
+\draw[thick] (1.25,0) -- (1.80,0);
+\draw[cWrong,thick,fill=cWrong!8] (2.02,0) circle (0.22) node {\scriptsize$\Sigma$};
+\draw[thick] (2.24,0) -- (2.79,0);
+\node at (3.09,0) {$+$};
+\draw[thick] (3.39,0) -- (3.94,0);
+\draw[cWrong,thick,fill=cWrong!8] (4.16,0) circle (0.22) node {\scriptsize$\Sigma$};
+\draw[thick] (4.38,0) -- (4.93,0);
+\draw[cWrong,thick,fill=cWrong!8] (5.15,0) circle (0.22) node {\scriptsize$\Sigma$};
+\draw[thick] (5.37,0) -- (5.92,0);
+\node at (6.22,0) {$+$};
+\node[anchor=west] at (6.32,0) {$\cdots=\dfrac{g_0}{1-\Sigma g_0}=\dfrac{1}{g_0^{-1}-\Sigma}$};
+\end{tikzpicture}}
+
+\newcommand{\SevenFigDysonBars}{%
+\begin{tikzpicture}[font=\scriptsize,baseline=(current bounding box.center)]
+\begin{scope}
+\draw[cBar,fill=cBar!25] (0.00,0) rectangle (0.36,0.720);
+\node[below] at (0.18,0) {$2$};
+\draw[cBar,fill=cBar!25] (0.48,0) rectangle (0.84,1.080);
+\node[below] at (0.66,0) {$3$};
+\draw[cBar,fill=cBar!25] (0.96,0) rectangle (1.32,1.260);
+\node[below] at (1.14,0) {$\frac{7}{2}$};
+\draw[cBar,fill=cBar!25] (1.44,0) rectangle (1.80,1.350);
+\node[below] at (1.62,0) {$\frac{15}{4}$};
+\draw[cBar,fill=cBar!25] (1.92,0) rectangle (2.28,1.395);
+\node[below] at (2.10,0) {$\frac{31}{8}$};
+\draw[cExact,densely dashed,thick] (-0.1,1.440) -- (2.40,1.440) node[right] {$4$};
+\draw (-0.1,0) -- (2.40,0);
+\node[below] at (1.20,-0.5) {$g_0=2,\ \Sigma=\frac14$ 的部分和};
+\end{scope}
+\end{tikzpicture}}
+
+\newcommand{\SevenTabDyson}{%
+\begin{tabular}[c]{@{}lrrrrrl@{}}
+\toprule
+摺積 (7.20)：$N$ & 0 & 1 & 2 & 3 & 4 & \\
+\quad $H_1=H_2=2^K$ & 1 & 2 & 4 & 8 & 16 & \\
+\quad $\sum_MH_1(M)H_2(N-M)$ & 1 & 4 & 12 & 32 & 80 & $z=0.1$：1.5625\\
+\midrule
+Dyson：項數 $n$ & 1 & 2 & 3 & 4 & 5 & $\infty$\\
+\quad $g_0\sum_{k<n}(\Sigma g_0)^k$ & $2$ & $3$ & $\frac{7}{2}$ & $\frac{15}{4}$ & $\frac{31}{8}$ & $4$\\
+\bottomrule
+\end{tabular}
+\qquad
+\begin{tabular}[c]{@{}crrr@{}}
+\toprule
+計數版 $k$ & $(2k-1)!!$ & 不可約 $I_k$ & $\frac1{1-I(x)}$\\
+\midrule
+0 & 1 & --- & 1\\
+1 & 1 & 1 & 1\\
+2 & 3 & 2 & 3\\
+3 & 15 & 10 & 15\\
+4 & 105 & 74 & 105\\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\SevenTabPower}{%
+\begin{tabular}{@{}c|rrrrr@{}}
+\toprule
+$d$ \textbackslash\ $l$ & 0 & 1 & 2 & 3 & 4\\
+\midrule
+1 & $1$ & $-\frac{1}{2}$ & $-2$ & $-\frac{7}{2}$ & $-5$\\
+2 & $1$ & $0$ & $-1$ & $-2$ & $-3$\\
+3 & $1$ & $\frac{1}{2}$ & $0$ & $-\frac{1}{2}$ & $-1$\\
+4 & $1$ & $1$ & $1$ & $1$ & $1$\\
+5 & $1$ & $\frac{3}{2}$ & $2$ & $\frac{5}{2}$ & $3$\\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\SevenTabMF}{%
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+練習 7.4：$(m,\mathcal N)$ & $(10,10^2)$ & $(10^2,10^4)$ & $(10^3,10^6)$ & & 極限\\
+\quad $\mathcal Nz_c^mC_{MF}(m)$ & 0.3385 & 0.3643 & 0.3675 & & 0.3679\\
+\midrule
+練習 7.5：$\mathcal N$ & $10$ & $10^2$ & $10^3$ & $10^4$ & \\
+\quad $\frac z{z_c}=\frac12$：$\mathcal N(1-\frac z{z_c})G_{MF}$ & 0.6899 & 0.9341 & 0.9922 & 0.9992 & 1\\
+\quad $\frac z{z_c}=\frac32$：$\frac{\ln G_{MF}}{\mathcal N}$ & --- & 0.0452 & 0.0596 & 0.0621 & 0.0625\\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\SevenFigFlory}{%
+\begin{tikzpicture}[x=0.0085cm,y=0.022cm,>=Stealth,font=\scriptsize]
+\draw[->] (0,0) -- (640,0) node[right] {$R$};
+\draw[->] (0,-160) -- (0,12);
+\foreach \x in {100,200,300,400,500,600} {\draw (\x,0) -- (\x,3); \node[above] at (\x,2) {\x};}
+\foreach \y in {-150,-100,-50} {\draw (0,\y) -- (-8,\y); \node[left] at (-8,\y) {$\y$};}
+\begin{scope}\clip (0,-160) rectangle (640,0);
+\draw[cBar,thick] plot coordinates {(50,-2.50) (55,-3.02) (60,-3.60) (65,-4.22) (70,-4.90) (75,-5.62) (80,-6.40) (85,-7.22) (90,-8.10) (95,-9.03) (100,-10.00) (105,-11.03) (110,-12.10) (115,-13.22) (120,-14.40) (125,-15.62) (130,-16.90) (135,-18.23) (140,-19.60) (145,-21.02) (150,-22.50) (155,-24.02) (160,-25.60) (165,-27.23) (170,-28.90) (175,-30.62) (180,-32.40) (185,-34.23) (190,-36.10) (195,-38.02) (200,-40.00) (205,-42.02) (210,-44.10) (215,-46.23) (220,-48.40) (225,-50.62) (230,-52.90) (235,-55.23) (240,-57.60) (245,-60.02) (250,-62.50) (255,-65.03) (260,-67.60) (265,-70.22) (270,-72.90) (275,-75.62) (280,-78.40) (285,-81.22) (290,-84.10) (295,-87.03) (300,-90.00) (305,-93.03) (310,-96.10) (315,-99.22) (320,-102.40) (325,-105.62) (330,-108.90) (335,-112.22) (340,-115.60) (345,-119.03) (350,-122.50) (355,-126.03) (360,-129.60) (365,-133.22) (370,-136.90) (375,-140.62) (380,-144.40) (385,-148.22) (390,-152.10) (395,-156.03) (400,-160.00) (405,-164.03) (410,-168.10) (415,-172.22) (420,-176.40) (425,-180.62) (430,-184.90) (435,-189.22) (440,-193.60) (445,-198.03) (450,-202.50) (455,-207.03) (460,-211.60) (465,-216.22) (470,-220.90) (475,-225.62) (480,-230.40) (485,-235.22) (490,-240.10) (495,-245.03) (500,-250.00) (505,-255.03) (510,-260.10) (515,-265.23) (520,-270.40) (525,-275.62) (530,-280.90) (535,-286.23) (540,-291.60) (545,-297.02) (550,-302.50) (555,-308.02) (560,-313.60) (565,-319.23) (570,-324.90) (575,-330.62) (580,-336.40) (585,-342.23) (590,-348.10) (595,-354.02) (600,-360.00)};
+\draw[cWalk,thick] plot coordinates {(50,-400.00) (55,-330.58) (60,-277.78) (65,-236.69) (70,-204.08) (75,-177.78) (80,-156.25) (85,-138.41) (90,-123.46) (95,-110.80) (100,-100.00) (105,-90.70) (110,-82.64) (115,-75.61) (120,-69.44) (125,-64.00) (130,-59.17) (135,-54.87) (140,-51.02) (145,-47.56) (150,-44.44) (155,-41.62) (160,-39.06) (165,-36.73) (170,-34.60) (175,-32.65) (180,-30.86) (185,-29.22) (190,-27.70) (195,-26.30) (200,-25.00) (205,-23.80) (210,-22.68) (215,-21.63) (220,-20.66) (225,-19.75) (230,-18.90) (235,-18.11) (240,-17.36) (245,-16.66) (250,-16.00) (255,-15.38) (260,-14.79) (265,-14.24) (270,-13.72) (275,-13.22) (280,-12.76) (285,-12.31) (290,-11.89) (295,-11.49) (300,-11.11) (305,-10.75) (310,-10.41) (315,-10.08) (320,-9.77) (325,-9.47) (330,-9.18) (335,-8.91) (340,-8.65) (345,-8.40) (350,-8.16) (355,-7.93) (360,-7.72) (365,-7.51) (370,-7.30) (375,-7.11) (380,-6.93) (385,-6.75) (390,-6.57) (395,-6.41) (400,-6.25) (405,-6.10) (410,-5.95) (415,-5.81) (420,-5.67) (425,-5.54) (430,-5.41) (435,-5.28) (440,-5.17) (445,-5.05) (450,-4.94) (455,-4.83) (460,-4.73) (465,-4.62) (470,-4.53) (475,-4.43) (480,-4.34) (485,-4.25) (490,-4.16) (495,-4.08) (500,-4.00) (505,-3.92) (510,-3.84) (515,-3.77) (520,-3.70) (525,-3.63) (530,-3.56) (535,-3.49) (540,-3.43) (545,-3.37) (550,-3.31) (555,-3.25) (560,-3.19) (565,-3.13) (570,-3.08) (575,-3.02) (580,-2.97) (585,-2.92) (590,-2.87) (595,-2.82) (600,-2.78)};
+\draw[cExact,very thick] plot coordinates {(50,-400.00) (55,-333.60) (60,-281.38) (65,-240.91) (70,-208.98) (75,-183.40) (80,-162.65) (85,-145.63) (90,-131.56) (95,-119.83) (100,-110.00) (105,-101.73) (110,-94.74) (115,-88.84) (120,-83.84) (125,-79.62) (130,-76.07) (135,-73.09) (140,-70.62) (145,-68.59) (150,-66.94) (155,-65.65) (160,-64.66) (165,-63.96) (170,-63.50) (175,-63.28) (180,-63.26) (185,-63.44) (190,-63.80) (195,-64.32) (200,-65.00) (205,-65.82) (210,-66.78) (215,-67.86) (220,-69.06) (225,-70.38) (230,-71.80) (235,-73.33) (240,-74.96) (245,-76.68) (250,-78.50) (255,-80.40) (260,-82.39) (265,-84.46) (270,-86.62) (275,-88.85) (280,-91.16) (285,-93.54) (290,-95.99) (295,-98.52) (300,-101.11) (305,-103.77) (310,-106.51) (315,-109.30) (320,-112.17) (325,-115.09) (330,-118.08) (335,-121.14) (340,-124.25) (345,-127.43) (350,-130.66) (355,-133.96) (360,-137.32) (365,-140.73) (370,-144.20) (375,-147.74) (380,-151.33) (385,-154.97) (390,-158.67) (395,-162.43) (400,-166.25) (405,-170.12) (410,-174.05) (415,-178.03) (420,-182.07) (425,-186.16) (430,-190.31) (435,-194.51) (440,-198.77) (445,-203.07) (450,-207.44) (455,-211.86) (460,-216.33) (465,-220.85) (470,-225.43) (475,-230.06) (480,-234.74) (485,-239.48) (490,-244.26) (495,-249.11) (500,-254.00) (505,-258.95) (510,-263.94) (515,-269.00) (520,-274.10) (525,-279.25) (530,-284.46) (535,-289.72) (540,-295.03) (545,-300.39) (550,-305.81) (555,-311.27) (560,-316.79) (565,-322.36) (570,-327.98) (575,-333.65) (580,-339.37) (585,-345.15) (590,-350.97) (595,-356.85) (600,-362.78)};
+\end{scope}
+\draw[gray,densely dashed] (177.83,-160) -- (177.83,0);
+\fill[cExact] (177.83,-63.25) circle (1.6pt);
+\fill (177.83,-31.62) circle (1.4pt);
+\node[below right] at (177.83,-150) {$R^*=177.83$};
+\node[cWalk,anchor=west] at (320,-32) {排斥 $-um^2/R^2$};
+\node[cBar,anchor=west] at (320,-49) {熵 $-R^2/m$};
+\node[cExact,anchor=west] at (320,-66) {和，最大 $-63.25$};
+\node[black,anchor=west] at (320,-83) {交點：兩項都是 $-31.62$};
+\end{tikzpicture}}
+
+\newcommand{\SevenTabFlory}{%
+\begin{tabular}{@{}ccccl@{}}
+\toprule
+$d$ & $\nu_F=\frac3{d+2}$ & 數值斜率 & $R^*$（$m=10^3$） & 已知值\\
+\midrule
+1 & $1$ & 1.0000 & 793.70 & 1\\
+2 & $\frac{3}{4}$ & 0.7500 & 177.83 & $\frac34$（精確）\\
+3 & $\frac{3}{5}$ & 0.6000 & 68.43 & 0.588（數值）\\
+4 & $\frac{1}{2}$ & 0.5000 & 35.50 & $\frac12$\\
+\bottomrule
+\end{tabular}
+\\[6pt]
+\begin{tabular}{@{}l*{5}{c}c@{}}
+\toprule
+二維 $N$ & 6 & 8 & 10 & 12 & 14 & $\infty$\\
+\midrule
+$2\nu_{\rm eff}$ & 1.4306 & 1.4372 & 1.4442 & 1.4505 & 1.4556 & $\frac32$\\
+\bottomrule
+\end{tabular}}
+
+\newcommand{\SevenTabErrata}{%
+\begin{tabular}{@{}lll@{}}
+\toprule
+位置 & 書上 & 應為\\
+\midrule
+p.~169--173，(7.6)(7.11)、Ex.~7.1 & {\color{cWrong}$(2\pi Ma^2)^{-3/2}$} & {\color{cExact}$(2\pi Ma^2/3)^{-3/2}$}\\
+p.~173，(7.11) & {\color{cWrong}$e^{-3|\vec x-\vec r_1|^2/3M_1a^2}$、$\cdots/3M_ka^2$} & {\color{cExact}分母 $2M_1a^2$、$2M_ka^2$}\\
+p.~176，(7.21) 第二、三行 & {\color{cWrong}$Z^{N-M_1}$、$Z^{K_2}$} & {\color{cExact}$z^{N-M_1}$、$z^{K_2}$}\\
+p.~178，(7.27) 前 & {\color{cWrong}Figure 7.3(a)} & {\color{cExact}Figure 7.3(b)（並排）}\\
+p.~183，(7.33) & {\color{cWrong}$g_0[\Sigma_1+\Sigma_2]^2g_0$} & {\color{cExact}$g_0[\Sigma_1+\Sigma_2]g_0[\Sigma_1+\Sigma_2]g_0$}\\
+p.~183，(7.35) & {\color{cWrong}$\frac{g_0}{1+(\Sigma_1+\Sigma_2)g_0}$} & {\color{cExact}$\frac{g_0}{1-(\Sigma_1+\Sigma_2)g_0}$}\\
+p.~188，(7.47) & {\color{cWrong}$za^2\nabla^2G-(z/z_c-1)G=a^d\delta$} & {\color{cExact}$(1-z/z_c)G-za^2\nabla^2G=a^d\delta$}\\
+p.~188，(7.48) & {\color{cWrong}$\psi_i(\vec r)=e^{-\vec q\cdot\vec r}$} & {\color{cExact}$\psi_i(\vec r)=e^{i\vec q\cdot\vec r}/\sqrt V$}\\
+p.~188，(7.50) 後 & {\color{cWrong}(7.43dd)} & {\color{cExact}(7.43d)}\\
+p.~189，(7.55) 前 & {\color{cWrong}積分 $=1/(z_0-z)$} & {\color{cExact}積分 $=z_c/(z_0-z)$}\\
+p.~190，(7.58) 與前一句 & {\color{cWrong}$e^{-\mathcal Nz\lambda/z_c}$；$z^m\cdots\lambda^n$} & {\color{cExact}$e^{+\mathcal Nz\lambda/z_c}$；$(z/z_c)^m\cdots\lambda^m$}\\
+p.~190，(7.59) & {\color{cWrong}$e^{-\mathcal N(f\lambda^2+\mathcal N\lambda)+m\ln\lambda}$} & {\color{cExact}$e^{-\mathcal N(f\lambda^2+\lambda)+m\ln\lambda}$}\\
+p.~191，(7.61) 左邊 & {\color{cWrong}$C_{MF}(N;\vec x,\vec y)$} & {\color{cExact}$C_{MF}(m;\vec x,\vec y)$}\\
+\bottomrule
+\end{tabular}}
