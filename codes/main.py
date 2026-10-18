@@ -8,6 +8,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py Ch4Demo -w    第 4 章 8 幕連續播放（W401–W408），輸出到 renders/Ch4Demo.mp4
     manimgl main.py Ch5Demo -w    第 5 章 7 幕連續播放（W501–W507），輸出到 renders/Ch5Demo.mp4
     manimgl main.py Ch6Demo -w    第 6 章 7 幕連續播放（W601–W607），輸出到 renders/Ch6Demo.mp4
+    manimgl main.py Ch7Demo -w    第 7 章 6 幕連續播放（W701–W706），輸出到 renders/Ch7Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -74,6 +75,12 @@ from scenes import w604_infinite_dim as w604
 from scenes import w605_kramers_identity as w605
 from scenes import w606_one_over_d as w606
 from scenes import w607_fixman_saw as w607
+from scenes import w701_path_sum as w701
+from scenes import w702_self_avoiding as w702
+from scenes import w703_one_minus_f as w703
+from scenes import w704_dyson as w704
+from scenes import w705_mean_field as w705
+from scenes import w706_flory as w706
 
 
 def play_sequence(scene, classes):
@@ -302,6 +309,30 @@ class W607FixmanSaw(w607.W607FixmanSaw):
     pass
 
 
+class W701PathSum(w701.W701PathSum):
+    pass
+
+
+class W702SelfAvoiding(w702.W702SelfAvoiding):
+    pass
+
+
+class W703OneMinusF(w703.W703OneMinusF):
+    pass
+
+
+class W704Dyson(w704.W704Dyson):
+    pass
+
+
+class W705MeanField(w705.W705MeanField):
+    pass
+
+
+class W706Flory(w706.W706Flory):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -365,3 +396,13 @@ class Ch6Demo(w601.W601ShapeCloud):
 
     def construct(self):
         play_sequence(self, CH6)
+
+
+CH7 = [w701.W701PathSum, w702.W702SelfAvoiding, w703.W703OneMinusF, w704.W704Dyson, w705.W705MeanField, w706.W706Flory]
+
+
+class Ch7Demo(w701.W701PathSum):
+    """第 7 章 6 幕連續播放（W701–W706）。"""
+
+    def construct(self):
+        play_sequence(self, CH7)
