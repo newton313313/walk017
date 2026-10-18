@@ -123,6 +123,10 @@ def main():
     ok = code == 0 and "walk_shape（第 6 章）" in out and "全部驗證通過" in out
     report("數學驗證 utils/walk_shape.py（第 6 章）", ok, "定義式＝兩兩差＝Kramers、非球度的公式＝精確動差＝暴力列舉＝模擬、1/d 展開與 Fixman＝模擬、筆誤的更正、場景卡的數字全部一致"
            if ok else out[-300:])
+    code, out = run([sys.executable, str(HERE / "utils" / "walk_saw.py")])
+    ok = code == 0 and "walk_saw（第 7 章）" in out and "全部驗證通過" in out
+    report("數學驗證 utils/walk_saw.py（第 7 章）", ok, "切段＝公式＝暴力列舉、自迴避的 DFS＝文獻＝暴力、1−f 展開三種算法＝c_N、Dyson、平均場與 Flory 的數值＝解析、筆誤的更正、場景卡的數字全部一致"
+           if ok else out[-300:])
 
     notes = HERE.parent / "notes"
     code, out = run([sys.executable, str(notes / "ch1" / "make_figs.py")], cwd=notes)
