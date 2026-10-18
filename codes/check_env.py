@@ -135,6 +135,10 @@ def main():
     ok = code == 0 and "walk_crit（第 9 章）" in out and "全部驗證通過" in out
     report("數學驗證 utils/walk_crit.py（第 9 章）", ok, "平均場＝牛頓＝漸近、Onsager＝低溫展開、小 Ising 列舉＝閉式、Metropolis＝精確列舉、一維 G＝轉移矩陣＝環、標度律（Fraction）、Widom 解析＝差分、Landau 根＝格點、(9.34) quad＝梯形、係數 lgamma＝遞迴、ξ² 兩種列舉、高斯積分＝dblquad＝Gauss–Hermite、Trotter 階數、梯子 n＝1、2 暴力＝閉式、n→0＝自迴避、筆誤的更正、場景卡的數字全部一致"
            if ok else out[-300:])
+    code, out = run([sys.executable, str(HERE / "utils" / "walk_cond.py")])
+    ok = code == 0 and "walk_cond（第 10 章）" in out and "全部驗證通過" in out
+    report("數學驗證 utils/walk_cond.py（第 10 章）", ok, "環面列舉 8 重對稱＝不用對稱＝4^N 暴力＝Gray 碼、平均場 erfcx＝quad、n→0 徑向＝拋物柱＝一維、註 3＝walk_saw 的 G_MF、tanh＝BVP、自旋波 Fraction＝numpy、D 的 FFT＝直接求和＝無限格子＋Ewald、erfc 形 vs 精確步數＝三維遞迴、G(R) Bessel＝G_c、ρ 比值＝差分、指數兩條路（Fraction）、筆誤的更正、場景卡的數字全部一致"
+           if ok else out[-300:])
 
     notes = HERE.parent / "notes"
     code, out = run([sys.executable, str(notes / "ch1" / "make_figs.py")], cwd=notes)
