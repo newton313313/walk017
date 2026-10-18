@@ -9,6 +9,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py Ch5Demo -w    第 5 章 7 幕連續播放（W501–W507），輸出到 renders/Ch5Demo.mp4
     manimgl main.py Ch6Demo -w    第 6 章 7 幕連續播放（W601–W607），輸出到 renders/Ch6Demo.mp4
     manimgl main.py Ch7Demo -w    第 7 章 6 幕連續播放（W701–W706），輸出到 renders/Ch7Demo.mp4
+    manimgl main.py Ch8Demo -w    第 8 章 4 幕連續播放（W801–W804），輸出到 renders/Ch8Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -81,6 +82,10 @@ from scenes import w703_one_minus_f as w703
 from scenes import w704_dyson as w704
 from scenes import w705_mean_field as w705
 from scenes import w706_flory as w706
+from scenes import w801_non_gaussian as w801
+from scenes import w802_scaling_form as w802
+from scenes import w803_steepest_descent as w803
+from scenes import w804_rescaling_flory as w804
 
 
 def play_sequence(scene, classes):
@@ -333,6 +338,22 @@ class W706Flory(w706.W706Flory):
     pass
 
 
+class W801NonGaussian(w801.W801NonGaussian):
+    pass
+
+
+class W802ScalingForm(w802.W802ScalingForm):
+    pass
+
+
+class W803SteepestDescent(w803.W803SteepestDescent):
+    pass
+
+
+class W804RescalingFlory(w804.W804RescalingFlory):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -406,3 +427,13 @@ class Ch7Demo(w701.W701PathSum):
 
     def construct(self):
         play_sequence(self, CH7)
+
+
+CH8 = [w801.W801NonGaussian, w802.W802ScalingForm, w803.W803SteepestDescent, w804.W804RescalingFlory]
+
+
+class Ch8Demo(w801.W801NonGaussian):
+    """第 8 章 4 幕連續播放（W801–W804）。"""
+
+    def construct(self):
+        play_sequence(self, CH8)
