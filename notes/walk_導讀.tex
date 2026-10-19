@@ -1,7 +1,7 @@
 % !TEX program = xelatex
 % 編譯方式： xelatex walk_導讀.tex   （在 notes/ 裡執行，跑兩次以產生目錄與交互參照）
-% 內文在 ch1/part1.tex、ch2/part2.tex、ch3/part3.tex、ch4/part4.tex、ch5/part5.tex、ch6/part6.tex、ch7/part7.tex、ch8/part8.tex、ch9/part9.tex、ch10/part10.tex、ch11/part11.tex；圖與表由 chN/make_figs.py 產生（chN/figs.tex，含數字檢查）。
-% 先 python ch1/make_figs.py、python ch2/make_figs.py、python ch3/make_figs.py、python ch4/make_figs.py、python ch5/make_figs.py、python ch6/make_figs.py、python ch7/make_figs.py、python ch8/make_figs.py、python ch9/make_figs.py、python ch10/make_figs.py、python ch11/make_figs.py 再編譯。
+% 內文在 ch1/part1.tex、ch2/part2.tex、ch3/part3.tex、ch4/part4.tex、ch5/part5.tex、ch6/part6.tex、ch7/part7.tex、ch8/part8.tex、ch9/part9.tex、ch10/part10.tex、ch11/part11.tex、ch12/part12.tex；圖與表由 chN/make_figs.py 產生（chN/figs.tex，含數字檢查）。
+% 先 python ch1/make_figs.py、python ch2/make_figs.py、python ch3/make_figs.py、python ch4/make_figs.py、python ch5/make_figs.py、python ch6/make_figs.py、python ch7/make_figs.py、python ch8/make_figs.py、python ch9/make_figs.py、python ch10/make_figs.py、python ch11/make_figs.py、python ch12/make_figs.py 再編譯。
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[margin=2.2cm]{geometry}
@@ -59,12 +59,12 @@
 
 \begin{center}
 {\Large\bfseries 隨機漫步導讀}\\[4pt]
-J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1--11 章（配合 manim 動畫 W101--W112、W201--W212、W301--W308、W401--W408、W501--W507、W601--W607、W701--W706、W801--W804、W901--W906、W1001--W1005、W1101--W1106）\\[8pt]
+J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1--12 章（配合 manim 動畫 W101--W112、W201--W212、W301--W308、W401--W408、W501--W507、W601--W607、W701--W706、W801--W804、W901--W906、W1001--W1005、W1101--W1106、W1201--W1206）\\[8pt]
 {\small 原文：Joseph Rudnick and George Gaspari, \emph{Elements of the Random Walk: An Introduction for Advanced
 Students and Researchers}, Cambridge University Press, 2004.}
 \end{center}
 
-\begin{keybox}[全書地圖（目前完成到第 11 章）]
+\begin{keybox}[全書地圖：全書完成（第 1--12 章）]
 \small
 \begin{tabular}{@{}rp{0.93\linewidth}@{}}
 1 & 技巧入門：一維最簡單的漫步——數路線、動差、Stirling 與高斯、擴散方程、生成函數、鞍點法（序曲）\\
@@ -144,6 +144,10 @@ Students and Researchers}, Cambridge University Press, 2004.}
 11.1.1 & 碎形、維度 & W1101 & 11.2 前半 & 一維 Gaussian 鏈 & W1103\\
 11.1.2 & 被動的重整化 & W1102 & 11.2 例題 & 一維 Ising 的抽格 & W1104\\
 11.3 & 不動點、臨界指數 & W1106 & 11.2.1--2 & 動量殼、連續 & W1105\\
+\midrule
+12.1 & 四次項、殼層 & W1201 & 12.2.5--6 & $\epsilon$ 展開 & W1204\\
+12.7 & 配對、連結叢集 & W1202 & 12.3--4 & O($n$)、自迴避 & W1205\\
+12.2.4 & 一迴圈、流 & W1203 & 12.5--6 & 圖解法、回顧 & W1206\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -160,10 +164,11 @@ Students and Researchers}, Cambridge University Press, 2004.}
 \item 第 8 章：數學 \texttt{codes/utils/walk\_scale.py}，圖表 \texttt{notes/ch8/make\_figs.py}，逐式校對 \texttt{ref/md/ch08\_formulas.md}，連續播放 \texttt{Ch8Demo}（W801--W804）；
 \item 第 9 章：數學 \texttt{codes/utils/walk\_crit.py}，圖表 \texttt{notes/ch9/make\_figs.py}，逐式校對 \texttt{ref/md/ch09\_formulas.md}，連續播放 \texttt{Ch9Demo}（W901--W906）；
 \item 第 10 章：數學 \texttt{codes/utils/walk\_cond.py}，圖表 \texttt{notes/ch10/make\_figs.py}，逐式校對 \texttt{ref/md/ch10\_formulas.md}，連續播放 \texttt{Ch10Demo}（W1001--W1005）；
-\item 第 11 章：數學 \texttt{codes/utils/walk\_rg.py}，圖表 \texttt{notes/ch11/make\_figs.py}，逐式校對 \texttt{ref/md/ch11\_formulas.md}，連續播放 \texttt{Ch11Demo}（W1101--W1106）。
+\item 第 11 章：數學 \texttt{codes/utils/walk\_rg.py}，圖表 \texttt{notes/ch11/make\_figs.py}，逐式校對 \texttt{ref/md/ch11\_formulas.md}，連續播放 \texttt{Ch11Demo}（W1101--W1106）；
+\item 第 12 章：數學 \texttt{codes/utils/walk\_eps.py}，圖表 \texttt{notes/ch12/make\_figs.py}，逐式校對 \texttt{ref/md/ch12\_formulas.md}，連續播放 \texttt{Ch12Demo}（W1201--W1206）。
 \end{itemize}
 路徑都相對於 \texttt{C:\textbackslash mypython\textbackslash manim\textbackslash projects\textbackslash walk017}。
-書上的筆誤在文中用紅框標出，總表在 1.7 節、2.5 節、3.9 節、4.5 節、5.5 節、6.4 節、7.4 節、8.6 節、9.8 節、10.7 節與 11.8 節。上表是第 1、4、5、6、7、8、9、10、11 章各節與動畫的對應（第 4--11 章的細表在各節開頭）；第 2、3 章的對應表在各節開頭。
+書上的筆誤在文中用紅框標出，總表在 1.7 節、2.5 節、3.9 節、4.5 節、5.5 節、6.4 節、7.4 節、8.6 節、9.8 節、10.7 節、11.8 節與 12.8 節。上表是第 1、4、5、6、7、8、9、10、11、12 章各節與動畫的對應（第 4--12 章的細表在各節開頭）；第 2、3 章的對應表在各節開頭。
 
 \input{ch1/part1}
 \clearpage
@@ -186,5 +191,7 @@ Students and Researchers}, Cambridge University Press, 2004.}
 \input{ch10/part10}
 \clearpage
 \input{ch11/part11}
+\clearpage
+\input{ch12/part12}
 
 \end{document}

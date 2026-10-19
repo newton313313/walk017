@@ -1,0 +1,338 @@
+\input{ch12/figs}
+
+\section{\texorpdfstring{重整化群（續）與 $\epsilon$ 展開（第 12 章）}{重整化群（續）與 ε 展開（第 12 章）}}
+
+\begin{keybox}[先看這裡]
+第 11 章的動量殼只有二次項（Gaussian 模型）：各個 Fourier 模態互不相干，積掉外圈殼層只給一個常數，所以只得到平均場的 $\nu=\frac12$。
+這一章加上四次項 $u\,S^4$，照同樣四步走一遍：
+(1)~把布里淵區外圈一層薄薄的\textbf{殼層}裡的模態先積分掉（\textbf{殼層積分}）；
+(2)~四次項把殼層和內區的模態纏在一起，對殼層做 Gaussian 平均＝把殼層的「手」兩兩牽起來，而取對數之後\textbf{只剩連通的圖}（\textbf{連結叢集}定理）；
+(3)~重新標度回原來的樣子，得到 $r$、$u$ 兩個參數的微分方程——參數的\textbf{流}；
+(4)~四維以下（$\epsilon=4-d>0$）流有一個新的\textbf{不動點}（Wilson--Fisher 點），它離 Gaussian 點只有 $O(\epsilon)$，所以可以把 $\epsilon$ 當小參數展開臨界指數：
+Ising $\nu=\frac12+\frac\epsilon{12}$，O($n$) $\nu=\frac12+\frac{(n+2)\epsilon}{4(n+8)}$；$n=0$ 就是自迴避漫步，$\epsilon=1$ 得 $\nu\approx\frac9{16}$（已知 0.588）。
+最後兩節（12.5--12.6）用費曼圖講同一件事，只取概念。這是全書最後一章，本節最後附一頁\textbf{全書回顧}。
+
+\textbf{記號}：$\epsilon=4-d$；GLW 的 $r$（約化溫度）、$u$（四次耦合）；布里淵區取半徑 $\Lambda=e^{-\ell}$ 的球；殼層裡 $r+q^2$ 換成 $r+1$。
+\textbf{本系列把書上 (12.37) 的 $d$ 吸收進 $u$}（本系列的 $u$ ＝書上的 $ud$；書上 (12.66)(12.67) 本來就這樣寫，$\nu$ 不受影響）。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+12.1--12.2.4 & 四次項、殼層 & W1201 & 12.2.5--6 & $\epsilon$ 展開求 $\nu$ & W1204\\
+12.2.4、12.7 & 配對、連結叢集 & W1202 & 12.3--12.4 & O($n$)、自迴避漫步 & W1205\\
+12.2.4--5 & 一迴圈、$(r,u)$ 的流 & W1203 & 12.5--12.6 & 圖解法、全書回顧 & W1206\\
+\bottomrule
+\end{tabular}
+\end{center}
+數字一律由 \texttt{codes/utils/walk\_eps.py} 重算，逐式校對見 \texttt{ref/md/ch12\_formulas.md}，
+圖表由 \texttt{ch12/make\_figs.py} 產生並先做數字檢查。連續播放：\texttt{Ch12Demo}（W1201--W1206）。
+\end{keybox}
+
+% =====================================================================
+\subsection{加上四次項：殼層與「怎樣正確地積掉自由度」}
+\leavevmode\bk{pp.~285--290}\ \anim{W1201}\par\nopagebreak
+
+\textbf{問}：上一章只有二次項；加上四次項之後，還能「積掉一半」嗎？
+
+\textbf{模型}（(12.1)--(12.4)）：一分量（Ising 型）的 GLW Hamiltonian 寫在 Fourier 空間，
+\[\mathcal H[S(\vec q)]=\sum_{\vec q}\frac12\big(r+q^2\big)S(\vec q)S(-\vec q)+\frac uN\sum_{\vec q_1\ldots\vec q_4}S(\vec q_1)S(\vec q_2)S(\vec q_3)S(\vec q_4)\,\delta_{\vec q_1+\vec q_2+\vec q_3+\vec q_4}.\tag{12.3--12.4}\]
+二次項裡每個 $\vec q$ 各管各的；四次項的 $\delta$ 是動量守恆：四個 $\vec q$ 加起來是 0 才有貢獻，於是不同的模態被綁在一起。
+\textbf{倒晶格}（Fig.~12.1--12.2）：格距 $a$ 的晶格 $\leftrightarrow$ 格距 $2\pi/a$ 的倒晶格；系統邊長 $L\propto N^{1/d}$ 越大，允許的 $\vec q$ 越密（間距 $2\pi/L$）。$N$ 個格點對應 $N$ 個 $\vec q$。
+
+\textbf{殼層}（Fig.~12.3--12.4，圖 \ref{twelve-fig-shell} 左）：臨界點附近只有小的 $q$（長波長）重要，所以把立方的布里淵區換成半徑 $\Lambda=e^{-\ell}$ 的球；
+每一步積掉 $e^{-\ell-\delta\ell}<|\vec q|<e^{-\ell}$ 這一層。\textbf{殼層積分}的白話：每一個 $S(\vec q)$ 都是一個積分變數，$Z$ 是對全部 $S(\vec q)$ 的積分；
+先把殼層裡那幾個變數積完，剩下的就是內區變數的有效 Hamiltonian。殼層占的模態比例是體積比
+\[\frac{\sum_{\rm shell}1}{N}=1-e^{-d\,\delta\ell}\approx d\,\delta\ell,\qquad dq=e^{-\ell}-e^{-\ell-\delta\ell}\approx e^{-\ell}\delta\ell .\tag{12.20--12.24}\]
+\textbf{算到底}：$d=3$、$\delta\ell=0.1$：0.2592 對 0.3000；$\delta\ell=0.01$：0.0296 對 0.0300；$d=4$、$\delta\ell=0.01$：0.0392 對 0.0400——$\delta\ell$ 越小越準。
+真的在半徑 200 的球裡數格點也一樣（0.2591、0.0296，差不到 $2\times10^{-4}$）。$\ell=0.5$（$\Lambda=0.6065$）、$\delta\ell=0.01$：$dq=0.006035$，近似 $e^{-\ell}\delta\ell=0.006065$。
+
+\textbf{怎樣正確地積掉自由度}（(12.5)--(12.10)）：把變數分成留下的 $S_i$ 與要積掉的 $S_i'$：
+\[\begin{gathered}Z(K)=\sum_{\{S_i\},\{S_i'\}}e^{-H(K,S_i,S_i')},\qquad A(K')\,e^{-H'(K',S_i)}=\sum_{\{S_i'\}}e^{-H(K,S_i,S_i')},\\
+Z_N(K)=A(K')\,Z_{N'}(K'),\qquad K'=\mathcal R(K).\end{gathered}\tag{12.5--12.10}\]
+要點：$H'$ 必須和 $H$ \textbf{同一個形式}，只是參數 $K\to K'$；跑出來的常數 $A$ 只進自由能。
+\textbf{兩個變數的玩具}（書外）：$s$ 在內區、$S'$ 在殼層，只留 (12.11) 的 $6u$ 頂點：
+$\mathcal H=\frac r2s^2+us^4+\frac{r+1}2S'^2+6u\,s^2S'^2$。對 $S'$ 是 Gaussian 積分，$\int e^{-\alpha S'^2}dS'=\sqrt{\pi/\alpha}$，$\alpha=\frac{r+1}2+6us^2$：
+\[A=\sqrt{\frac{2\pi}{r+1}},\qquad \mathcal H'(s)=\frac r2s^2+us^4+\frac12\ln\Big(1+\frac{12u\,s^2}{r+1}\Big).\]
+用 $\ln(1+x)=x-\frac{x^2}2+\frac{x^3}3-\cdots$ 展開：$s^2$ 的係數多了 $\frac{6u}{1+r}$、$s^4$ 的係數少了 $\frac{36u^2}{(1+r)^2}$，還冒出一個 $s^6$ 項：
+\[r'=r+\frac{12u}{1+r},\qquad u'=u-\frac{36u^2}{(1+r)^2},\qquad c_6=\frac16\Big(\frac{12u}{1+r}\Big)^3.\]
+$r=0.2$、$u=0.01$（$\frac{12u}{1+r}=0.1$）：$r'=0.3000$、$u'=0.0075$、$c_6=0.000167$（書上丟掉的高階項）；$\mathcal H'(1)=0.1577$（閉式＝數值積分）。
+配分函數：二重積分 $Z=9.0517$，而 $A=2.2882$、$Z'=\int e^{-\mathcal H'(s)}ds=3.9558$，$A\,Z'=9.0517$——正是 $Z_N=A(K')Z_{N'}(K')$。
+\textbf{12 和 36 就是下一節要在殼層裡數出來的數字}（真正的殼層還多一個 $d\,\delta\ell$）。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.28\linewidth}\centering\TwelveFigShell\end{minipage}\hfill
+\begin{minipage}[c]{0.31\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\TwelveTabShell\end{minipage}\hfill
+\begin{minipage}[c]{0.38\linewidth}\centering\TwelveFigToy\end{minipage}
+\caption{左：球形布里淵區（平面示意），點是允許的 $\vec q$，殼層的模態（橙）先積掉。中：殼層比例（數格點：半徑 200 的球）。右：兩變數玩具（$r=0.2$、$u=0.01$），精確的 $\mathcal H'(s)$ 與截斷的 $\frac{r'}2s^2+u's^4$ 幾乎重合}\label{twelve-fig-shell}
+\end{figure}
+
+\textbf{四次項按幾隻腳在殼層分類}（(12.11)）：$\binom4k$ 給係數 $1,4,6,4,1$（0 到 4 隻腳在殼層）；殼層很薄時，三、四隻腳在殼層的兩項可略（書上的說法）。
+\textbf{重新標度}（(12.29)--(12.34)）：積完殼層，布里淵區半徑變小；把 $\vec q\to\vec q\,'e^{-\delta\ell}$ 讓它變回原大小，$N\to N'e^{d\delta\ell}$（模態變少），再令 $S\to S''e^{\delta\ell}$ 讓 $q^2$ 項的係數維持 1：
+$q^2S^2\to q'^2e^{-2\delta\ell}S''^2e^{2\delta\ell}$（乘 1）、$rS^2\to re^{2\delta\ell}S''^2$、$\frac uNS^4\to\frac{u\,e^{4\delta\ell}}{N'e^{d\delta\ell}}S''^4$。
+\textbf{算到底}（$d=3$、$\delta\ell=0.1$）：$q^2$ 項 1.0000、$r$ 項 $e^{2\delta\ell}=1.2214$、$u$ 項 $e^{(4-d)\delta\ell}=1.1052$。$d<4$ 時 $u$ 被放大——四次項在長波長變重要，這就是平均場在四維以下失效的原因。
+\begin{errbox}[p.~295，(12.32)(12.33)]
+(12.32) 印成 $N\to N'e^{d\delta\ell}\approx N'(1+\delta\ell)$，應為 $N'(1+d\,\delta\ell)$：$d=3$、$\delta\ell=0.01$ 時 $e^{0.03}=1.0305$，不是 1.0100。
+(12.33) 印成 $\vec q\to\vec q\,'e^{-d\delta\ell}\approx\vec q\,'(1-d\,\delta\ell)$，應為 $\vec q\,'e^{-\delta\ell}$（正文自己也這樣說）：照書上 $q^2$ 項要乘 $e^{-2(d-1)\delta\ell}=0.6703$（$d=3$、$\delta\ell=0.1$），模型就不再同形。
+\end{errbox}
+
+\textbf{揭曉}：積掉殼層、重新標度之後，模型還是 GLW 的樣子，只剩 $r$ 與 $u$ 兩個數在變。
+
+% =====================================================================
+\subsection{配對遊戲：只剩連通的圖}
+\leavevmode\bk{pp.~289--292、317--322}\ \anim{W1202}\par\nopagebreak
+
+\textbf{問}：殼層的變數積掉之後，四次頂點會變成什麼？
+
+\textbf{直觀}：把四次項裡碰到殼層的部分當成微擾 $V$，$e^{-V}=\sum_n\frac{(-V)^n}{n!}$，再對殼層變數做 Gaussian 平均。Gaussian 平均有一條規則（第 6 章的 Wick 配對）：
+\textbf{一串變數乘積的平均＝把它們兩兩配對的所有方法之和}，每一對給
+\[\big\langle S(\vec Q_1)S(\vec Q_2)\big\rangle=\frac{\delta(\vec Q_1+\vec Q_2)}{r+Q_1^2}\qquad(\text{殼層 }Q\approx1\text{：}\tfrac1{r+1}).\tag{12:S-2}\]
+把頂點畫成一個點加四隻手（Fig.~12.6）：一隻手在殼層的 (a) 係數 $\frac{4u}N$、兩隻手在殼層的 (b) 係數 $\frac{6u}N$（(12.14)(12.15)）。殼層的手兩兩牽起來，內區的手留著，變成新的 $r$、$u$。
+
+\textbf{片段與環}（補充 12.7，圖 \ref{twelve-fig-pairs}）：每個 (b) 片段有兩隻殼層的手；全部牽好之後，片段連成一個個環：
+type 1（自己的兩手相牽）、type 2（兩個片段雙線）、type 3（三角環）……$n$ 個片段共有 $(2n-1)!!$ 種牽法（3、15、105、945）。
+\textbf{算到底}：$n=3$：$15=1+6+8$（三個 type 1／type 1＋type 2／三角環），不同的片段圖 1、3、1 張；三角環的 8 種牽法是 $2^3$。
+\textbf{Ex.~12.9}：5 個片段配成 3 個 type 1 ＋ 1 個 type 2。945 種牽法裡有 20 種＝10 張片段圖 $\times$ 2 種雙線接法（圖 \ref{twelve-fig-pairs} 上右的 10 張）：
+\[\frac{5!}{3!\,2!}=10,\qquad\text{一般}\quad\frac{n!}{n_1!\,n_2!\,(2!)^{n_2}}\quad(n=n_1+2n_2).\tag{12:S-4}\]
+理由：$n$ 個片段排成一列有 $n!$ 種；type 1 之間互換（$n_1!$）、type 2 之間互換（$n_2!$）、每個 type 2 內部互換（$2!$）都是同一張圖。圖 \ref{twelve-fig-pairs} 右下的表對 $n\le6$ 全部和列舉一致。
+\begin{errbox}[p.~320]
+同一頁前面寫對了 $\frac{5!}{3!\,2!}$，第二次卻寫成 $\frac{5!}{2!\,1!}$——照書上是 60，列舉只有 10 張圖。
+\end{errbox}
+
+\textbf{為什麼只剩連通的圖}（(12:S-3)--(12:S-7)）：記 $\mathcal T_k$ 為「一個 type $k$ 環」的值。把 $\frac1{n!}$ 和上面的組合因子相乘，$n!$ 正好消掉：
+\[\sum_{n_1,n_2}\frac{\mathcal T_1^{n_1}\mathcal T_2^{n_2}}{n_1!\,n_2!}=e^{\mathcal T_1+\mathcal T_2},\qquad
+\sum_{n_1,n_2,n_3,\ldots}\frac{\mathcal T_1^{n_1}\mathcal T_2^{n_2}\mathcal T_3^{n_3}}{n_1!\,n_2!\,n_3!}\cdots=\exp\big[\mathcal T_1+\mathcal T_2+\mathcal T_3+\cdots\big].\tag{12:S-5--12:S-7}\]
+\textbf{所有圖的和＝$\exp$（連通圖的和）}：取對數就只剩連通的圖——不連通的圖由指數自動算好。一般的因子是 $\frac{n!}{\prod_kn_k!\,f_k^{n_k}}$，
+$f_k$＝換頂點而配對不變的方法數：1、2、6、8、10（$f_3=6=3!$，Ex.~12.11；〔注〕$k\ge4$ 時 $f_k=2k$，不是 $k!$）。
+\begin{errbox}[p.~322，(12:S-7)]
+分子印成 $\mathcal T_1^{n_1}\mathcal T_3^{n_3}\mathcal T_3^{n_3}$、$n_1$ 從 1 起加；應為 $\mathcal T_1^{n_1}\mathcal T_2^{n_2}\mathcal T_3^{n_3}$，$n_1$ 也從 0 起（$n_1=0$ 的項不能少，否則得不到 $e^{\mathcal T_1}$）。
+\end{errbox}
+\textbf{最簡形}：一個 Gaussian 變數 $\langle s^{2n}\rangle=(2n-1)!!$ 就是所有配對；連成一個環的配對有 $w_k=2^{k-1}(k-1)!$ 種（1、2、8、48）。於是
+$\sum_n(2n-1)!!\frac{x^n}{n!}=\exp\big(\sum_kw_k\frac{x^k}{k!}\big)=(1-2x)^{-1/2}$；$x=0.1$：三種算法都是 1.1180。
+
+\textbf{數值核對}（Ex.~12.1）：$X=-as^2$，$s$ 的變異數 $\sigma^2=1$，$a=0.1$。$\langle e^X\rangle$ 用四種算法：數值積分、所有圖的和 $\sum_n\frac{\langle X^n\rangle}{n!}$、
+$\exp$（連通圖）$=\exp\sum_k\frac{\kappa_k}{k!}$、閉式 $(1+2a\sigma^2)^{-1/2}$，全部 0.9129（對數 $-0.0912$）。連通圖（環）$\kappa_k=(-a\sigma^2)^k2^{k-1}(k-1)!$：$-0.1000$、0.0200、$-0.0080$、0.0048。
+二階：全部 $\frac{\langle X^2\rangle}2=\frac{3a^2}2=0.0150$ ＝ 連通 $\frac{\kappa_2}2=0.0100$ ＋ 不連通 $\frac{\kappa_1^2}2=0.0050$。三個殼層變數（耦合矩陣）也一樣：$\det(1+2A)^{-1/2}$＝三維求積＝環的和＝0.8087。
+
+\begin{figure}[htbp]
+\centering
+\TwelveFigPairs\\[6pt]
+\begin{minipage}[c]{0.55\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\TwelveTabCensus\end{minipage}\hfill
+\begin{minipage}[c]{0.43\linewidth}\centering\footnotesize\setlength{\tabcolsep}{4pt}\TwelveTabSfour\end{minipage}
+\caption{配對。上左：三種環（黑點＝片段，灰＝內區的手，橙＝殼層的手牽成的線）。上右：Ex.~12.9 的 10 張片段圖（雙線那一對之外各自成圈）。
+左下：$n=3,4$ 個片段的配對普查（配對數／不同的圖數）。右下：(12:S-4) 與列舉}\label{twelve-fig-pairs}
+\end{figure}
+
+\textbf{揭曉}：指數化把不連通的圖自動算好——只要畫連通的圖；Fig.~12.11 的兩張一迴圈圖就是下一節的主角。
+
+% =====================================================================
+\subsection{一迴圈與 \texorpdfstring{$(r,u)$}{(r,u)} 平面的流}
+\leavevmode\bk{pp.~292--297}\ \anim{W1203}\par\nopagebreak
+
+\textbf{問}：兩張一迴圈圖各給多少？
+
+\textbf{(a) 改 $r$}（Fig.~12.11(a)，(12.16)--(12.18)）：一個 $6u$ 頂點，兩隻殼層的手自己接成一圈，剩兩隻內區的手——形狀就是二次項。
+\textbf{(b) 改 $u$}（Fig.~12.11(b)，(12.19)）：二階，兩個頂點各用兩隻殼層的手互接（type 2），剩四隻內區的手——形狀就是四次項：
+\[\text{(a)}=\frac{6u}{N(r+1)}\sum_{\vec Q\in\rm shell}\ \sum_{\vec q}S(\vec q)S(-\vec q),\qquad
+\text{(b)}=\frac{36u^2}{N^2(r+1)^2}\sum_{\vec Q,\vec Q'\in\rm shell}\ \sum_{\vec q_1..\vec q_4}S\cdots S\,\delta .\tag{12.18--12.19}\]
+係數的來歷正是 12.1 節的玩具：(a) 的 $6u$ 要和 $\frac r2$ 比，所以 $r$ 多 $2\times6=12$；(b) 是二階的 $\frac12\times6\times6\times2$（雙線兩種接法）$=36$，進四次項時帶負號（$\ln$ 的二階項）。
+\textbf{殼層求和}：$\sum_{\vec Q\in\rm shell}1=N\frac{\text{殼層體積}}{\text{布里淵區體積}}=N\frac{d\,\delta q}\Lambda=N\,d\,\delta\ell$（(12.20)--(12.25)，就是 12.1 節的 0.0392 對 0.0400）；
+(b) 的兩個殼層動量被動量守恆 $\vec Q+\vec Q'+\vec q_1+\vec q_2=0$ 綁住（(12.26)），取 $\vec q_1+\vec q_2\approx0$ 只剩一個殼層求和（(12.27)）。於是 (12.28)：
+\[r\to r+\frac{12u}{r+1}d\,\delta\ell,\qquad u\to u-\frac{36u^2}{(r+1)^2}d\,\delta\ell .\]
+\textbf{乘上重新標度的乘數}（$e^{2\delta\ell}$、$e^{(4-d)\delta\ell}$），令 $\delta\ell\to0$ 得遞迴方程（(12.35)--(12.38)；本系列把 $d$ 併進 $u$）：
+\[\frac{dr}{d\ell}=2r+\frac{12u}{1+r},\qquad\frac{du}{d\ell}=\epsilon u-\frac{36u^2}{(1+r)^2}.\tag{12.37--12.38}\]
+\begin{errbox}[pp.~296--297，(12.36)(12.38)(12.39)；p.~293]
+書上這三式的 $u^2$ 項寫成 $36u^2$，少了 $d$：(12.28)、(12.35)、(12.40)、(12.41) 和 $u^*\to\epsilon/36d$ 都有 $d$，應為 $(4-d)u-36d\,u^2$。
+（本系列把 $d$ 併進 $u$，兩種寫法的 $\nu$ 相同。）另外 p.~293 (12.17) 前的「Figure 12.16(b)」應為 Figure 12.11(b)。〔注〕(12.35) 第二個指數前少了負號。
+\end{errbox}
+
+\textbf{不動點}（$\frac{dr}{d\ell}=\frac{du}{d\ell}=0$）：Gaussian 點 $(0,0)$；另一個由 $\epsilon=\frac{36u}{(1+r)^2}$ 與 $2r(1+r)=-12u$ 解出 $\epsilon(1+r)=-6r$：
+\[\text{Wilson--Fisher：}\quad r^*=-\frac{\epsilon}{6+\epsilon},\qquad u^*=\frac{\epsilon}{(6+\epsilon)^2}\qquad(\text{一階 }-\tfrac\epsilon6,\ \tfrac\epsilon{36}).\]
+$\epsilon=1$：$(-\frac17,\frac1{49})=(-0.1429,0.0204)$（表見圖 \ref{twelve-fig-flow} 右）。$\epsilon\to0$ 時兩個不動點合而為一（書上 $u^*\to\epsilon/36d$）。
+\textbf{Gaussian 點的穩定性}：在 $(0,0)$ 線性化，矩陣 $\begin{pmatrix}2&12\\0&\epsilon\end{pmatrix}$ 的特徵值是 $2$ 與 $\epsilon$（$\epsilon=1$：2.0000、1.0000）。
+$\epsilon>0$ 時 $u$ 方向也是相關的——Gaussian 點不穩定，臨界的系統會被推向 WF 點；$d>4$（$\epsilon<0$）時 $u$ 無關，平均場正確——第 8 章的上臨界維度 4 從這裡來。
+
+\textbf{流向圖}（圖 \ref{twelve-fig-flow} 左，$\epsilon=1$）：$u_0=0.002$ 與 0.04 各取三個起點 $r_0=r_c(u_0)$、$r_c\pm0.02$。中間那條（臨界線，綠）流進 WF 點；
+旁邊兩條先靠近 WF 點，再沿相關方向往 $r\to+$（高溫相）或 $r\to-$（低溫相）跑掉（畫到 $|r|=0.45$）。不管 $u_0$ 是多少，臨界的系統最後都停在同一點——\textbf{普適性}。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.5\linewidth}\centering\TwelveFigFlow\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\TwelveTabFixed\end{minipage}
+\caption{左：$(r,u)$ 平面的流（$\epsilon=1$；白圈是 Gaussian 點與 Wilson--Fisher 點）。右：WF 點的精確值與一階近似；$\epsilon\to0$ 時都趨向 $(0,0)$}\label{twelve-fig-flow}
+\end{figure}
+
+\textbf{揭曉}：四維以下，臨界的系統都流向 Wilson--Fisher 點——臨界指數由它附近的流決定。
+
+% =====================================================================
+\subsection{\texorpdfstring{$\epsilon$ 展開求 $\nu$}{ε 展開求 ν}}
+\leavevmode\bk{pp.~296--300}\ \anim{W1204}\par\nopagebreak
+
+\textbf{問}：耦合 $u$ 最後流到哪裡？$\nu$ 是多少？
+
+\textbf{$u$ 的流}（(12.39)--(12.41)，Ex.~12.2）：在 $r=0$ 附近 $\frac{du}{d\ell}=\epsilon u-36u^2$——小的 $u$ 像 $e^{\epsilon\ell}$ 一樣長大、大的 $u$ 被 $-36u^2$ 拉下來。分離變數積分：
+\[\int_{u_0}^{u(\ell)}\frac{du}{\epsilon u-36u^2}=\ell\quad\Rightarrow\quad u(\ell)=\frac{\epsilon u_0e^{\epsilon\ell}}{\epsilon+36u_0(e^{\epsilon\ell}-1)}\ \xrightarrow{\ \ell\to\infty\ }\ \frac{\epsilon}{36}.\tag{12.40--12.41}\]
+\textbf{算到底}（$\epsilon=1$，圖 \ref{twelve-fig-u}）：$u_0=0.005$：$\ell=1,2,5$ 得 0.0104、0.0172、0.0270；$u_0=0.06$：0.0346、0.0300、0.0279——從兩邊都趨向 $u^*=\frac1{36}=0.0278$（閉式＝數值積分）。
+\textbf{Ex.~12.3}（Fig.~12.13）：另一個不動點 $u=0$ 的斜率是 $+\epsilon$（不穩定）：$u_0=10^{-6}$ 時 $u(2)/u_0=7.3874\approx e^2=7.3891$；$u^*$ 的斜率是 $-\epsilon$（穩定）。
+
+\begin{figure}[htbp]
+\centering
+\TwelveFigU
+\caption{(12.41) 的 $u(\ell)$（$\epsilon=1$），點是數值積分；菱形是 12.6 節 (12.86) 的 $g_0(q_0=e^{-5})$，落在同一條曲線上}\label{twelve-fig-u}
+\end{figure}
+
+\textbf{$r$ 的流}（(12.42)--(12.51)）：把 $\frac{12u}{1+r}$ 展開，$\frac{dr}{d\ell}\approx2r+12u-12ur$。令 $r=t-6u$（書上 $t-6ud$，在保留 $d$ 的寫法下是對的）消掉常數項 $12u$，一階得
+\[\frac{dt}{d\ell}=2t-12u\,t\quad\Rightarrow\quad t(\ell)=t(0)\,e^{2\ell-12\int_0^\ell u\,d\ell'}.\tag{12.45--12.46}\]
+積分換成對 $u$：$d\ell'=\frac{du'}{\epsilon u'-36u'^2}$，所以 $12\int_0^\ell u\,d\ell'=12\int_{u_0}^{u}\frac{u'\,du'}{\epsilon u'-36u'^2}=-\frac13\ln(\epsilon-36u')\big|_{u_0}^{u}$，再代入 (12.41)：
+\[t(\ell)=t(0)\,e^{2\ell}\Big[\frac{\epsilon}{\epsilon+36u_0(e^{\epsilon\ell}-1)}\Big]^{1/3}\ \xrightarrow{\ \ell\text{ 大}\ }\ \propto t(0)\,e^{(2-\epsilon/3)\ell}.\tag{12.49--12.51}\]
+\textbf{算到底}：$t_0=10^{-4}$、$u_0=0.01$、$\ell=3$：閉式＝數值積分＝0.0203。$t$ 的指數增長率是 $2-\frac\epsilon3$，比 Gaussian 的 2 慢一點。
+\begin{errbox}[p.~298，(12.47)(12.48)]
+(12.47) 左邊 $\int_0^\ell u\,d\ell'$ 少了 $12d$。(12.48) 印成 $12d\int_{u_0}^u\frac{du'}{\epsilon u'-36du'^2}$，分子少了 $u'$，應為 $12d\int_{u_0}^u\frac{u'\,du'}{\epsilon u'-36du'^2}$：
+$u_0=0.001\to u=0.005$（$\epsilon=1$、$d=3$）正確的是 0.2207，等於 (12.49)；照書上是 81.7804。
+\end{errbox}
+
+\textbf{讀出 $\nu$}（(12.52)--(12.59)）：$t(0)$ 是「離臨界的距離」，$t(0)\propto T-T_c^*$（$T_c^*$ 是被漲落移動過的臨界溫度）。一直流到 $r(\ell^*)=D$（一個普通大小的數，那時關聯長度約 1 個格距）就停：
+\[e^{(2-\epsilon/3)\ell^*}=\frac D{t(0)}\ \Rightarrow\ e^{\ell^*}=\Big(\frac D{T-T_c^*}\Big)^{\frac1{2-\epsilon/3}},\qquad 1=\xi(\ell^*)=\xi(0)e^{-\ell^*}\ \Rightarrow\ \xi(0)\propto(T-T_c^*)^{-\frac1{2-\epsilon/3}}.\tag{12.52--12.58}\]
+\[\nu=\frac1{2-\epsilon/3}\approx\frac12\Big(1+\frac\epsilon6\Big)=\frac12+\frac\epsilon{12},\qquad\epsilon=1:\ \nu=\frac7{12}=0.5833 .\tag{12.59--12.60}\]
+平均場 0.5 $\to$ 一階 0.5833 $\to$ 三維 Ising 已知約 0.630（文獻值，只引用）：第一次「算」出不是 $\frac12$ 的臨界指數。
+\begin{errbox}[p.~299，Ex.~12.4；(12.60) 後]
+Ex.~12.4「Show that (12.53) follows from (12.51)」應為 (12.52)——(12.53) 在練習之後才定義。(12.60) 後說三維 Ising 的「$\nu\sim0.61$」，已知值約 0.630。
+\end{errbox}
+\textbf{臨界點被移動}（Ex.~12.4）：$t(0)=r(0)+6u_0$，所以臨界點在 $r_c\approx-6u_0$（書上 $-6u_0d$）。精確地說，臨界線是 Gaussian 點 $\epsilon$ 方向的特徵向量 $r_c\approx-\frac{12u_0}{2-\epsilon}$：
+$u_0=10^{-4}$、$\epsilon=0.1$：二分法 $-0.000631$、特徵向量 $-0.000632$、一階 $-0.000600$（$u_0=10^{-3}$、$\epsilon=1$：$-0.0111$ 對 $-0.0120$）。
+
+\textbf{$\nu$ 的三種讀法}（本系列，圖 \ref{twelve-fig-nu}）：一階 $\frac12+\frac\epsilon{12}$；(12.54) 不展開 $\frac1{2-\epsilon/3}$；把完整的一迴圈方程在 WF 點線性化、$\nu=1/\lambda_r$
+（$\epsilon=1$ 的矩陣精確是 $\begin{pmatrix}5/3&14\\1/21&-1\end{pmatrix}$，特徵值 $\frac{1\pm\sqrt{22}}3=1.8968,\ -1.2301$，$\nu=0.5272$）。
+三條曲線在 $\epsilon=0$ 相切，只有 $\epsilon$ 的一次項相同——一迴圈只準到 $O(\epsilon)$，$O(\epsilon^2)$ 要二迴圈的圖；$\epsilon=1$ 時三者相差不小，這是 12.5 節「隱憂」的第一條。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.62\linewidth}\centering\TwelveFigNu\end{minipage}\hfill
+\begin{minipage}[c]{0.36\linewidth}\centering\footnotesize\setlength{\tabcolsep}{4pt}\TwelveTabNu\end{minipage}
+\caption{$\nu$ 的三種讀法（Ising）：一階、不展開、線性化矩陣；在 $\epsilon=0$ 相切}\label{twelve-fig-nu}
+\end{figure}
+
+\textbf{揭曉}：Wilson--Fisher 點把 $\nu$ 從平均場的 $\frac12$ 推到 $\frac7{12}$；$\epsilon$ 是唯一的小參數。
+
+% =====================================================================
+\subsection{O(\texorpdfstring{$n$}{n}) 模型與自迴避漫步}
+\leavevmode\bk{pp.~300--304}\ \anim{W1205}\par\nopagebreak
+
+\textbf{問}：自旋有 $n$ 個分量時，12 和 36 會變成什麼？
+
+\textbf{模型}（(12.61)、Fig.~12.14）：四次項 $\frac uN\sum(\vec S_1\cdot\vec S_2)(\vec S_3\cdot\vec S_4)\delta$，殼層的平均（Ex.~12.5）
+\[\big\langle S^\alpha(\vec Q_1)S^\beta(\vec Q_2)\big\rangle=\frac{\delta_{\alpha\beta}}{1+r}\,\delta(\vec Q_1+\vec Q_2)\tag{12.63}\]
+——不同分量不配對（殼層的權重 $e^{-\frac12(1+r)\sum_\alpha|S^\alpha|^2}$ 對各分量獨立）。〔注〕(12.63) 印成 $S^\beta(S(\vec Q_2)$，多一個「$S($」。
+\textbf{數分量}（Fig.~12.15，Ex.~12.6）：四隻手選兩隻到殼層（6 種）：兩隻在\textbf{同一個}點積（2 種）$\to$ 繞一圈 $\sum_\beta\delta_{\beta\beta}=n$；在\textbf{不同}點積（4 種）$\to$ 1。合計
+\[\text{(a)}+\text{(b)}=\frac{2n+4}{1+r}\,\frac uN\sum_{\vec Q}\sum_{\vec q}\vec S(\vec q)\cdot\vec S(-\vec q)\tag{12.64}\]
+（$n=1$ 回到 6；〔注〕書上少了 $\frac uN$）。所以 $12\to A=2(2n+4)=4(n+2)$；同樣數 $u$ 的圖（Fig.~12.16--12.17，Ex.~12.7）得 $36\to B=4(n+8)$：
+\[\frac{dr}{d\ell}=2r+\frac{4(n+2)u}{1+r},\qquad\frac{du}{d\ell}=\epsilon u-\frac{4(n+8)}{(1+r)^2}u^2 .\tag{12.66--12.67}\]
+\textbf{讀出 $\nu$}：照 12.4 節，$u^*\approx\frac\epsilon B$、$r=t-\frac A2u$，$\frac{dt}{d\ell}=2t-Au\,t$，$t\propto e^{(2-A\epsilon/B)\ell}$：
+\[\nu=\frac1{2-\frac{(n+2)\epsilon}{n+8}}\approx\frac12+\frac{(n+2)\epsilon}{4(n+8)},\qquad n=0:\ \nu=\frac12+\frac\epsilon{16},\quad\epsilon=1:\ \frac9{16}=0.5625 .\tag{12.68--12.70}\]
+$n=1$ 回到 $\frac12+\frac\epsilon{12}$（$\frac AB=\frac13$）。〔注〕(12.70) 的 0.563 是 0.5625 四捨五入。$n=0$ 的 WF 點是 $(-\frac19,\frac2{81})$。
+程式真的對 $n=1..4$ 做了張量縮併：$2n+4$ 與 $4(n+8)$ 都對（表 \ref{twelve-tab-on}）。
+
+\begin{table}[htbp]
+\centering\footnotesize\setlength{\tabcolsep}{4pt}
+\TwelveTabOn
+\caption{O($n$) 模型（$\epsilon=1$）：殼層的因子與 $\nu$ 的三種讀法；已知值只引用。$n=0$ 是自迴避漫步、$n=1$ Ising、$n=2$ XY、$n=3$ Heisenberg}\label{twelve-tab-on}
+\end{table}
+
+\textbf{Flory 與 $\epsilon$ 展開}（(12.71)(12.72)）：第 7 章的 Flory 指數 $\nu_F=\frac3{d+2}$（$d=3$：$\frac35=0.6$）寫成 $\epsilon$ 的函數再展開：
+\[\nu_F=\frac3{6-\epsilon}=\frac12+\frac\epsilon{12}+\frac{\epsilon^2}{72}+\frac{\epsilon^3}{432}+\cdots\qquad(\text{係數 }\tfrac12(\tfrac16)^k).\tag{12.71--12.72}\]
+一次係數 $\frac1{12}$ 對 $n=0$ 的 $\frac1{16}$：\textbf{Flory 不是精確的}（雖然數值接近：0.5833 對 0.5625）。〔注〕Ising 不展開的 $\frac1{2-\epsilon/3}$ 恰好就是 $\frac3{6-\epsilon}$——巧合。
+\textbf{算到底}：$N=1000$ 步的漫步大小 $N^\nu$：普通 $\sqrt N=31.62$、一階 $N^{9/16}=48.70$、已知 $N^{0.588}=58.08$——自迴避讓鏈撐開將近一倍。
+
+\textbf{$\epsilon$ 展開的四個隱憂}（p.~304）：$\epsilon=1$ 並不小；級數是漸近級數（收斂半徑 0）；可能有 $e^{-A/\epsilon}$ 這種冪級數抓不到的項；重整化群本身沒有被嚴格證明。
+儘管如此，高階的 $\epsilon$ 展開（配合重新求和）給出的指數和實驗、數值模擬相符到小數第二、三位。
+
+\textbf{揭曉}：同一套遞迴，$n\to0$ 就是自迴避漫步——第 1 章的 $\sqrt N$ 在這裡變成 $N^{0.5625}$（已知 $N^{0.588}$）。
+
+% =====================================================================
+\subsection{圖解法的重整化群（概念）}
+\leavevmode\bk{pp.~304--317}\ \anim{W1206}\par\nopagebreak
+
+\textbf{問}：不切殼層、直接用費曼圖，也能做重整化嗎？
+
+\textbf{重整化傳播子}（(12.73)，Fig.~12.18--12.20）：所有「插一塊 $\Sigma$」的鏈加起來是幾何級數（和第 7 章 W704 的 Dyson 方程同一個形狀）：
+\[\frac1{r+q^2}+\frac1{r+q^2}\,\Sigma\,\frac1{r+q^2}+\cdots=\frac1{r+q^2-\Sigma(r,\vec q)}.\tag{12.73}\]
+$\Sigma$ 叫\textbf{質量算子}，整條鏈畫成一條雙線。把圖裡內部的動量依大小排序，只算 $q<q_0<q_1,q_2,q_3$ 的部分（Fig.~12.21 的「西瓜」圖），
+截斷 $q_0$ 就扮演殼層半徑的角色；重整化傳播子寫成 $q^2+\Sigma'=q_0^{2-\eta}\mathcal S(q/q_0)$，$y=1/\nu$（(12.75)--(12.80)）。
+
+\textbf{四點函數與 $g_0$}（(12.81)--(12.86)）：把有效的四次耦合寫成 $u_R=q_0^{4-d+2\eta}g$，定義 $g_0(q_0)=q_0^{-4+d-2\eta}u_R$，得
+\[q_0\frac{dg_0}{dq_0}=(-4+d-2\eta)g_0+\mathcal Bg_0^2 .\tag{12.86}\]
+換變數 $q_0=e^{-\ell}$（截斷往小動量走＝$\ell$ 變大），$q_0\frac d{dq_0}=-\frac d{d\ell}$：$\frac{dg_0}{d\ell}=(\epsilon+2\eta)g_0-\mathcal Bg_0^2$——$\eta=0$、$\mathcal B=36$ 就是 (12.39)。
+\textbf{算到底}：$g_0(1)=0.005$ 積到 $q_0=e^{-5}=0.0067$：0.0270，正是 12.4 節的 $u(\ell=5)$（圖 \ref{twelve-fig-u} 的菱形）；不動點 $g^*=\frac\epsilon{\mathcal B}=0.0278$。
+
+\textbf{冪次數算}（(12.87)--(12.89)，Fig.~12.27）：直接做微擾，第 $n$ 階含 $(u\,r^{-(4-d)/2})^n$，$d<4$、$r\to0$ 時每一階都發散——普通的微擾在臨界點失效。
+但重整化的耦合 $u_R\propto r^{(4-d)/2}$ 剛好把它抵消，有效的展開參數停在 $g^*$。以西瓜圖為例：特徵動量 $Q\propto r^{1/2}$，三個 $d^dQ$ 給 $r^{3d/2}$、$\delta$ 給 $r^{-d/2}$、三個 $G=\frac1{r+Q^2}$ 給 $r^{-3}$：
+\[\int u^2G(Q_1)G(Q_2)G(Q_3)\,d^dQ_1d^dQ_2d^dQ_3\,\delta(\vec Q_1+\vec Q_2+\vec Q_3-\vec q)\ \propto\ u^2r^{d-3}=r\,\big(ur^{-(4-d)/2}\big)^2\tag{12.89}\]
+（$\Sigma$ 和 $r$ 同單位，所以前面是 $r$）。數值積分量出的冪次與 $d-3$ 一致：
+\begin{center}\footnotesize\setlength{\tabcolsep}{5pt}\TwelveTabPc\end{center}
+\begin{errbox}[p.~315，(12.89) 後]
+書上寫 $u^2r^{2d-3}=r^{-1}\times(ur^{-(4-d)/2})^2$，兩邊本來就不相等（$2d-3$ 對 $d-5$）。應為 $u^2r^{d-3}=r\times(ur^{-(4-d)/2})^2$：$d=2$ 數值冪次 $-1.0000$，照書上是 $+1$。
+\end{errbox}
+\textbf{反項與 Callan--Symanzik 方程}（Fig.~12.28，pp.~315--317，只用文字）：截斷 $q_0$ 是算法的產物，物理的答案不能依賴它；要求「改變 $q_0$ 而答案不變」就得到一條對 $q_0$ 的微分方程——又是重整化群方程。
+
+\textbf{揭曉}：切殼層（Wilson）與費曼圖（場論）走不同的路，得到同一條流方程與同一個不動點。
+
+% =====================================================================
+\subsection{練習 12.1--12.11 解答}
+{\small
+\begin{enumerate}[label=\textbf{12.\arabic*},itemsep=0.05em]
+\item 連結叢集。\quad 答：$n$ 個片段的 Gaussian 平均＝所有配對的和；每個配對把片段分成環（type $k$），同一種分法的數目 $\frac{n!}{\prod_kn_k!\,f_k^{n_k}}$，
+配上 $e^{-V}$ 展開的 $\frac1{n!}$ 就是 $\prod_k\frac{\mathcal T_k^{n_k}}{n_k!}$，對所有 $n_k$ 求和 $\Rightarrow\exp(\sum_k\mathcal T_k)$。數值：$X=-as^2$ 時 0.9129（四種算法）、二階 $0.0150=0.0100+0.0050$；三個變數 0.8087。
+\item 解 (12.39)。\quad 答：部分分式 $\frac1{\epsilon u-36du^2}=\frac1\epsilon\big(\frac1u+\frac{36d}{\epsilon-36du}\big)$ $\Rightarrow\frac1\epsilon\ln\frac{u(\epsilon-36du_0)}{u_0(\epsilon-36du)}=\ell$，解出 $u$ 就是 (12.41)；
+$\ell\to\infty$ 得 $\frac\epsilon{36d}$。數值（本系列 $d$ 併進 $u$）$u_0=0.005$：0.0104、0.0172、0.0270。
+\item 另一個不動點。\quad 答：$u=0$ 附近 $\frac{d\,\delta u}{d\ell}=\epsilon\,\delta u$ $\Rightarrow\delta u\propto e^{\epsilon\ell}$ 變大（不穩定）；$u^*$ 處斜率 $\epsilon-72du^*=-\epsilon$（穩定）$\Rightarrow$ Fig.~12.13 的箭頭都指向 $u^*$。
+$u_0=10^{-6}$：$u(2)/u_0=7.3874\approx e^2$。
+\item 由 (12.51) 得 (12.52)（題目的 (12.53) 應為 (12.52)）。\quad 答：大 $\ell$ 時 $\big[\frac\epsilon{\epsilon+36du_0(e^{\epsilon\ell}-1)}\big]^{1/3}\to\big(\frac\epsilon{36du_0}\big)^{1/3}e^{-\epsilon\ell/3}$ $\Rightarrow t\propto t(0)e^{(2-\epsilon/3)\ell}$；
+$r^*(0)=t(0)=r(0)+6u_0d\propto T-T_c^*$ $\Rightarrow$ 臨界點移到 $r_c\approx-6u_0d$（本系列 $-6u_0$；數值 $-0.000631$、特徵向量 $-0.000632$、一階 $-0.000600$）。
+\item (12.63)。\quad 答：殼層的權重 $\exp[-\frac12(1+r)\sum_\alpha S^\alpha(\vec Q)S^\alpha(-\vec Q)]$ 對各分量獨立，不同分量的平均是 0，同分量就是一分量的 (12:S-2) $\Rightarrow\frac{\delta_{\alpha\beta}}{1+r}\delta(\vec Q_1+\vec Q_2)$。
+\item (12.64)。\quad 答：四隻手選兩隻在殼層（6 種）：同一個點積（2 種）$\sum_\beta\delta_{\beta\beta}=n$，不同點積（4 種）各 1 $\Rightarrow2n+4$；和 $\frac r2$ 比較多一個 2 $\Rightarrow A=4(n+2)$（$n=1$：12）。
+\item (12.65)。\quad 答：兩個頂點各選兩隻殼層的手、互接（$6\times6\times2=72$ 種）；對外面四隻手對稱化後是 $(\vec S\cdot\vec S)^2$ 的 $8(n+8)$ 倍（$n=1$：72），乘二階的 $\frac12$ $\Rightarrow4(n+8)$（$n=1$：36；einsum 核對 $n=1..4$）。
+\item (12.68)。\quad 答：把 12 換成 $4(n+2)$、36 換成 $4(n+8)$：$t\propto e^{(2-\frac{(n+2)\epsilon}{n+8})\ell}$ $\Rightarrow\nu=\frac1{2-(n+2)\epsilon/(n+8)}\approx\frac12+\frac{(n+2)\epsilon}{4(n+8)}$；$n=0$、$\epsilon=1$：$\frac9{16}=0.5625$。
+\item $\frac{5!}{3!\,2!}$。\quad 答：先排 5 個片段（$5!$），前三個各自成 type 1、後兩個成 type 2；前三個互換（$3!$）、後兩個互換（$2!$）不產生新的圖 $\Rightarrow10$。
+列舉：945 種配對裡 20 種＝10 張圖 $\times$ 2 種雙線接法；書上第二次寫的 $\frac{5!}{2!\,1!}=60$ 是筆誤。
+\item (12:S-4)。\quad 答：$n=n_1+2n_2$ 個片段排成一列：$n!$；type 1 之間互換 $n_1!$、type 2 之間互換 $n_2!$、每個 type 2 內部互換 $2!$ $\Rightarrow\frac{n!}{n_1!\,n_2!\,(2!)^{n_2}}$（$n\le6$ 全部＝列舉，圖 \ref{twelve-fig-pairs}）。
+\item $f_3=6$。\quad 答：三角環的 $3!=6$ 種換頂點都保持「每個頂點和另外兩個各連一線」$\Rightarrow f_3=6$（三角環的腳配對 8 種＝$2^3$）。〔注〕$k\ge4$ 的環 $f_k=2k$（只有轉與翻），例如 $f_4=8$。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 12 章的回顧與筆誤一覽}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lll@{}}
+\toprule
+主題（書上的式子） & 結果 & 動畫\\
+\midrule
+殼層與積掉自由度 (12.1)--(12.34) & 玩具 $r'=r+\frac{12u}{1+r}=0.3000$、$u'=u-\frac{36u^2}{(1+r)^2}=0.0075$；$u$ 乘 $e^{\epsilon\delta\ell}$ & W1201\\
+配對、連結叢集 (12:S-1)--(12:S-7) & 只剩連通圖；$\frac{5!}{3!\,2!}=10$、$f_3=6$；$\langle e^X\rangle=0.9129$ & W1202\\
+一迴圈與流 (12.16)--(12.38) & $\frac{dr}{d\ell}=2r+\frac{12u}{1+r}$、$\frac{du}{d\ell}=\epsilon u-\frac{36u^2}{(1+r)^2}$；WF 點 $(-\frac17,\frac1{49})$ & W1203\\
+$\epsilon$ 展開 (12.39)--(12.60) & $u\to\frac\epsilon{36}$；$\nu=\frac12+\frac\epsilon{12}=0.5833$（已知 0.630） & W1204\\
+O($n$) 與自迴避 (12.61)--(12.72) & $\nu=\frac12+\frac{(n+2)\epsilon}{4(n+8)}$；$n=0$：0.5625（已知 0.588）；Flory 不精確 & W1205\\
+圖解法 (12.73)--(12.89) & (12.86)＝(12.39)（$q_0=e^{-\ell}$）；$u^2r^{d-3}=r(ur^{-(4-d)/2})^2$ & W1206\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{筆誤一覽}（給 2004 年版；〔注〕見各節）：下表在文中都用紅框標出，每一條都用程式核對過。
+\begin{center}
+\footnotesize\renewcommand{\arraystretch}{0.9}
+\TwelveTabErrata
+\end{center}
+
+% =====================================================================
+\clearpage
+\subsection{全書回顧}
+
+十二章、87 幕動畫走的是同一條路：從一枚硬幣出發（第 1 章，$\langle x^2\rangle=N$、距離只長成 $\sqrt N$），用\textbf{生成函數}把數路線變成做積分（第 2--6 章：格子、回家、牆、偏向、形狀）；
+再加上「不能走回頭路」，漫步變成真正的難題（第 7--8 章：自迴避、Flory 的 $\frac3{d+2}$、四維是分界）；
+接著發現自迴避漫步就是 $n\to0$ 的磁鐵（第 9--10 章），漫步的指數就是臨界指數；最後用\textbf{重整化群}——放大、積掉、再放大——
+在四維以下找到 Wilson--Fisher 不動點，把 $\nu$ 從 $\frac12$ 一路算到 $\frac12+\frac\epsilon{16}$（第 11--12 章）。下表每章一列，數字與動畫 W1206 的全書回顧相同。
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.3}
+\TwelveTabBook
+\end{center}
+\textbf{一句話}：漫步、磁鐵與重整化群說的是同一個故事——自迴避的鏈在三維裡 $R\sim N^{0.588}$，一迴圈的 $\epsilon$ 展開給 $N^{0.5625}$，Flory 給 $N^{0.6}$，而沒有限制的漫步永遠是 $\sqrt N$。
