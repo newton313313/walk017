@@ -1,0 +1,293 @@
+\input{ch10/figs}
+
+\section{漫步與 \texorpdfstring{O($n$)}{O(n)} 模型：平均場與自旋波（第 10 章）}
+
+\begin{keybox}[先看這裡]
+第 9 章說：$n\to0$ 的 O($n$) 磁鐵，關聯函數就是自迴避漫步的生成函數。這一章把磁鐵的兩個標準近似——\textbf{平均場}（所有自旋都一樣）與\textbf{自旋波}（平均場上的小漣漪）——用在\textbf{關在盒子裡的漫步}，
+特別是長到把盒子擠滿的「凝聚相」。路線：週期盒子（環面）裡的高分子 $\to$ 平均場化成一維積分，就是第 7 章的 (7.57) $\to$ 自旋波：每個波數 $n-1$ 個橫向、1 個縱向模態，$n\to0$ 時橫向是 $-1$ 個
+$\to$ 頭尾之間的\textbf{相關洞}，遠處是 Coulomb 形 $|\vec x-\vec x\,'|^{2-d}$ $\to$ Redner--Reynolds：漫步的\textbf{密度}是序參量，$\beta'=1$、$\gamma'=\alpha'=0$、上臨界維度 4。
+
+\textbf{記號}：步數 $N$、每步的逸度 $z$、$z_c=1/\mu$（二維 0.3791）；這一章 $e^{-r}=z/z_c$（第 9 章是 $e^{-rN/2}$）；O($n$) 的分量數 $n$；格點數 $N_0$（$=V$，格距 1）；
+平均場的權重 $f(\lambda)=e^{-N_0(\frac r2\lambda+\frac u4\lambda^2)}$；自旋波的 $\lambda_1$（橫向）、$\lambda_2$（縱向）；相關洞 $D$；漫步的新指數 $\beta',\gamma',\alpha',\nu'$（磁鐵的不加撇號）。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+10.1 & 關在盒子裡、環面 & W1001 & 10.3 後半 & 相關洞 $D$、Coulomb 形 & W1004\\
+10.2 & 平均場、先取 $n\to0$ & W1002 & 10.3.1 & Redner--Reynolds、密度 & W1005\\
+10.3 & 自旋波、負一個模態 & W1003 & 10.4 & 洞的來源：普通漫步的 $1/R$ & W1004\\
+\bottomrule
+\end{tabular}
+\end{center}
+（上表是書上的節號；本講義 10.4 節＝書上 10.3 後半＋10.4，10.5 節＝書上 10.3.1，順序和動畫相同。）數字一律由 \texttt{codes/utils/walk\_cond.py} 重算，
+逐式校對見 \texttt{ref/md/ch10\_formulas.md}，圖表由 \texttt{ch10/make\_figs.py} 產生並先做數字檢查。連續播放：\texttt{Ch10Demo}（W1001--W1005）。
+\end{keybox}
+
+% =====================================================================
+\subsection{關在盒子裡的高分子}
+\leavevmode\bk{pp.~233--236}\ \anim{W1001}\par\nopagebreak
+
+\textbf{問}：一條高分子關在小盒子裡、和一池單體平衡——盒子的牆會怎樣改變它能走的路？
+
+\textbf{和單體池平衡}（Fig.~10.1）：單體可以接上鏈的兩端，也可以從端點蒸發回池裡，所以鏈長 $N$ 不固定；每接上一個單體得一個因子 $z$（單體的\textbf{逸度}）。從 $\vec x$ 到 $\vec y$ 的鏈的總權重是巨配分函數
+\[G(z;\vec x,\vec y)=\sum_NC(N;\vec x,\vec y)\,z^N\tag{10.1}\]
+（$C$＝自迴避條數），正是第 9 章的生成函數：$z$ 小時短鏈為主，$z$ 越大鏈越長。
+\begin{errbox}[p.~235，(10.1)]
+書上印成 $z^n$。$n$ 是 O($n$) 的分量數：$\langle N\rangle=z\,\partial\ln G/\partial z$ 只剩 $n$，$n\to0$ 時 $G\to\sum_NC(N)$ 與 $z$ 無關、$\langle N\rangle=0$（$4\times4$ 環面上永遠是 90677）。應為 $z^N$。
+\end{errbox}
+
+\textbf{週期邊界}：真的牆讓靠牆處和中間不一樣（10.3 節的 $\tanh$ 形），所以書上讓走出右邊的從左邊回來、走出上邊的從下邊回來：$L\times L$ 格子黏成\textbf{環面}，格點數 $V=L^2$。
+\textbf{算到底：$4\times4$ 環面}（圖 \ref{ten-fig-torus} 上；E、N、W、S＝東、北、西、南，從 $(1,1)$ 出發）：\texttt{WNE}（$N=3$）不越界，和在無限平面上一樣；
+\texttt{WSSEENNE}（$N=8$）從下邊出去、由上邊進來，再從上邊出去、由下邊回來；\texttt{WSSEEENNNEEESSW}（$N=15$）越界 3 次，16 格全部走過（Hamilton 路徑）——一盤義大利麵。
+
+\textbf{環面上能走的路比較少}：把環面上的漫步「攤開」到平面（圖 \ref{ten-fig-torus} 上右），得到各點\emph{模 $L$} 互不相同的平面漫步；所以環面的 $c_N$＝平面的 $c_N$ 減去「攤開後有兩點相差 $(kL,lL)\ne(0,0)$」的走法。
+相差 $L$ 的倍數至少要走 $L$ 步：$N<L$ 時兩者一樣；$N=L$ 時只扣掉一路直走、繞一圈回到起點的 4 條：$c_4=96=100-4$（$4\times4$）、$c_3=32=36-4$（$3\times3$）、$c_5=280=284-4$（$5\times5$）。
+$N$ 再大扣得更多（圖 \ref{ten-fig-torus} 下）：$c_N$ 先增後減，走滿的只剩 5712 條，全部 90677 條（$4\times4$ 環面就是四維超立方體，$16\times5712=91392$ 正是四位元 Gray 碼的個數）。
+
+\textbf{三種情況}：$\langle N\rangle=\sum_NNc_Nz^N\big/\sum_Nc_Nz^N$。$z=0.2$：分母 $1+0.8+0.48+0.288+\cdots=2.8782$，分子 $0.8+0.96+0.864+\cdots=4.1445$，$\langle N\rangle=1.4400$，漫步比盒子小；
+$z=z_c=0.3791$：4.8899，和盒子差不多；$z=1.0$：11.7409（最多 15），擠滿盒子。p.~234 強調\textbf{極限的順序}：先取 $n\to0$，再讓盒子變大（10.2 節用數字看為什麼）。
+
+\begin{figure}[htbp]
+\centering
+\TenFigTorus\\[6pt]
+{\footnotesize\setlength{\tabcolsep}{4pt}\TenTabTorus}
+\caption{$4\times4$ 環面上的自迴避漫步。上：三條例子（綠點是起點、空心圈是終點；橙色是盒子裡的步，藍色是越界的半步；邊上的同向小箭頭表示對邊黏在一起）與 $N=8$ 那條攤開到平面
+（虛線是盒子和它下面的複本）。下：$c_N$ 的比較，$N\le3$（綠）完全相同，$N=4$ 少了 4 條直線}\label{ten-fig-torus}
+\end{figure}
+
+\textbf{揭曉}：盒子小、漫步長，漫步就被擠成一盤義大利麵；本章用 O($n$) 模型的平均場與自旋波描述這個「凝聚相」。
+
+% =====================================================================
+\subsection{\texorpdfstring{O($n$)}{O(n)} 模型的平均場}
+\leavevmode\bk{pp.~236--239}\ \anim{W1002}\par\nopagebreak
+
+\textbf{問}：如果每個自旋都一樣（平均場），$n\to0$ 的 O($n$) 模型會給出什麼？
+
+\textbf{模型}（(10.2)--(10.7)）：$\mathcal H$ 就是第 9 章的 GLW (9.28)（$\frac r2|\vec S_i|^2+\frac12|\nabla\vec S_i|^2+\frac u4|\vec S_i|^4-\vec h\cdot\vec S_i$ 對格點加總），而
+\[G(r;\vec R_i-\vec R_j)=\lim_{n\to0}\frac1n\sum_{\alpha=1}^n\langle S_{i\alpha}S_{j\alpha}\rangle=\sum_NC(N;\vec R_i-\vec R_j)\,e^{-rN}.\tag{10.4}\]
+對終點加總得磁化率 $\Gamma(r)=\sum_jG=\sum_N\Gamma_Ne^{-rN}$（(10.5)；$\Gamma_N$＝$N$ 步的自迴避條數，以 $z_c^{-N}$ 為單位）。$r>0$ 是 $z<z_c$，$r<0$ 是 $z>z_c$。
+〔注〕$e^{-r}=z/z_c$；第 9 章 (9.76)(9.77) 用 $e^{-rN/2}$，兩章的 $r$ 差 2 倍；書上說 $r=(T-T_c)/T_c$。
+
+\textbf{平均場}（(10.8)--(10.11)）：令所有 $\vec S_i=\vec M$，梯度項消失，$Z_{MF}=\int d^nM\,e^{-N_0\{\frac r2|\vec M|^2+\frac u4|\vec M|^4-\vec h\cdot\vec M\}}$，對 $h$ 微分兩次得 $\Gamma_{MF}=N_0\lim_{n\to0}\langle M_1^2\rangle$。
+被積函數只依賴 $\lambda=|\vec M|^2$：權重是 $f(\lambda)$，$n$ 維球殼給 $d^nM\propto\lambda^{n/2-1}d\lambda$，對稱性給 $\langle M_1^2\rangle=\langle\lambda\rangle/n$。
+$n\to0$ 時分母被 $\lambda\approx0$ 主宰（$\int_0^1\lambda^{n/2-1}d\lambda=\frac2n\to\infty$，分母 $\approx\frac2nf(0)=\frac2n$），兩個 $\frac1n$ 相消：
+\[\Gamma_n=\frac{N_0}n\,\frac{\int_0^\infty\lambda^{n/2}f\,d\lambda}{\int_0^\infty\lambda^{n/2-1}f\,d\lambda}\ \xrightarrow{\ n\to0\ }\ \Gamma_{MF}=\frac{N_0}2\int_0^\infty e^{-N_0(\frac r2\lambda+\frac u4\lambda^2)}d\lambda .\tag{10.15}\]
+數值（$N_0=100$、$r=0.5$、$u=1$，圖 \ref{ten-fig-mf} 右上）：$n=3,2,1,\allowbreak0.1,0.01$ 得 1.7183、1.7634、1.8131、1.8624、1.8676，趨於 1.8682。
+$u=0$（高斯）時任何 $n$ 都是 $\langle M_1^2\rangle=\frac1{N_0r}$、$\Gamma=\frac1r=2$；(10.15) 也給 $\frac{N_0}2\cdot\frac2{N_0r}=\frac1r$。
+
+\textbf{書上的路}（(10.12)--(10.14)）：$\delta(\lambda-|\vec M|^2)=\frac1{2\pi}\int dS\,e^{iS(\lambda-|\vec M|^2)}$ 把 $\vec M$ 的積分變成高斯積分（$M_1^2$ 的平均是 $\frac1{2iS}$；分母 $\to2\pi f(0)=2\pi$，
+〔注〕(10.12) 的 $\frac1{2\pi}$ 在分子分母都省掉了），得 $\Gamma_{MF}=\frac{N_0}{2\pi}\iint d\lambda\,dS\,f(\lambda)\frac{e^{iS\lambda}}{2iS}$。
+\begin{errbox}[p.~238，(10.14)$\to$(10.15)]
+書上說「對 $S$ 的積分就是 $i\pi$」，得 $\Gamma_{MF}=\frac{N_0}4\int_0^\infty f\,d\lambda$。$i\pi$ 是主值；照註 2 的 $-iS\to-iS-\epsilon$，極點在實軸上方，$\int dS\,\frac{e^{iS\lambda}}{S-i\epsilon}=2\pi i\,e^{-\epsilon\lambda}\theta(\lambda)$
+（$\epsilon=0.1$：$\lambda=1$ 得 $5.6853i=2\pi ie^{-0.1}$、$\lambda=-1$ 得 0），所以應為 $\frac{N_0}2\int_0^\infty f\,d\lambda$。$u=0$ 時書上的式子得 $\frac1{2r}=1$（應為 2）；數值極限 1.8682，書上 0.9341。
+\end{errbox}
+
+\textbf{算到底：閉式}。配方 $\frac r2\lambda+\frac u4\lambda^2=\frac u4(\lambda+\frac ru)^2-\frac{r^2}{4u}$ 得
+$I\equiv\int_0^\infty f\,d\lambda=\sqrt{\frac\pi{N_0u}}\,e^{N_0r^2/4u}\,\mathrm{erfc}\big(\frac r2\sqrt{N_0/u}\big)$。$N_0=100$、$r=0.5$、$u=1$：$I=0.1772\times518.01\times4.070\times10^{-4}=0.03736$，$\Gamma_{MF}=50I=1.8682$。
+用 $\mathrm{erfc}(x)\approx\frac{e^{-x^2}}{x\sqrt\pi}$（$x\to+\infty$）與 $\mathrm{erfc}(-\infty)=2$ 得兩種漸近（圖 \ref{ten-fig-mf}）：
+\begin{itemize}[nosep]
+\item $r>0$：$f$ 從 $\lambda=0$ 就遞減（$\vec M\approx0$），$\Gamma_{MF}\approx\frac1r$，和普通漫步的 $\sum_Ne^{-rN}\approx\frac1r$ 一樣：漫步比盒子小。$N_0=100,\allowbreak1000,\allowbreak10^4$：1.8682、1.9844、1.9984 $\to2$。
+\item $r<0$：$f$ 在 $\lambda^*=|r|/u$ 有尖峰，$\Gamma_{MF}\approx\sqrt{\pi N_0/u}\,e^{N_0r^2/4u}$ 隨體積\emph{指數}增長：漫步擠滿盒子。精確 $\div$ 漸近 0.9998、1.0000、1.0000；
+$\ln\Gamma_{MF}/N_0=0.0912,\allowbreak\ 0.0665,\allowbreak\ 0.0630\to\frac{r^2}{4u}=0.0625$（p.~239 的「reduction factor」$e^{Nr^2/4u}$ 就是這個鞍點值）。
+\end{itemize}
+\textbf{為什麼要先取 $n\to0$}：$r=-0.5$ 時 $\Gamma_{MF}=9179.7$，而 $n=10^{-2},\allowbreak10^{-3},\allowbreak10^{-4},\allowbreak10^{-6}$ 的 $\Gamma_n/\Gamma_{MF}=0.3299,\allowbreak\ 0.8311,\allowbreak\ 0.9801,\allowbreak\ 0.9998$。推導要分母的 $\frac2n$ 壓過 $\lambda^*$ 附近的尖峰
+（$\propto e^{N_0r^2/4u}=518.01$），即 $n\,e^{N_0r^2/4u}\ll1$：盒子越大 $n$ 要越小，先讓盒子變大就到不了 $n\to0$ 的結果。
+
+\textbf{和第 7 章對照}（註 3）：在 (10.15) 裡換 $N_0\to N$、$\lambda\to2\lambda$、$u\to f$、$r\to1-x$（$x=z/z_c$），得 $\Gamma_{MF}=N\int_0^\infty e^{N(-f\lambda^2-\lambda(1-x))}d\lambda=N\,G_{MF}$，
+$G_{MF}$ 就是第 7 章的平均場 (7.57)；多出的 $N$ 是對終點加總。$r=0.5$（$x=\frac12$，第 7 章練習 7.5 的 $x$）：$\Gamma_{MF}=1.8682=100\,G_{MF}(\frac12)$。$r\to1-z/z_c$ 正是 $e^{-r}=z/z_c$ 在 $z_c$ 附近的展開。
+\begin{errbox}[p.~238，註 3]
+書上的對照 $\lambda\to4\lambda$、$4u\to f$、$2r\to1-z/z_c$ 只對它自己的 $\frac{N_0}4$ 成立（兩個 2 倍抵掉：$\frac{N_0}4I=0.9341$，照書上的換法 $100\,G_{MF}$ 也是 0.9341）。
+配上更正的 (10.15)，應為 $\lambda\to2\lambda$、$u\to f$、$r\to1-z/z_c$（也和 (10.4) 的 $e^{-r}=z/z_c$ 一致）。
+\end{errbox}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.42\linewidth}\centering\TenFigMF\end{minipage}\hfill
+\begin{minipage}[c]{0.56\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\TenTabN\\[8pt]\TenTabAsym\end{minipage}
+\caption{平均場（$N_0=100$、$u=1$）。左：$f(\lambda)$ 除以峰值，$r=0.5$（藍）從 0 遞減、$r=-0.5$（橙）在 $\lambda^*$ 有尖峰。
+右上：$\Gamma_n=N_0\langle M_1^2\rangle_n$ 趨於 (10.15)，$r<0$ 時 $n$ 要非常小。右下：$N_0$ 變大時的兩種漸近}\label{ten-fig-mf}
+\end{figure}
+
+\textbf{揭曉}：平均場把盒子裡的漫步變成一維積分；$r<0$ 多出的 $e^{N_0r^2/4u}$ 正是第 7 章的因子。
+
+% =====================================================================
+\subsection{自旋波：在平均場上加漣漪}
+\leavevmode\bk{pp.~239--243}\ \anim{W1003}\par\nopagebreak
+
+\textbf{問}：平均場把所有自旋看成一樣——在它上面加一點漣漪（自旋波），會多出什麼？
+
+\textbf{狀態方程}（(10.16)(10.17)）：連續版的 $\mathcal H$ 把 $\sum_i$ 換成 $\int d^dx$；讓它極小的組態 $\vec M(\vec x)$ 滿足下面左邊的狀態方程（練習 10.1）。\textbf{算到底：牆邊}（圖 \ref{ten-fig-sw} 左；書上沒寫的例子）：
+一維、$h=0$、牆上 $M(0)=0$、遠處 $M\to M_0=\sqrt{|r|/u}$（$r<0$）。試 $M=M_0\tanh kx$：$M''=-2k^2M(1-M^2/M_0^2)$，而 (10.17) 要 $M''=rM+uM^3=-|r|M(1-M^2/M_0^2)$，所以 $k=\sqrt{|r|/2}$：
+\[-\nabla^2\vec M+r\vec M+u\vec M|\vec M|^2-\vec h=0,\qquad M(x)=\sqrt{|r|/u}\,\tanh\big(x\sqrt{|r|/2}\big).\tag{10.17}\]
+$r=-1$、$u=1$：$M(1),M(2),M(4)=0.6089,\allowbreak\ 0.8884,\allowbreak\ 0.9930$；牆的影響只延伸約一個\textbf{癒合長度} $\sqrt{2/|r|}=1.4142$（有限差分＋牛頓法解邊值問題，和 $\tanh$ 只差 $2.8\times10^{-6}$）。
+週期邊界沒有牆，$\vec M$ 就是常數——以下都用週期邊界。
+
+\textbf{展開到二次}（(10.18)--(10.21)）：令 $\vec S=\vec M+\vec\sigma$，把 $|\vec M+\vec\sigma|^4=(|\vec M|^2+2\vec M\cdot\vec\sigma+|\vec\sigma|^2)^2$ 乘開。一次項是 (10.17) 的左邊乘 $\vec\sigma$，等於 0（極小點附近沒有一次項）；二次項
+\[\mathcal H_2=\int d^dx\Big\{\frac12|\nabla\vec\sigma|^2+\frac r2|\vec\sigma|^2+\frac u2|\vec M|^2|\vec\sigma|^2+u(\vec M\cdot\vec\sigma)^2\Big\},\tag{10.21}\]
+最後一項只罰「沿著 $\vec M$」的漣漪——這就是橫向與縱向的差別。週期盒子裡用 Fourier 模態 $\psi_{\vec q}=\prod_ie^{iq_ix_i}/\sqrt{L_i}$、$q_i=2\pi n_i/L_i$（每個方向剛好繞整數圈；(10.22)--(10.24)），
+$\nabla$ 變成乘 $i\vec q$，各個 $\vec q$ 分開：$\mathcal H_2=\sum_{\vec q}\vec\sigma_{\vec q}^*\cdot X_{\vec q}\cdot\vec\sigma_{\vec q}$，
+\[X_{\vec q}=\lambda_1I+u|\vec M\rangle\langle\vec M|,\qquad\lambda_1=\frac r2+\frac12q^2+\frac12u|\vec M|^2,\qquad\lambda_2=\lambda_1+u|\vec M|^2.\tag{10.27--10.29}\]
+垂直於 $\vec M$ 的向量被 $|\vec M\rangle\langle\vec M|$ 打成 0，特徵值 $\lambda_1$（$n-1$ 重，\textbf{橫向}）；沿著 $\vec M$ 多 $u|\vec M|^2$，特徵值 $\lambda_2$（1 重，\textbf{縱向}；練習 10.3）。
+
+\textbf{算到底：$n=3$}。$r=-1$、$u=1$、$q^2=1$、$\vec M=(\frac23,\frac23,\frac13)$（$|\vec M|^2=1=|r|/u$，平均場的鞍點）：$\lambda_1=-\frac12+\frac12+\frac12=\frac12$、$\lambda_2=\frac32$；
+(10.30) 給 $X^{-1}=\frac I{\lambda_1}-\frac{u|\vec M\rangle\langle\vec M|}{\lambda_1\lambda_2}=2I-\frac43|\vec M\rangle\langle\vec M|$：
+\[X=\frac12I+|\vec M\rangle\langle\vec M|=\frac1{18}\begin{pmatrix}17&8&4\\8&17&4\\4&4&11\end{pmatrix},\qquad X^{-1}=\frac1{27}\begin{pmatrix}38&-16&-8\\-16&38&-8\\-8&-8&50\end{pmatrix}.\tag{10.30}\]
+核對：$X\vec M=\frac32\vec M$；$(1,-1,0)$、$(1,1,-4)$ 垂直於 $\vec M$，都乘 $\frac12$；跡 $\frac{45}{18}=\frac12+\frac12+\frac32$；$XX^{-1}=X^{-1}X=I$（分數精確，(10.31)）；隨機的 $\vec M$、$n=1$ 到 6 誤差 $<10^{-11}$。
+$q=0$ 時 $\lambda_1=0$：整體轉動 $\vec M$ 不花能量。
+
+\textbf{高斯積分}（(10.32)）：每個 $\vec q$ 是 $n$ 維高斯積分 $\int d^n\sigma\,e^{-\vec\sigma\cdot X\cdot\vec\sigma+\vec h\cdot\vec\sigma}=\frac{\pi^{n/2}}{\sqrt{\det X}}\,e^{+\frac14\vec h\cdot X^{-1}\cdot\vec h}$，$\det X=\lambda_1^{n-1}\lambda_2$。
+例：$n=2$、$\vec M=(\frac35,\frac45)$、$\vec h=(\frac12,0)$：$\det X=\frac34$，$(X^{-1})_{11}=2-\frac43\cdot\frac9{25}=\frac{38}{25}$，$\vec h\cdot X^{-1}\cdot\vec h=0.38$；積分 $=\frac{\pi}{\sqrt{3/4}}\,e^{0.38/4}=3.6276\times e^{0.095}=3.9891$，和數值積分相同。
+\begin{errbox}[p.~242，(10.32)(10.33)]
+(1) (10.32) 的指數印成 $\exp[-\frac14\vec h\cdots X^{-1}\cdots\vec h]$，應為 $+\frac14$（配方：$-\vec\sigma\cdot X\cdot\vec\sigma+\vec h\cdot\vec\sigma$ 的極大值是 $+\frac14\vec h\cdot X^{-1}\cdot\vec h$）；上例照書上得 3.2988。
+(2) (10.33) 左邊寫 $\sqrt{\lambda_2/\lambda_1}$，應為 $\sqrt{\lambda_1/\lambda_2}$（右邊的 $\sqrt{\frac{r+q^2+u|\vec M|^2}{r+q^2+3u|\vec M|^2}}$ 對）；$n=3$ 的例子照書上得 $\sqrt3=1.7321$，應為 0.5774。
+\end{errbox}
+\textbf{負一個模態}（(10.33)，圖 \ref{ten-fig-sw} 右）：$(\det X)^{-1/2}=\lambda_1^{-(n-1)/2}\lambda_2^{-1/2}$。$n=3$ 兩個橫向、一個縱向；$n=1$（Ising）只有縱向；$n\to0$ 時橫向的個數 $n-1\to-1$，
+$\frac1{\sqrt{\lambda_2}\sqrt{\lambda_1^{n-1}}}\to\sqrt{\frac{\lambda_1}{\lambda_2}}=\sqrt{\frac{r+q^2+u|\vec M|^2}{r+q^2+3u|\vec M|^2}}$——「負一個模態」把 $\sqrt{\lambda_1}$ 搬到分子：數學上允許，物理上奇妙。上例 $\to\frac1{\sqrt3}=0.5774$。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.5\linewidth}\centering\TenFigWall\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\TenTabModes\end{minipage}
+\caption{自旋波。左：牆邊的狀態方程解（$r=-1$、$u=1$），切線（點線）在癒合長度碰到 $M_0$。
+右：$\vec M=(\frac23,\frac23,\frac13)$、$q^2=1$ 的模態；$n\to0$ 時橫向模態的個數是 $-1$，$(\det X)^{-1/2}\to\sqrt{\lambda_1/\lambda_2}=1/\sqrt3$}\label{ten-fig-sw}
+\end{figure}
+
+\textbf{揭曉}：每個 $\vec q$ 有 $n-1$ 個橫向、1 個縱向模態；$n\to0$ 時橫向變成 $-1$ 個，留下 $\sqrt{\lambda_1/\lambda_2}$。
+
+% =====================================================================
+\subsection{相關洞：頭尾互相排斥}
+\leavevmode\bk{pp.~243--246、251--253}\ \anim{W1004}\par\nopagebreak
+
+\textbf{問}：擠滿盒子的漫步，頭和尾喜不喜歡靠在一起？
+
+\textbf{生成函數}（(10.37)）：$G(z;\vec x,\vec x\,')=\lim_{n\to0}\frac1n\frac{\partial^2\ln Z}{\partial h(\vec x)\partial h(\vec x\,')}$——外場隨位置變，兩次微分取出「從 $\vec x$ 到 $\vec x\,'$」的漫步。書上 (10.32)--(10.43) 的長式只看結構，分四步：
+\begin{enumerate}[label=\textbf{\arabic*.},itemsep=0em,leftmargin=1.6em]
+\item \textbf{對漣漪積分}（(10.32)(10.33)）：每個 $\vec q$ 一個高斯積分；$n\to0$ 時行列式剩 $\prod_{\vec q}\sqrt{\lambda_1/\lambda_2}$，外場留在 $e^{+\frac14\vec h\cdot X^{-1}\cdot\vec h}$ 裡。
+\item \textbf{把 $X^{-1}$ 拆兩塊}（(10.34)--(10.36)）：與 $\vec M$ 的方向無關的 $\vec h\cdot\vec h\,'$ 項（係數 $G_0$），與沿著 $\vec M$ 的 $(\vec h\cdot\vec M)(\vec h\,'\cdot\vec M)$ 項——係數是橫向與縱向「傳播子」之差
+（$\vec q=0$ 的零模是 $\vec M$ 本身的轉動，要去掉）：
+\[D(\vec x,\vec x\,')=\sum_{\vec q\ne0}\psi_{\vec q}(\vec x)\psi_{\vec q}(\vec x\,')\Big(\frac1{r+q^2+u|\vec M|^2}-\frac1{r+q^2+3u|\vec M|^2}\Big).\tag{10.36}\]
+\item \textbf{對 $\vec M$ 積分}（(10.38)--(10.42)）：用 10.2 節的 $\lambda$ 技巧，$n\to0$ 時 $\int f\,d^nM\to1$、$\int(\vec h\cdot\vec M)(\vec h\,'\cdot\vec M)f\,d^nM\to\frac{\vec h\cdot\vec h\,'}2\int_0^\infty f\,d\lambda$（就是 (10.15) 的 $\frac{N_0}2$）。
+\item \textbf{取係數}（(10.43)）：$\vec h\cdot\vec h\,'$ 的係數是 $\frac14\{G_0-(\int_0^\infty f\,d\lambda)\,D\}$。〔注〕本系列只核對到這一層結構，沒有逐行驗算。
+\end{enumerate}
+
+\textbf{兩種情況}：$r\gg0$ 時 $\vec M=0$，$G_0\to\int\frac{d^dq}{(2\pi)^d}\frac{e^{i\vec q\cdot(\vec x-\vec x\,')}}{r+q^2}$（(10.44)）：看不到盒子的普通漫步（$32^3$ 週期格子、$r=1$，和無限大格子相差 $1.2\times10^{-11}$）。
+$r\ll0$ 時平均場的峰主宰；在鞍點 $u|\vec M|^2=|r|$，(10.36) 的括號是 $\frac1{q^2}-\frac1{q^2+2|r|}$，於是 $G$ 是平均場的條數 $\times(1-D)$：
+\[G\propto\int_0^\infty e^{-N_0(\frac r2\lambda+\frac u4\lambda^2)}d\lambda\,\big(1-D\big),\qquad D(\vec x,\vec x\,')=\sum_{\vec q\ne0}\frac{2|r|\,\psi_{\vec q}(\vec x)\psi_{\vec q}(\vec x\,')}{q^2(2|r|+q^2)} .\tag{10.45, 10.46}\]
+\textbf{算到底：$64^3$ 週期格子}（$r=-1$、$u=1$，格子上 $q^2\to\sum_i4\sin^2\frac{q_i}2$；圖 \ref{ten-fig-hole} 左）：沿軸相距 $\Delta=0,1,2,4,\allowbreak8,16,32$，
+$D=0.1083,\allowbreak\ 0.0613,\allowbreak\ 0.0359,\allowbreak\ 0.0167,\allowbreak\ 0.0065,\allowbreak\ 0.0016,\allowbreak\ -0.0001$，$1-D=0.8917\to1.0001$：頭尾重合時條數少 11\%、相鄰時少 6\%，越遠越不受影響——這個凹陷就是\textbf{相關洞}。
+$-D\approx c_0-c/\Delta$（$\Delta=4$ 到 16 擬合）：$c=0.0801$，和 $\frac1{4\pi}=0.0796$ 只差 1.0064 倍。
+\begin{errbox}[p.~245，(10.45)(10.46) 與正文]
+(1) (10.45) 的指數印成 $-N_0(r\lambda+u\lambda^2)$，應為 (10.15) 的 $-N_0(\frac r2\lambda+\frac u4\lambda^2)$：照書上極大在 $|r|/2u=0.5$，不是正文說的 $|r|/u=1$（$r=-1$）。
+(2) 正文說 $D$「隨距離增加」：$D$ 的權重都是正的，$D(0)$ 最大、隨距離遞減（$\Delta=0\to8$：0.1083 $\to$ 0.0065）；增加的是 $-D$（書上 Fig.~10.2 畫的就是 $-D$）與 $1-D$。
+(3) (10.46) 的分子少了 $2|r|$，也要去掉 $\vec q=0$：照書上 $D(0)=0.0541$，只有一半（(10.47) 寫「正比於」，不受影響）。
+\end{errbox}
+
+\textbf{Coulomb 形}（(10.47)(10.48)、練習 10.5）：三維、無限大的連續版積得出來：$\frac1{q^2}$ 與 $\frac1{q^2+2|r|}$ 的 Fourier 轉換是 Coulomb 與 Yukawa，
+$D(\rho)=\frac1{4\pi\rho}(1-e^{-\sqrt{2|r|}\rho})\to\frac1{4\pi\rho}$（$\rho\gg1/\sqrt{2|r|}$），與 $r$ 無關；一般維度 $D\propto|\vec x-\vec x\,'|^{2-d}$（(10.48)）。
+$r=-1$、$\rho=1,2,4,8$：0.0602、0.0374、0.0198、0.0099；無限大格子 0.0648、0.0394、0.0202、0.0100（圖 \ref{ten-fig-hole} 右上）；週期盒子只讓 $D$ 整體下移一個常數
+$\frac{2.837297}{4\pi L}=0.0035$（簡單立方的 Ewald 常數，就是上面的 $c_0$）。〔注〕p.~246 的條件寫成 $\gg1/|r|$；長度尺度是 $1/\sqrt{2|r|}$。
+
+\textbf{洞從哪裡來}（書上 10.4 節，(10.76)--(10.84)）：先看\emph{普通}漫步。從原點走 $N$ 步，落在離起點 $\vec R$ 處的步數期望值是 $\sum_{n\le N}P_n(\vec R)$。
+Fourier 空間裡是公比 $\frac{z_c}{z_c+k^2}$ 的等比級數，加到第 $N$ 步得 $\frac1{z_ck^2}[1-e^{-(N+1)k^2/z_c}]$（(10.80)(10.81)），轉回實空間：
+\[\sum_{n\le N}P_n(R)\ \propto\ \frac1{4\pi z_cR}\,\mathrm{erfc}\Big(\sqrt{\frac{z_cR^2}{4(N+1)}}\Big)\tag{10.83}\]
+——$R$ 比 $2\sqrt{N/z_c}$ 小時 $\propto\frac1R$，再遠就被高斯截斷。\textbf{核對}（簡單立方格子、每步 $\frac16$，$z_c\leftrightarrow6$、前因子 $\frac3{2\pi R}$；$N=100$；圖 \ref{ten-fig-hole} 右下）：
+精確計數和 erfc 形只差 3--11\%，轉折在 $R\approx8.2$；$N\to\infty$ 時 $G(R)\cdot\frac{2\pi R}3=1.0815\to1.0009$，就是 $\frac1R$。
+所以長漫步在自己任一點的周圍，步數的密度 $\propto R^{-(d-2)}$；自迴避讓頭（或尾）在這些地方受罰，修正 $\sim-u/R$，和 (10.48) 的洞是同一個形狀。
+\begin{errbox}[p.~253，(10.83)]
+erfc 的引數印成 $\frac{z_cR^2}{2(N+1)}$：$\int\frac{d^3k}{(2\pi)^3}\frac{e^{i\vec k\cdot\vec R}}{k^2}e^{-ak^2}=\frac{\mathrm{erf}(R/2\sqrt a)}{4\pi R}$、$a=\frac{N+1}{z_c}$，應為 $\sqrt{\frac{z_cR^2}{4(N+1)}}$。
+照書上 $R=8$ 得 $4.3\times10^{-4}$（精確 0.0103）、$R=16$ 得 $1.7\times10^{-28}$：尾巴是 $e^{-(z_cR^2/2N)^2}$，不是高斯。
+\end{errbox}
+〔注〕(10.79) 的 $d^kk_1$ 應為 $d^dk_1$；(10.80) 書上省了 $z_c^{-N}$；p.~253 的轉折 $R\le\sqrt{2N/z_c}$ 更正後是 $R\approx2\sqrt{N/z_c}$；前因子依正規化而定，只看形狀。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.46\linewidth}\centering\TenFigHole\end{minipage}\hfill
+\begin{minipage}[c]{0.52\linewidth}\centering\footnotesize\setlength{\tabcolsep}{2.5pt}\TenTabHole\\[8pt]\TenTabVisits\end{minipage}
+\caption{相關洞。左：$64^3$ 週期格子沿軸的 $-D(\Delta)$（$r=-1$；書上 Fig.~10.2 的樣子）與 Coulomb 擬合。右上：各種 $D$ 與 $\frac1{4\pi\rho}$。
+右下：簡單立方格子普通漫步「離起點 $R$ 的步數」（$N=100$）與更正的 (10.83)，紅字是書上的引數，最後一列是 $N=\infty$}\label{ten-fig-hole}
+\end{figure}
+
+\textbf{揭曉}：普通漫步在自己周圍的步數密度 $\propto1/R$；自迴避的懲罰 $-u/R$ 讓頭尾互相排斥——一個 Coulomb 形的洞。
+
+% =====================================================================
+\subsection{Redner--Reynolds：漫步的密度是序參量}
+\leavevmode\bk{pp.~246--251}\ \anim{W1005}\par\nopagebreak
+
+\textbf{問}：把漫步的步數當成粒子數——它的「密度」能不能像磁化一樣當序參量？
+
+\textbf{巨正則系綜}（(10.49)--(10.52)、(10.59)）：$\Gamma(r)=\sum_N\Gamma_Ne^{-rN}$ 就像氣體的巨配分函數（$N$＝粒子數、$-r$＝化學勢）：
+\[\Omega=\frac1V\ln\Gamma,\qquad\langle N\rangle=-\frac{\partial\ln\Gamma}{\partial r},\qquad\rho=\frac{\langle N\rangle}V=-\frac{\partial\Omega}{\partial r},\qquad\frac{\partial^2\Omega}{\partial r^2}=\frac{\mathrm{Var}\,N}V .\tag{10.49--10.59}\]
+$e^{-r}=z/z_c$，所以 $-\partial/\partial r=z\,\partial/\partial z$：和 10.1 節的 $\langle N\rangle$ 相同。
+\textbf{算到底：環面}（圖 \ref{ten-fig-rr} 左）：$\rho(z)$ 從 0 爬到 $\frac{V-1}V$（$z\to\infty$ 只剩走滿的漫步：$\frac89,\frac{15}{16},\frac{24}{25}$）。
+漲落 $\mathrm{Var}\,N/V$ 的峰在 $z^*=0.4443,\allowbreak\ 0.4380,\allowbreak\ 0.4272$，高 0.4289、0.5846、0.7242（$L=3,4,5$）——格子越大峰越高、越往 $z_c$ 靠：有限大小的相變。
+無限大的盒子裡，$\rho$ 在 $z_c$ 以下是 0、以上不是 0：密度就是序參量。
+
+\textbf{平均場}（(10.53)--(10.64)）：(10.15) 再對起點加總（多一個 $V$）。$r>0$：$\Gamma_{MF}\propto V/r$，$\Omega=\frac1V\{\ln V-\ln r+\text{常數}\}$，$\rho_{MF}=\frac1{Vr}\to0$；
+$r<0$：$\Gamma_{MF}\propto V^{3/2}e^{+Vr^2/4u}$，$\Omega=\frac1V\{\frac32\ln V+\frac{Vr^2}{4u}+\text{常數}\}$，$\rho_{MF}=\frac{|r|}{2u}$（(10.55)--(10.58)）。
+$V=10^6$、$u=1$：$r=-0.5,\allowbreak-0.1,\allowbreak-0.01$ 得 $\rho=0.2500,\allowbreak\ 0.0500,\allowbreak\ 0.0050$；$r=0.1,\allowbreak\ 0.5$ 得 $1.0\times10^{-5}$、$2.0\times10^{-6}$。$\ln\rho$ 對 $\ln|r|$ 的斜率 1.0000，所以 $\beta'=1$（磁鐵的 $\beta=\frac12$：$\rho=\frac12|\vec M|^2$，$\beta'=2\beta$）。
+$\chi'=\partial^2\Omega/\partial r^2$：$r<0$ 時 $\frac1{2u}=0.5000$；$r=0.1,\allowbreak\ 0.5$ 時 $1.0\times10^{-4}$、$4.0\times10^{-6}$（$=\frac1{Vr^2}\to0$）——只跳一下、不發散：$\gamma'=\alpha'=0$；另有 $\nu'=\frac12$（(10.62)--(10.64)）。
+\begin{errbox}[pp.~247--248，(10.53)(10.55)]
+$r<0$ 的指數印成 $e^{-\frac V{a^d}\frac{r^2}{4u}}$，$\Omega$ 裡是 $\ln V-\frac V{a^d}\frac{r^2}{4u}$；(10.15) 在 $\lambda^*=|r|/u$ 的值是 $e^{+N_0r^2/4u}$，應為 $+$。照書上的負號 $\rho=-\partial\Omega/\partial r=\frac r{2u}<0$（$r=-0.5$ 得 $-0.2500$）。
+\end{errbox}
+〔注〕(10.53) 是 $N_0\times$(10.15)，沿用書上的 $\frac{N_0}4$，更正後乘 2（常數，不影響 $\rho$）；(10.55) 的 $\ln V$ 應為 $\frac32\ln V$；(10.58) 的「$\rho_{MF}\to|r|$」是 $\propto|r|$；p.~249 的 $\gamma'_{MF}=0$ 見 (10.63)。
+
+\textbf{標度}（(10.65)--(10.73)）：仿照第 9 章，$\Omega$ 的奇異部分只透過 $rL^{1/\nu}$ 依賴 $r$：$\Omega\sim L^{-d}H(rL^{1/\nu})$（(10.70)），所以 $\rho=-\partial\Omega/\partial r=-L^{1/\nu-d}H'(rL^{1/\nu})$（(10.71)）。
+$L\to\infty$ 時 $\rho$ 不能依賴 $L$，只能 $H'(y)\propto|y|^{\nu d-1}$：$\rho\propto|r|^{\nu d-1}$、$\beta'=d\nu-1$（(10.72)(10.73)）；同理 $\alpha'=\gamma'=2-d\nu$、$\nu'=\nu$。平均場（$d=4$、$\nu=\frac12$）回到 $\beta'=1$、$\gamma'=\alpha'=0$。
+標度律 $\alpha'+2\beta'+\gamma'=(2-d\nu)+2(d\nu-1)+(2-d\nu)=2$；平均場的 $2-\alpha'=d_c\nu'$ 給 $2=d_c\cdot\frac12$，上臨界維度 $d_c=4$（(10.65)(10.66)）。
+〔注〕(10.71) 書上 $\rho=\partial\Omega/\partial r$ 少了負號；(10.72) 的 $r^{\nu d-1}$ 應為 $|r|^{\nu d-1}$。
+\textbf{Table 10.1}（p.~251，圖 \ref{ten-fig-rr} 右）用第 9 章的 hyperscaling $d\nu=2-\alpha$ 改寫：$\beta'=1-\alpha$、$\gamma'=\alpha'=\alpha$、$\nu'=\nu$、$d_c=4$——漫步的新指數全由磁鐵的 $\alpha$、$\nu$ 決定
+（二維 $\nu=\frac34$：$\beta'=\gamma'=\alpha'=\frac12$；三維 $\nu\approx0.588$ 只引用：$\beta'=0.764$、$\gamma'=\alpha'=0.236$）。
+\begin{errbox}[p.~251，(10.75)]
+書上寫 $2-\alpha'=d_c\nu'$，並說兩條標度律「一般都成立」。一般維度要用 $d$：$2-\alpha'=d\,\nu'$（就是 hyperscaling）。$d=2$：$2-\alpha'=\frac32=d\nu'$，但 $d_c\nu'=3$；$d=3$：1.764 對 2.352。
+\end{errbox}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.46\linewidth}\centering\TenFigRho\\[6pt]\footnotesize\setlength{\tabcolsep}{2.5pt}\TenTabRho\end{minipage}\hfill
+\begin{minipage}[c]{0.52\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\TenTabExp\end{minipage}
+\caption{Redner--Reynolds。左：環面的精確 $\rho(z)$ 與漲落 $\mathrm{Var}\,N/V$（圓點是峰），格子越大峰越高、越靠近 $z_c$。
+右：漫步的新指數與標度律的驗算；$d\nu'$ 是更正的 (10.75)，紅字是照書上的 $d_c\nu'$}\label{ten-fig-rr}
+\end{figure}
+
+\textbf{揭曉}：漫步的密度在 $z_c$ 兩邊從 0 變成有限值——擠滿盒子的漫步就是 O($n$) 磁鐵的有序相。
+
+% =====================================================================
+\subsection{練習 10.1--10.5 解答}
+{\small
+\begin{enumerate}[label=\textbf{10.\arabic*},itemsep=0.05em]
+\item 由 $\delta\mathcal H=0$ 推出 (10.17)。\quad 答：$\vec S\to\vec S+\delta\vec S$：$\delta\mathcal H=\int d^dx\{(r\vec S+u\vec S|\vec S|^2-\vec h)\cdot\delta\vec S+\nabla\vec S\cdot\nabla\delta\vec S\}$；
+最後一項分部積分成 $-\nabla^2\vec S\cdot\delta\vec S$（週期邊界，或牆上 $\delta\vec S=0$，邊界項為 0）。對任何 $\delta\vec S$ 都要 $\delta\mathcal H=0$ $\Rightarrow-\nabla^2\vec M+r\vec M+u\vec M|\vec M|^2-\vec h=0$。
+離散化 $\mathcal H$ 的數值梯度＝格距 $\times$(10.17) 的左邊（相對誤差 $<10^{-7}$）；牆邊的解見 10.3 節。
+\item 展開的三階項。\quad 答：$(|\vec M|^2+2\vec M\cdot\vec\sigma+|\vec\sigma|^2)^2$ 的三階項是 $2\cdot(2\vec M\cdot\vec\sigma)|\vec\sigma|^2$，乘 $\frac u4$：$\mathcal H_3=u\int d^dx\,(\vec M\cdot\vec\sigma)|\vec\sigma|^2$；四階 $\frac u4\int|\vec\sigma|^4$；
+梯度項與 $r$ 項只到二階。$|\vec M+\epsilon\vec\sigma|^4$ 對 $\epsilon$ 的係數（數值內插）＝公式，誤差 $<10^{-11}$。
+\item $X$ 的特徵值。\quad 答：$X=\lambda_1I+uP$、$P=|\vec M\rangle\langle\vec M|$。$P\vec M=|\vec M|^2\vec M$ $\Rightarrow$ 沿 $\vec M$ 的特徵值 $\lambda_1+u|\vec M|^2=\lambda_2$（1 重）；$\vec v\perp\vec M$ $\Rightarrow$ $P\vec v=0$，特徵值 $\lambda_1$（$n-1$ 維）；
+所以 $\det X=\lambda_1^{n-1}\lambda_2$（例子 $\frac12,\frac12,\frac32$）。
+\item 驗證 (10.30)(10.31)。\quad 答：用 $P^2=|\vec M|^2P$：$(\lambda_1I+uP)\big(\frac I{\lambda_1}-\frac{uP}{\lambda_1\lambda_2}\big)=I+uP\,\frac{\lambda_2-\lambda_1-u|\vec M|^2}{\lambda_1\lambda_2}=I$；$P$ 與 $I$ 可交換，左逆就是右逆（例子見 10.3 節，分數精確）。
+\item $D$ 的長距離行為 (10.48)。\quad 答：令 $\vec q=\vec p/|\vec\Delta|$（$\vec\Delta=\vec x-\vec x\,'$）：
+\[\int d^dq\frac{e^{i\vec q\cdot\vec\Delta}}{q^2(2|r|+q^2)}=|\Delta|^{4-d}\int d^dp\frac{e^{i\vec p\cdot\hat\Delta}}{p^2(2|r||\Delta|^2+p^2)}\approx\frac{|\Delta|^{2-d}}{2|r|}\int d^dp\frac{e^{i\vec p\cdot\hat\Delta}}{p^2}\qquad(|\Delta|^2|r|\gg1),\]
+即 $D\propto|\Delta|^{2-d}$；乘上 (10.46) 漏掉的 $2|r|$ 後與 $r$ 無關。三維精確 $D=\frac1{4\pi\rho}(1-e^{-\sqrt{2|r|}\rho})$：0.0602、0.0374、0.0198、0.0099（$r=-1$）；格子與週期盒子見圖 \ref{ten-fig-hole}。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 10 章的回顧與筆誤一覽}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lll@{}}
+\toprule
+主題（書上的式子） & 結果 & 動畫\\
+\midrule
+盒子裡的漫步 (10.1) & $4\times4$ 環面的 $c_N$ 從 $N=4$ 起變少（96 對 100），走滿的 5712 條 & W1001\\
+平均場 (10.2)--(10.15) & $\Gamma_{MF}=\frac{N_0}2\int_0^\infty f\,d\lambda$；$r<0$ 多出 $e^{N_0r^2/4u}$；先取 $n\to0$ & W1002\\
+自旋波 (10.16)--(10.36) & $\lambda_1$（$n-1$ 重）、$\lambda_2$（1 重）；$n\to0$ 剩 $\sqrt{\lambda_1/\lambda_2}$ & W1003\\
+相關洞 (10.37)--(10.48)、(10.76)--(10.84) & $1-D$：0.8917 $\to$ 1；$D\approx\frac1{4\pi\Delta}$；步數密度 $\propto1/R$ & W1004\\
+Redner--Reynolds (10.49)--(10.75) & $\rho_{MF}=\frac{|r|}{2u}$；$\beta'=d\nu-1$、$\gamma'=\alpha'=2-d\nu$、$d_c=4$ & W1005\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{筆誤一覽}（給 2004 年版；〔注〕見各節）：下表在文中都用紅框標出，每一條都用程式核對過。
+\begin{center}
+\footnotesize\renewcommand{\arraystretch}{0.9}
+\TenTabErrata
+\end{center}

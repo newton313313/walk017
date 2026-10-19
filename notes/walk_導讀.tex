@@ -1,7 +1,7 @@
 % !TEX program = xelatex
 % 編譯方式： xelatex walk_導讀.tex   （在 notes/ 裡執行，跑兩次以產生目錄與交互參照）
-% 內文在 ch1/part1.tex、ch2/part2.tex、ch3/part3.tex、ch4/part4.tex、ch5/part5.tex、ch6/part6.tex、ch7/part7.tex、ch8/part8.tex、ch9/part9.tex；圖與表由 chN/make_figs.py 產生（chN/figs.tex，含數字檢查）。
-% 先 python ch1/make_figs.py、python ch2/make_figs.py、python ch3/make_figs.py、python ch4/make_figs.py、python ch5/make_figs.py、python ch6/make_figs.py、python ch7/make_figs.py、python ch8/make_figs.py、python ch9/make_figs.py 再編譯。
+% 內文在 ch1/part1.tex、ch2/part2.tex、ch3/part3.tex、ch4/part4.tex、ch5/part5.tex、ch6/part6.tex、ch7/part7.tex、ch8/part8.tex、ch9/part9.tex、ch10/part10.tex；圖與表由 chN/make_figs.py 產生（chN/figs.tex，含數字檢查）。
+% 先 python ch1/make_figs.py、python ch2/make_figs.py、python ch3/make_figs.py、python ch4/make_figs.py、python ch5/make_figs.py、python ch6/make_figs.py、python ch7/make_figs.py、python ch8/make_figs.py、python ch9/make_figs.py、python ch10/make_figs.py 再編譯。
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[margin=2.2cm]{geometry}
@@ -59,12 +59,12 @@
 
 \begin{center}
 {\Large\bfseries 隨機漫步導讀}\\[4pt]
-J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1--9 章（配合 manim 動畫 W101--W112、W201--W212、W301--W308、W401--W408、W501--W507、W601--W607、W701--W706、W801--W804、W901--W906）\\[8pt]
+J.~Rudnick、G.~Gaspari《Elements of the Random Walk》第 1--10 章（配合 manim 動畫 W101--W112、W201--W212、W301--W308、W401--W408、W501--W507、W601--W607、W701--W706、W801--W804、W901--W906、W1001--W1005）\\[8pt]
 {\small 原文：Joseph Rudnick and George Gaspari, \emph{Elements of the Random Walk: An Introduction for Advanced
 Students and Researchers}, Cambridge University Press, 2004.}
 \end{center}
 
-\begin{keybox}[全書地圖（目前完成到第 9 章）]
+\begin{keybox}[全書地圖（目前完成到第 10 章）]
 \small
 \begin{tabular}{@{}rp{0.93\linewidth}@{}}
 1 & 技巧入門：一維最簡單的漫步——數路線、動差、Stirling 與高斯、擴散方程、生成函數、鞍點法（序曲）\\
@@ -136,6 +136,10 @@ Students and Researchers}, Cambridge University Press, 2004.}
 9.1 & 漫步的指數、臨界點 & W901 & 9.3 & GLW、雙井 & W904\\
 9.2.1 & $O(n)$、對稱破缺 & W902 & 9.4 & 從磁鐵讀出 $\langle R^2\rangle$ & W905\\
 9.2.3 & 臨界指數、標度律 & W903 & 9.5--9.6 & $n\to0$、高斯積分 & W906\\
+\midrule
+10.1 & 關在盒子裡、環面 & W1001 & 10.3 後半 & 相關洞、Coulomb 形 & W1004\\
+10.2 & 平均場、先取 $n\to0$ & W1002 & 10.3.1 & Redner--Reynolds & W1005\\
+10.3 & 自旋波、負一個模態 & W1003 & 10.4 & 洞的來源 & W1004\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -150,10 +154,11 @@ Students and Researchers}, Cambridge University Press, 2004.}
 \item 第 6 章：數學 \texttt{codes/utils/walk\_shape.py}，圖表 \texttt{notes/ch6/make\_figs.py}，逐式校對 \texttt{ref/md/ch06\_formulas.md}，連續播放 \texttt{Ch6Demo}（W601--W607）；
 \item 第 7 章：數學 \texttt{codes/utils/walk\_saw.py}，圖表 \texttt{notes/ch7/make\_figs.py}，逐式校對 \texttt{ref/md/ch07\_formulas.md}，連續播放 \texttt{Ch7Demo}（W701--W706）；
 \item 第 8 章：數學 \texttt{codes/utils/walk\_scale.py}，圖表 \texttt{notes/ch8/make\_figs.py}，逐式校對 \texttt{ref/md/ch08\_formulas.md}，連續播放 \texttt{Ch8Demo}（W801--W804）；
-\item 第 9 章：數學 \texttt{codes/utils/walk\_crit.py}，圖表 \texttt{notes/ch9/make\_figs.py}，逐式校對 \texttt{ref/md/ch09\_formulas.md}，連續播放 \texttt{Ch9Demo}（W901--W906）。
+\item 第 9 章：數學 \texttt{codes/utils/walk\_crit.py}，圖表 \texttt{notes/ch9/make\_figs.py}，逐式校對 \texttt{ref/md/ch09\_formulas.md}，連續播放 \texttt{Ch9Demo}（W901--W906）；
+\item 第 10 章：數學 \texttt{codes/utils/walk\_cond.py}，圖表 \texttt{notes/ch10/make\_figs.py}，逐式校對 \texttt{ref/md/ch10\_formulas.md}，連續播放 \texttt{Ch10Demo}（W1001--W1005）。
 \end{itemize}
 路徑都相對於 \texttt{C:\textbackslash mypython\textbackslash manim\textbackslash projects\textbackslash walk017}。
-書上的筆誤在文中用紅框標出，總表在 1.7 節、2.5 節、3.9 節、4.5 節、5.5 節、6.4 節、7.4 節、8.6 節與 9.8 節。上表是第 1、4、5、6、7、8、9 章各節與動畫的對應（第 4--9 章的細表在各節開頭）；第 2、3 章的對應表在各節開頭。
+書上的筆誤在文中用紅框標出，總表在 1.7 節、2.5 節、3.9 節、4.5 節、5.5 節、6.4 節、7.4 節、8.6 節、9.8 節與 10.7 節。上表是第 1、4、5、6、7、8、9、10 章各節與動畫的對應（第 4--10 章的細表在各節開頭）；第 2、3 章的對應表在各節開頭。
 
 \input{ch1/part1}
 \clearpage
@@ -172,5 +177,7 @@ Students and Researchers}, Cambridge University Press, 2004.}
 \input{ch8/part8}
 \clearpage
 \input{ch9/part9}
+\clearpage
+\input{ch10/part10}
 
 \end{document}
