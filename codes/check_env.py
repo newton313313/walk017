@@ -139,6 +139,10 @@ def main():
     ok = code == 0 and "walk_cond（第 10 章）" in out and "全部驗證通過" in out
     report("數學驗證 utils/walk_cond.py（第 10 章）", ok, "環面列舉 8 重對稱＝不用對稱＝4^N 暴力＝Gray 碼、平均場 erfcx＝quad、n→0 徑向＝拋物柱＝一維、註 3＝walk_saw 的 G_MF、tanh＝BVP、自旋波 Fraction＝numpy、D 的 FFT＝直接求和＝無限格子＋Ewald、erfc 形 vs 精確步數＝三維遞迴、G(R) Bessel＝G_c、ρ 比值＝差分、指數兩條路（Fraction）、筆誤的更正、場景卡的數字全部一致"
            if ok else out[-300:])
+    code, out = run([sys.executable, str(HERE / "utils" / "walk_rg.py")])
+    ok = code == 0 and "walk_rg（第 11 章）" in out and "全部驗證通過" in out
+    report("數學驗證 utils/walk_rg.py（第 11 章）", ok, "Koch／Cantor 質量－半徑＝盒子計數＝複本公式、⟨R_g²⟩ 公式＝4^N 列舉、Landau 三次方程＝二分法＝walk_crit、塌縮、完成平方＝數值積分、Gaussian 環的行列式＝抽格、Ising 環 暴力＝轉移矩陣＝連乘、x 遞迴＝K 遞迴、ξ(K')＝ξ/2、流 解析＝solve_ivp、(11.87) 殘差、指數公式＝Widom＝walk_crit 指數表、筆誤的更正、場景卡的數字全部一致"
+           if ok else out[-300:])
 
     notes = HERE.parent / "notes"
     code, out = run([sys.executable, str(notes / "ch1" / "make_figs.py")], cwd=notes)
