@@ -3,7 +3,7 @@
 J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advanced Students and Researchers*（Cambridge University Press 2004）
 的繁體中文導讀動畫與講義。目前完成**第 1–3 章**：第 1 章（Introduction to techniques）12 幕動畫 W101–W112＋連續播放 `Ch1Demo`；
 第 2 章（Generating functions I）12 幕動畫 W201–W212＋連續播放 `Ch2Demo`；第 3 章（Generating functions II：回家、維度、走過幾個點）
-8 幕動畫 W301–W308＋連續播放 `Ch3Demo`；第 4 章（邊界條件、穩定態與靜電類比）8 幕動畫 W401–W408＋連續播放 `Ch4Demo`；第 5 章（漫步的變化形：偏向、慣性、連續時間）7 幕動畫 W501–W507＋連續播放 `Ch5Demo`；第 6 章（漫步的形狀：迴轉半徑張量、非球度、1/d 展開）7 幕動畫 W601–W607＋連續播放 `Ch6Demo`；第 7 章（路徑積分與自迴避）6 幕動畫 W701–W706＋連續播放 `Ch7Demo`；第 8 章（標度入門）4 幕動畫 W801–W804＋連續播放 `Ch8Demo`；第 9 章（漫步的標度與臨界現象）6 幕動畫 W901–W906＋連續播放 `Ch9Demo`；第 10 章（O(n) 模型：平均場與自旋波）5 幕動畫 W1001–W1005＋連續播放 `Ch10Demo`；導讀講義 `../notes/walk_導讀.pdf`（十章）。
+8 幕動畫 W301–W308＋連續播放 `Ch3Demo`；第 4 章（邊界條件、穩定態與靜電類比）8 幕動畫 W401–W408＋連續播放 `Ch4Demo`；第 5 章（漫步的變化形：偏向、慣性、連續時間）7 幕動畫 W501–W507＋連續播放 `Ch5Demo`；第 6 章（漫步的形狀：迴轉半徑張量、非球度、1/d 展開）7 幕動畫 W601–W607＋連續播放 `Ch6Demo`；第 7 章（路徑積分與自迴避）6 幕動畫 W701–W706＋連續播放 `Ch7Demo`；第 8 章（標度入門）4 幕動畫 W801–W804＋連續播放 `Ch8Demo`；第 9 章（漫步的標度與臨界現象）6 幕動畫 W901–W906＋連續播放 `Ch9Demo`；第 10 章（O(n) 模型：平均場與自旋波）5 幕動畫 W1001–W1005＋連續播放 `Ch10Demo`；第 11 章（標度、碎形與重整化）6 幕動畫 W1101–W1106＋連續播放 `Ch11Demo`；導讀講義 `../notes/walk_導讀.pdf`（十一章）。
 
 **路徑的寫法：** 本檔裡沒有寫磁碟機的相對路徑，一律相對於本資料夾 `C:\mypython\manim\projects\walk017\codes`；
 寫成 `../notes/…`、`../ref/…` 的在上一層 `C:\mypython\manim\projects\walk017`。權威說明是上一層的 `交接說明_HANDOFF.md`。
@@ -25,8 +25,8 @@ J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advan
 | 輸出一幕 1080p | `manimgl scenes/w101_coin_walk.py W101CoinWalk -w --hd`（低畫質把 `--hd` 換 `-l`） |
 | 一次輸出全部 | `python render_all.py`（三章 32 幕）；`--ch1`／`--ch2`／`--ch3` 只做一章；`--ch1-demo`／`--ch2-demo`／`--ch3-demo` 加連續播放；`-l` 480p；`W105 210` 只做指定的幕；已存在的影片預設**跳過**，要重做加 `--force` |
 | 按兩下的選單 | `render_all.bat`（會自動啟用 conda） |
-| 連續播放 | `manimgl main.py Ch1Demo -w --hd`、`manimgl main.py Ch2Demo -w --hd`、`manimgl main.py Ch3Demo -w --hd`、`manimgl main.py Ch4Demo -w --hd`、`manimgl main.py Ch5Demo -w --hd`、`manimgl main.py Ch6Demo -w --hd`、`manimgl main.py Ch7Demo -w --hd`、`manimgl main.py Ch8Demo -w --hd`、`manimgl main.py Ch9Demo -w --hd`、`manimgl main.py Ch10Demo -w --hd` |
-| 數學自我測試 | `python utils/walk1d.py`（第 1 章）、`python utils/walk_gf.py`（第 2 章）、`python utils/walk_rec.py`（第 3 章，約 2 秒）、`python utils/walk_bc.py`（第 4 章，約 1 秒）、`python utils/walk_var.py`（第 5 章，約 1 秒）、`python utils/walk_shape.py`（第 6 章，約 2 秒）、`python utils/walk_saw.py`（第 7 章，約 1 秒）、`python utils/walk_scale.py`（第 8 章，約 1 秒）、`python utils/walk_crit.py`（第 9 章）、`python utils/walk_cond.py`（第 10 章） |
+| 連續播放 | `manimgl main.py Ch1Demo -w --hd`、`manimgl main.py Ch2Demo -w --hd`、`manimgl main.py Ch3Demo -w --hd`、`manimgl main.py Ch4Demo -w --hd`、`manimgl main.py Ch5Demo -w --hd`、`manimgl main.py Ch6Demo -w --hd`、`manimgl main.py Ch7Demo -w --hd`、`manimgl main.py Ch8Demo -w --hd`、`manimgl main.py Ch9Demo -w --hd`、`manimgl main.py Ch10Demo -w --hd`、`manimgl main.py Ch11Demo -w --hd` |
+| 數學自我測試 | `python utils/walk1d.py`（第 1 章）、`python utils/walk_gf.py`（第 2 章）、`python utils/walk_rec.py`（第 3 章，約 2 秒）、`python utils/walk_bc.py`（第 4 章，約 1 秒）、`python utils/walk_var.py`（第 5 章，約 1 秒）、`python utils/walk_shape.py`（第 6 章，約 2 秒）、`python utils/walk_saw.py`（第 7 章，約 1 秒）、`python utils/walk_scale.py`（第 8 章，約 1 秒）、`python utils/walk_crit.py`（第 9 章）、`python utils/walk_cond.py`（第 10 章）、`python utils/walk_rg.py`（第 11 章） |
 | 環境檢查 | `python check_env.py`、`python check_env.py --render` |
 | 試渲染＋總覽圖 | 在 `C:\mypython\manim\projects\combkit` 執行 `python tools/render_check.py C:/mypython/manim/projects/walk017/codes/scenes/<檔名> <類別> --config C:/mypython/manim/projects/walk017/codes/custom_config.yml --tile 480`，看 `runs/<類別>/sheet.png` |
 | 講義 | 在 `../notes` 執行 `python ch1/make_figs.py`、`python ch2/make_figs.py`、`python ch3/make_figs.py`，再 `xelatex walk_導讀.tex` 兩次 |
@@ -177,13 +177,26 @@ J. Rudnick & G. Gaspari, *Elements of the Random Walk: An Introduction for Advan
 
 連續播放：`main.py` 的 `Ch10Demo`（W1001–W1005），長度 11:19。計畫與場景卡：`../notes/plan_ch10.md`。數學：`utils/walk_cond.py`（依賴 numpy、scipy 與 `walk_saw`、`walk_crit` 等；場景用 `from utils import walk_cond as ...`）；第 10 章沒有新的畫圖模組。
 
+## 3k. 場景（第 11 章，`scenes/`）
+
+| 代號 | 檔名 | 類別 | 內容 | 書上 | 長度 |
+|---|---|---|---|---|---|
+| W1101 | `w1101_fractals.py` | `W1101Fractals` | 碎形：點、直線、圓弧放大；Koch 曲線（$4^k$ 段、長度 $(4/3)^k\to\infty$）、Cantor 集（$(2/3)^k\to0$）；質量－半徑 $\ln4/\ln3=1.2619$、$\ln2/\ln3=0.6309$、盒子計數斜率 1.2362、複本公式（Sierpinski 1.5850）；普通漫步斜率 2.0258、自迴避 $d_f=1/\nu=\frac43$（練習 11.1–11.3） | §11.1–11.1.1，pp. 255–261 | 2:32 |
+| W1102 | `w1102_passive_rg.py` | `W1102PassiveRG` | 被動的重整化：放大 $b$ 倍，$m\to mb^{d/4}$、$r\to rb^{d/2}$、$h\to hb^{3d/4}$ → $m=r^{1/2}f(h/r^{3/2})$、三條曲線塌縮成 $y+y^3=x$、$\gamma=1$；Gaussian 模型 $m=r^{(d-2)/4}F(h/r^{(d+2)/4})$、練習 11.4（$d=3$：$\beta=\frac14$、$\delta=5$；$d=4$ 與 Landau 相同；(11.16) 後的筆誤） | §11.1.2，pp. 261–264 | 2:04 |
+| W1103 | `w1103_gaussian_decimation.py` | `W1103GaussianDecimation` | 一維 Gaussian 鏈的抽格：完成平方（數值積分 1.224819）、$r''=r(r+4a)/a$、$h''$、自旋乘 $\sqrt{(r+2a)/a}$；蛛網圖 0.05→0.2025→0.8510→4.1282、$r^{(n)}\approx4^nr$、$h$ 每次乘 $2^{3/2}$ → $\gamma=1$（練習 11.5–11.6；(11.31)、Fig. 11.6–11.7、(11.46)(11.47) 的筆誤） | §11.2 前半，pp. 264–269 | 2:06 |
+| W1104 | `w1104_ising_decimation.py` | `W1104IsingDecimation` | 一維 Ising 的抽格：$A=2\sqrt{\cosh2K}=3.8793$、$K'=\frac12\ln\cosh2K=0.6625$、$K_n$ 一路趨向 0、加外場（練習 11.8）、4 自旋環 $Z=121.2329$（暴力＝轉移矩陣＝抽格連乘）、$x'=\frac{2x}{1+x^2}$ 的蛛網圖與兩個不動點、$\xi/e^{2K}\to\frac12$（練習 11.7、11.9；(11.53)、(11.63) 的筆誤） | §11.2 例題，pp. 269–272 | 2:07 |
+| W1105 | `w1105_momentum_shell.py` | `W1105MomentumShell` | 動量殼與連續重整化：布里淵區縮小一半、積掉殼層、$\alpha(q)=a(1-\cos q)$、$r\to4r$、$h\to2^{(d+2)/2}h$；$\frac{dr}{d\ell}=2r$、$\frac{dh}{d\ell}=\frac{d+2}2h$ 的流線、(11.24) 代入 (11.87) 驗證（殘差 $<10^{-7}$；(11.66)(11.67) 的筆誤） | §11.2.1–11.2.2，pp. 272–277 | 2:07 |
+| W1106 | `w1106_fixed_points.py` | `W1106FixedPoints` | 不動點與臨界指數：區塊自旋、臨界曲面（Fig. 11.9 示意）、$2\times2$ 線性化矩陣（示意，特徵值 2、$-3$：相關／無關）、$\nu=1/\Lambda_r$、四個指數公式 → Gaussian（$d=3,4$）、二維 Ising、二維自迴避的指數全部重現第 9 章 W903 的表＋第 11 章回顧 | §11.3，pp. 277–284 | 2:12 |
+
+連續播放：`main.py` 的 `Ch11Demo`（W1101–W1106），長度 13:15。計畫與場景卡：`../notes/plan_ch11.md`。數學：`utils/walk_rg.py`（依賴 numpy、scipy 與前幾章的模組；場景用 `from utils import walk_rg as ...`）；第 11 章沒有新的畫圖模組。
+
 ## 4. 程式結構
 
 ```text
 codes/
 ├── README.md             本檔
 ├── custom_config.yml     ManimGL 設定（只能寫英文）
-├── main.py               每個場景的同名子類別＋Ch1Demo、Ch2Demo、Ch3Demo、Ch4Demo、Ch5Demo、Ch6Demo、Ch7Demo、Ch8Demo、Ch9Demo、Ch10Demo（play_sequence 依序借用各場景的 construct）
+├── main.py               每個場景的同名子類別＋Ch1Demo、Ch2Demo、Ch3Demo、Ch4Demo、Ch5Demo、Ch6Demo、Ch7Demo、Ch8Demo、Ch9Demo、Ch10Demo、Ch11Demo（play_sequence 依序借用各場景的 construct）
 ├── render_all.py / .bat  批次輸出（.bat 必須純 ASCII＋CRLF）
 ├── check_env.py          環境檢查
 ├── scenes/               w101_…py … w112_…py、w201_…py … w212_…py、w301_…py … w308_…py（一個檔案一幕；輔助函式都是模組層級）
@@ -199,7 +212,8 @@ codes/
 │   ├── walk_saw.py       第 7 章的數學（純 Python，依賴 numpy、scipy）：路徑和的切段、自迴避漫步的精確列舉、1−f 展開、弧線圖與 Dyson 方程、冪次數算、平均場、Flory 指數
 │   ├── walk_scale.py     第 8 章的數學（純 Python，依賴 numpy、scipy、walk_gf、walk_saw）：長尾巴步伐、標度形式與塌縮、最陡下降與 Fisher 指數、比值法、重新標度與上臨界維度
 │   ├── walk_crit.py      第 9 章的數學（純 Python，依賴 numpy、scipy、walk_saw、walk_scale）：自發磁化、小 Ising 系統、一維 Ising 鏈、指數表與標度律、Landau 自由能、高斯積分與 Wick、Trotter 分解
-│   └── walk_cond.py      第 10 章的數學（純 Python，依賴 numpy、scipy 與前幾章的模組）：環面上的自迴避漫步、O(n) 平均場、自旋波的橫向與縱向模態、相關洞、Redner–Reynolds 的指數
+│   ├── walk_cond.py      第 10 章的數學（純 Python，依賴 numpy、scipy 與前幾章的模組）：環面上的自迴避漫步、O(n) 平均場、自旋波的橫向與縱向模態、相關洞、Redner–Reynolds 的指數
+│   └── walk_rg.py        第 11 章的數學（純 Python，依賴 numpy、scipy 與前幾章的模組）：Koch 曲線與 Cantor 集、碎形維度、被動重整化、Gaussian 與 Ising 的抽格、動量殼與連續重整化、不動點與指數
 └── renders/              影片（不進 git）
 ```
 
@@ -209,7 +223,7 @@ codes/
 
 ## 5. 每個數字怎麼核對
 
-- 場景：每幕的 `check_math()` 用 `utils.walk1d`（第 1 章）、`utils.walk_gf`（第 2 章）、`utils.walk_rec`（第 3 章）、`utils.walk_bc`（第 4 章）、`utils.walk_var`（第 5 章）、`utils.walk_shape`（第 6 章）、`utils.walk_saw`（第 7 章）、`utils.walk_scale`（第 8 章）、`utils.walk_crit`（第 9 章）或 `utils.walk_cond`（第 10 章）重算畫面上的每個數並 assert；版面用 `assert_in_frame`／`assert_apart`。
+- 場景：每幕的 `check_math()` 用 `utils.walk1d`（第 1 章）、`utils.walk_gf`（第 2 章）、`utils.walk_rec`（第 3 章）、`utils.walk_bc`（第 4 章）、`utils.walk_var`（第 5 章）、`utils.walk_shape`（第 6 章）、`utils.walk_saw`（第 7 章）、`utils.walk_scale`（第 8 章）、`utils.walk_crit`（第 9 章）、`utils.walk_cond`（第 10 章）或 `utils.walk_rg`（第 11 章）重算畫面上的每個數並 assert；版面用 `assert_in_frame`／`assert_apart`。
 - 數學模組：`python utils/walk1d.py`（公式 vs 暴力列舉、三種動差算法、書上的 15.1044／15.0961 等、`../notes/plan_ch01.md` 場景卡上的全部數字）；
   `python utils/walk_gf.py`（遞迴＝兩枚硬幣＝傅立葉積分、書上的數字、筆誤的更正、`../notes/plan_ch02.md` 場景卡上的全部數字）；
   `python utils/walk_rec.py`（生成函數＝暴力列舉＝逐步遞迴、Watson 積分的 Gamma 閉式＝Bessel 積分＝級數、模擬的固定種子、`../notes/plan_ch03.md` 場景卡上的全部數字）。

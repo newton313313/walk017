@@ -7,7 +7,7 @@
 把 J. Rudnick & G. Gaspari《Elements of the Random Walk》（Cambridge University Press 2004，12 章）逐章做成繁體中文的
 **ManimGL 動畫＋導讀講義**。目前完成：全書分章轉成 md（`ref/md/`）、**第 1 章** 12 幕動畫 W101–W112（＋連續播放 `Ch1Demo`）、
 **第 2 章** 12 幕動畫 W201–W212（＋連續播放 `Ch2Demo`）、**第 3 章** 8 幕動畫 W301–W308（＋連續播放 `Ch3Demo`）、
-**第 4 章** 8 幕動畫 W401–W408（＋連續播放 `Ch4Demo`）、**第 5 章** 7 幕動畫 W501–W507（＋連續播放 `Ch5Demo`）、**第 6 章** 7 幕動畫 W601–W607（＋連續播放 `Ch6Demo`）、**第 7 章** 6 幕動畫 W701–W706（＋連續播放 `Ch7Demo`）、**第 8 章** 4 幕動畫 W801–W804（＋連續播放 `Ch8Demo`）、**第 9 章** 6 幕動畫 W901–W906（＋連續播放 `Ch9Demo`）、**第 10 章** 5 幕動畫 W1001–W1005（＋連續播放 `Ch10Demo`）、導讀講義 `notes/walk_導讀.pdf` 第 1–10 章、第 1–10 章逐式校對與筆誤表。
+**第 4 章** 8 幕動畫 W401–W408（＋連續播放 `Ch4Demo`）、**第 5 章** 7 幕動畫 W501–W507（＋連續播放 `Ch5Demo`）、**第 6 章** 7 幕動畫 W601–W607（＋連續播放 `Ch6Demo`）、**第 7 章** 6 幕動畫 W701–W706（＋連續播放 `Ch7Demo`）、**第 8 章** 4 幕動畫 W801–W804（＋連續播放 `Ch8Demo`）、**第 9 章** 6 幕動畫 W901–W906（＋連續播放 `Ch9Demo`）、**第 10 章** 5 幕動畫 W1001–W1005（＋連續播放 `Ch10Demo`）、**第 11 章** 6 幕動畫 W1101–W1106（＋連續播放 `Ch11Demo`）、導讀講義 `notes/walk_導讀.pdf` 第 1–11 章、第 1–11 章逐式校對與筆誤表。
 
 ## 2. 現況
 
@@ -15,15 +15,15 @@
 |---|---|
 | 參考文獻 | `ref/ELEMENTS OF THE RANDOM WALK.pdf`（345 頁，有文字層；正文 PDF 頁序＝書頁＋16）。僅供個人研讀，不可散布 |
 | md 轉檔 | `ref/convert_to_md.py` → `ref/md/00_front_preface.md`…`13_references_index.md`（14 檔）＋`00_INDEX.md`（每章頁碼與全部小節標題）。數學字型依 /Differences 還原成 Unicode，獨立式排成二維文字圖 |
-| 校對 | `ref/md/ch01_formulas.md`（13 處筆誤）、`ref/md/ch02_formulas.md`（16 處筆誤）：全部式子改寫成 LaTeX（依頁面影像核對）＋筆誤表；`ref/md/ch03_formulas.md`（12 處筆誤／注）、`ref/md/ch04_formulas.md`（15 處筆誤＋1 注）、`ref/md/ch05_formulas.md`（10 處筆誤）、`ref/md/ch06_formulas.md`（12 處筆誤）、`ref/md/ch07_formulas.md`（13 處筆誤）、`ref/md/ch08_formulas.md`（7 處筆誤）、`ref/md/ch09_formulas.md`（10 處筆誤）、`ref/md/ch10_formulas.md`（11 處筆誤）只收場景與講義用到的式子 |
-| 計畫 | `notes/plan_ch01.md`、`notes/plan_ch02.md`、`notes/plan_ch03.md`、`notes/plan_ch04.md`、`notes/plan_ch05.md`、`notes/plan_ch06.md`、`notes/plan_ch07.md`、`notes/plan_ch08.md`、`notes/plan_ch09.md`、`notes/plan_ch10.md`（使用者指定的六步：大綱 → 生動度 → 例子 → 程式 → 省 token → 定稿場景卡） |
-| 數學 | `codes/utils/walk1d.py`（第 1 章）、`codes/utils/walk_gf.py`（第 2 章，不依賴 walk1d）、`codes/utils/walk_rec.py`（第 3 章，依賴 walk_gf）、`codes/utils/walk_bc.py`（第 4 章，依賴 walk_gf、walk_rec）、`codes/utils/walk_var.py`（第 5 章，依賴 numpy、scipy.special、walk_bc）、`codes/utils/walk_shape.py`（第 6 章，依賴 numpy、scipy.integrate）、`codes/utils/walk_saw.py`（第 7 章，依賴 numpy、scipy）、`codes/utils/walk_scale.py`（第 8 章，依賴 numpy、scipy、walk_gf、walk_saw）、`codes/utils/walk_crit.py`（第 9 章，依賴 numpy、scipy、walk_saw、walk_scale）、`codes/utils/walk_cond.py`（第 10 章，依賴 numpy、scipy 與前幾章的模組）；`python utils/<模組>.py` 自我測試，十個都在 `check_env.py` 裡（講義十章的數字檢查也在） |
-| 畫圖 | `codes/utils/walk_draw.py`（第 1 章）、`codes/utils/lattice_draw.py`（第 2 章：格子、熱圖、布里淵區、單位根、三維晶格）；第 3–10 章沒有新增畫圖模組 |
-| 動畫 | W101–W112、W201–W212、W301–W308、W401–W408、W501–W507、W601–W607、W701–W706、W801–W804、W901–W906、W1001–W1005，1080p 在 `codes/renders/`；`Ch1Demo` 25:40、`Ch2Demo` 26:20、`Ch3Demo` 17:39、`Ch4Demo` 17:49、`Ch5Demo` 16:02、`Ch6Demo` 14:46、`Ch7Demo` 13:40、`Ch8Demo` 8:28、`Ch9Demo` 13:53、`Ch10Demo` 11:19 |
-| 講義 | `notes/walk_導讀.tex/.pdf`（118 頁）；內文 `notes/ch1/part1.tex`、`notes/ch2/part2.tex`、`notes/ch3/part3.tex`、`notes/ch4/part4.tex`、`notes/ch5/part5.tex`、`notes/ch6/part6.tex`、`notes/ch7/part7.tex`、`notes/ch8/part8.tex`、`notes/ch9/part9.tex`、`notes/ch10/part10.tex`，圖表與數字檢查 `notes/chN/make_figs.py` → `notes/chN/figs.tex` |
-| combkit | 1.20.0：`combkit.walk1d`、`combkit.walk_gf`、`combkit.walk_rec`、`combkit.walk_bc`、`combkit.walk_var`、`combkit.walk_shape`、`combkit.walk_saw`、`combkit.walk_scale`、`combkit.walk_crit`、`combkit.walk_cond`、`combkit.draw.walk_draw`、`combkit.draw.lattice_draw`、`examples/ex14_random_walk.py`、`ex15_lattice_gf.py`、`ex16_recurrence.py`、`ex17_image_walker.py`、`ex18_persistent_walk.py`、`ex19_walk_shape.py`、`ex20_saw_flory.py`、`ex21_scaling_collapse.py`、`ex22_ising_scaling.py`、`ex23_torus_saw.py`、`tools/sync_from_walk017.py`；`projects/combkit_v1.20.0.zip`（路徑相對於 `C:\mypython\manim`） |
+| 校對 | `ref/md/ch01_formulas.md`（13 處筆誤）、`ref/md/ch02_formulas.md`（16 處筆誤）：全部式子改寫成 LaTeX（依頁面影像核對）＋筆誤表；`ref/md/ch03_formulas.md`（12 處筆誤／注）、`ref/md/ch04_formulas.md`（15 處筆誤＋1 注）、`ref/md/ch05_formulas.md`（10 處筆誤）、`ref/md/ch06_formulas.md`（12 處筆誤）、`ref/md/ch07_formulas.md`（13 處筆誤）、`ref/md/ch08_formulas.md`（7 處筆誤）、`ref/md/ch09_formulas.md`（10 處筆誤）、`ref/md/ch10_formulas.md`（11 處筆誤）、`ref/md/ch11_formulas.md`（8 處筆誤）只收場景與講義用到的式子 |
+| 計畫 | `notes/plan_ch01.md`、`notes/plan_ch02.md`、`notes/plan_ch03.md`、`notes/plan_ch04.md`、`notes/plan_ch05.md`、`notes/plan_ch06.md`、`notes/plan_ch07.md`、`notes/plan_ch08.md`、`notes/plan_ch09.md`、`notes/plan_ch10.md`、`notes/plan_ch11.md`（使用者指定的六步：大綱 → 生動度 → 例子 → 程式 → 省 token → 定稿場景卡） |
+| 數學 | `codes/utils/walk1d.py`（第 1 章）、`codes/utils/walk_gf.py`（第 2 章，不依賴 walk1d）、`codes/utils/walk_rec.py`（第 3 章，依賴 walk_gf）、`codes/utils/walk_bc.py`（第 4 章，依賴 walk_gf、walk_rec）、`codes/utils/walk_var.py`（第 5 章，依賴 numpy、scipy.special、walk_bc）、`codes/utils/walk_shape.py`（第 6 章，依賴 numpy、scipy.integrate）、`codes/utils/walk_saw.py`（第 7 章，依賴 numpy、scipy）、`codes/utils/walk_scale.py`（第 8 章，依賴 numpy、scipy、walk_gf、walk_saw）、`codes/utils/walk_crit.py`（第 9 章，依賴 numpy、scipy、walk_saw、walk_scale）、`codes/utils/walk_cond.py`（第 10 章，依賴 numpy、scipy 與前幾章的模組）、`codes/utils/walk_rg.py`（第 11 章，依賴 numpy、scipy 與前幾章的模組）；`python utils/<模組>.py` 自我測試，十一個都在 `check_env.py` 裡（講義十一章的數字檢查也在） |
+| 畫圖 | `codes/utils/walk_draw.py`（第 1 章）、`codes/utils/lattice_draw.py`（第 2 章：格子、熱圖、布里淵區、單位根、三維晶格）；第 3–11 章沒有新增畫圖模組 |
+| 動畫 | W101–W112、W201–W212、W301–W308、W401–W408、W501–W507、W601–W607、W701–W706、W801–W804、W901–W906、W1001–W1005、W1101–W1106，1080p 在 `codes/renders/`；`Ch1Demo` 25:40、`Ch2Demo` 26:20、`Ch3Demo` 17:39、`Ch4Demo` 17:49、`Ch5Demo` 16:02、`Ch6Demo` 14:46、`Ch7Demo` 13:40、`Ch8Demo` 8:28、`Ch9Demo` 13:53、`Ch10Demo` 11:19、`Ch11Demo` 13:15 |
+| 講義 | `notes/walk_導讀.tex/.pdf`（129 頁）；內文 `notes/ch1/part1.tex`、`notes/ch2/part2.tex`、`notes/ch3/part3.tex`、`notes/ch4/part4.tex`、`notes/ch5/part5.tex`、`notes/ch6/part6.tex`、`notes/ch7/part7.tex`、`notes/ch8/part8.tex`、`notes/ch9/part9.tex`、`notes/ch10/part10.tex`、`notes/ch11/part11.tex`，圖表與數字檢查 `notes/chN/make_figs.py` → `notes/chN/figs.tex` |
+| combkit | 1.21.0：`combkit.walk1d`、`combkit.walk_gf`、`combkit.walk_rec`、`combkit.walk_bc`、`combkit.walk_var`、`combkit.walk_shape`、`combkit.walk_saw`、`combkit.walk_scale`、`combkit.walk_crit`、`combkit.walk_cond`、`combkit.walk_rg`、`combkit.draw.walk_draw`、`combkit.draw.lattice_draw`、`examples/ex14_random_walk.py`、`ex15_lattice_gf.py`、`ex16_recurrence.py`、`ex17_image_walker.py`、`ex18_persistent_walk.py`、`ex19_walk_shape.py`、`ex20_saw_flory.py`、`ex21_scaling_collapse.py`、`ex22_ising_scaling.py`、`ex23_torus_saw.py`、`ex24_decimation_flow.py`、`tools/sync_from_walk017.py`；`projects/combkit_v1.21.0.zip`（路徑相對於 `C:\mypython\manim`） |
 | git | 本資料夾是獨立的 repo（master，無遠端）；`codes/renders/`、LaTeX 中間檔、`ref/png/` 不進 git |
-| 程式複本 | `C:\mypython\manim\projects\walkit`（2026-10-19，第 1–10 章，128 個檔案；舊版 `walkit_ch1-7`、`walkit_ch1-6`、`walkit_ch1-5`、`walkit_ch1-4` 都保存著）：codes/、notes 的 LaTeX 原始檔與 make_figs.py、ref 的兩支工具，附 README；不含影片、講義 PDF、書與 md。本資料夾才是正本，更新後要重新複製（舊的 walkit 先改名） |
+| 程式複本 | `C:\mypython\manim\projects\walkit`（2026-10-19，第 1–10 章，128 個檔案；舊版 `walkit_ch1-7`、`walkit_ch1-6`、`walkit_ch1-5`、`walkit_ch1-4` 都保存著；第 11 章之後還沒重新複製）：codes/、notes 的 LaTeX 原始檔與 make_figs.py、ref 的兩支工具，附 README；不含影片、講義 PDF、書與 md。本資料夾才是正本，更新後要重新複製（舊的 walkit 先改名） |
 
 ## 3. 檔案結構
 
@@ -32,7 +32,7 @@ walk017/
 ├── 交接說明_HANDOFF.md        本文件（權威）
 ├── codes/                      manimgl 一律在這裡執行；說明見 codes/README.md
 │   ├── custom_config.yml       只能寫英文
-│   ├── main.py                 同名子類別＋Ch1Demo、Ch2Demo、Ch3Demo、Ch4Demo、Ch5Demo、Ch6Demo、Ch7Demo、Ch8Demo、Ch9Demo、Ch10Demo
+│   ├── main.py                 同名子類別＋Ch1Demo、Ch2Demo、Ch3Demo、Ch4Demo、Ch5Demo、Ch6Demo、Ch7Demo、Ch8Demo、Ch9Demo、Ch10Demo、Ch11Demo
 │   ├── render_all.py / .bat    批次輸出（已存在的影片預設跳過）
 │   ├── check_env.py            環境檢查
 │   ├── scenes/                 w101_coin_walk.py … w112_steepest_descent.py、w201_what_is_gf.py … w212_singularities.py、
@@ -51,7 +51,8 @@ walk017/
 │   ├── ch7/                    part7.tex（第 7 章內文）、make_figs.py、figs.tex（產生的；巨集都以 \Seven 開頭）
 │   ├── ch8/                    part8.tex（第 8 章內文）、make_figs.py、figs.tex（產生的；巨集都以 \Eight 開頭）
 │   ├── ch9/                    part9.tex（第 9 章內文）、make_figs.py、figs.tex（產生的；巨集都以 \Nine 開頭）
-│   └── ch10/                   part10.tex（第 10 章內文）、make_figs.py、figs.tex（產生的；巨集都以 \Ten 開頭）
+│   ├── ch10/                   part10.tex（第 10 章內文）、make_figs.py、figs.tex（產生的；巨集都以 \Ten 開頭）
+│   └── ch11/                   part11.tex（第 11 章內文）、make_figs.py、figs.tex（產生的；巨集都以 \Eleven 開頭）
 └── ref/                        僅供個人研讀，不可散布
     ├── ELEMENTS OF THE RANDOM WALK.pdf
     ├── convert_to_md.py        全書 → md/
@@ -291,6 +292,27 @@ walk017/
 - W1005：$\chi'$ 那列五個 $r$ 都有值；多一張 $\rho_{MF}(r)$ 的小圖；表裡的分數用 `\tfrac`；回顧表的格子依欄寬縮小。
 - 講義代理人指出 $1-D=0.8917$ 是頭尾**重合**（$\Delta=0$），相鄰（$\Delta=1$）是 0.9387：W1004 的字在 1080p 輸出前改成「頭尾重合」，plan 與 `ch10_formulas.md` 也改了。用語：第 10 章用「相關洞」（全書地圖第 10 列已統一），第 9 章用「關聯函數」「關聯長度」——英文都是 correlation。
 
+## 5k. 場景與影片（第 11 章）
+
+| 代號 | 主題 | 長度 |
+|---|---|---|
+| W1101 | 碎形：點、直線、圓弧放大；Koch 曲線（$4^k$ 段、長度 $(4/3)^k\to\infty$）、Cantor 集（$(2/3)^k\to0$）；質量－半徑 $\ln4/\ln3=1.2619$、$\ln2/\ln3=0.6309$、盒子計數斜率 1.2362、複本公式（Sierpinski 1.5850）；普通漫步斜率 2.0258、自迴避 $d_f=1/\nu=\frac43$（練習 11.1–11.3） | 2:32 |
+| W1102 | 被動的重整化：放大 $b$ 倍，$m\to mb^{d/4}$、$r\to rb^{d/2}$、$h\to hb^{3d/4}$ → $m=r^{1/2}f(h/r^{3/2})$、三條曲線塌縮成 $y+y^3=x$、$\gamma=1$；Gaussian 模型 $m=r^{(d-2)/4}F(h/r^{(d+2)/4})$、練習 11.4（$d=3$：$\beta=\frac14$、$\delta=5$；$d=4$ 與 Landau 相同；(11.16) 後的筆誤） | 2:04 |
+| W1103 | 一維 Gaussian 鏈的抽格：完成平方（數值積分 1.224819）、$r''=r(r+4a)/a$、$h''$、自旋乘 $\sqrt{(r+2a)/a}$；蛛網圖 0.05→0.2025→0.8510→4.1282、$r^{(n)}\approx4^nr$、$h$ 每次乘 $2^{3/2}$ → $\gamma=1$（練習 11.5–11.6；(11.31)、Fig. 11.6–11.7、(11.46)(11.47) 的筆誤） | 2:06 |
+| W1104 | 一維 Ising 的抽格：$A=2\sqrt{\cosh2K}=3.8793$、$K'=\frac12\ln\cosh2K=0.6625$、$K_n$ 一路趨向 0、加外場（練習 11.8）、4 自旋環 $Z=121.2329$（暴力＝轉移矩陣＝抽格連乘）、$x'=\frac{2x}{1+x^2}$ 的蛛網圖與兩個不動點、$\xi/e^{2K}\to\frac12$（練習 11.7、11.9；(11.53)、(11.63) 的筆誤） | 2:07 |
+| W1105 | 動量殼與連續重整化：布里淵區縮小一半、積掉殼層、$\alpha(q)=a(1-\cos q)$、$r\to4r$、$h\to2^{(d+2)/2}h$；$\frac{dr}{d\ell}=2r$、$\frac{dh}{d\ell}=\frac{d+2}2h$ 的流線、(11.24) 代入 (11.87) 驗證（殘差 $<10^{-7}$；(11.66)(11.67) 的筆誤） | 2:07 |
+| W1106 | 不動點與臨界指數：區塊自旋、臨界曲面（Fig. 11.9 示意）、$2\times2$ 線性化矩陣（示意，特徵值 2、$-3$：相關／無關）、$\nu=1/\Lambda_r$、四個指數公式 → Gaussian（$d=3,4$）、二維 Ising、二維自迴避的指數全部重現第 9 章 W903 的表＋第 11 章回顧 | 2:12 |
+| Ch11Demo | 第 11 章連續播放 | 13:15 |
+
+6 幕合計 13:09；做法同第 9、10 章（基礎代理人＋2 個場景代理人＋1 個講義代理人）。和場景卡不同的地方：
+- 基礎代理人把大綱 §3 W1105 那列照抄書上錯的 $\alpha(q)$ 改成 $a(1-\cos qc)\approx\frac12ac^2q^2$；W1106 的 $2\times2$ 矩陣 $\begin{pmatrix}1&2\\2&-2\end{pmatrix}$ 是自己設計的示意例子（書上沒有），畫面標「示意」。
+- W1101：152 秒（略超過 2.5 分鐘）；Koch 的表轉置成 3 列 × 7 欄；盒子計數與漫步各多一張 $\ln N$ 對 $\ln$ 尺度的小圖（斜率都和模組一致）；放大的是第 5 代的前四分之一（257 點 ×3）。
+- W1102：練習 11.4 的表多一列「平均場」（和 $d=4$ 相同）；表裡的分數寫成 a/b。
+- W1103：蛛網圖多畫一段到對角線 4.1282，再用紅箭頭表示下一步 33.5553 跑出圖外；$S_2=0.3$、$S_4=-0.7$ 是完成平方的數值核對用的值。
+- W1104：蛛網圖的 $x_0$–$x_5$ 寫成兩欄算式，不用表；9 個 ±1 自旋的花樣自訂。
+- W1105：流的表多一列 $\ell=\ln2$（$r=0.0400$、$h=0.0566$，等於 $b=2$ 的一步）；「Landau 形在 $d=3$ 不成立」用場景裡的 `landau_residual()` 核對（殘差 0.58）。
+- W1106：Fig. 11.10 畫成 $\delta(\ell)=0.01e^{\Lambda\ell}$（$\Lambda_r=2$、1）升到 Dist $=1$ 的示意；不動點畫成白點（背景是深色）；回顧表 6 列、沒有表頭。
+
 ## 6. 下一章怎麼做（照這個流程，省 token）
 
 1. 讀 `ref/md/00_INDEX.md` 與那一章的 md；式子用 `ref/page_png.py` 截圖核對，必要時照 `ref/md/ch01_formulas.md` 寫一份 `chNN_formulas.md`（含筆誤表）。
@@ -339,3 +361,4 @@ walk017/
 - 2026-10-18：第 8 章：大綱與省 token 檢討（`plan_ch08.md` §1–§5，4 幕、1 個場景代理人）；基礎代理人：逐式校對（7 處筆誤）、`walk_scale`、定稿卡、combkit 1.18.0（`ex21_scaling_collapse.py`）；W801–W804、`Ch8Demo`（8:28）；講義第 8 章由代理人寫（7 頁，全冊 98 頁）。
 - 2026-10-18–19：第 9 章：大綱與省 token 檢討（`plan_ch09.md` §1–§5，6 幕）；基礎代理人：逐式校對（10 處筆誤）、`walk_crit`、定稿卡、combkit 1.19.0（`ex22_ising_scaling.py`）；W901–W906 由 2 個代理人平行製作、`Ch9Demo`（13:53）；講義第 9 章由代理人寫（全冊 109 頁）。
 - 2026-10-19：第 10 章：大綱與省 token 檢討（`plan_ch10.md` §1–§5，5 幕）；基礎代理人：逐式校對（11 處筆誤）、`walk_cond`、定稿卡、combkit 1.20.0（`ex23_torus_saw.py`）；W1001–W1005 由 2 個代理人平行製作、`Ch10Demo`（11:19）；講義第 10 章由代理人寫（全冊 118 頁）。
+- 2026-10-19：第 11 章：大綱與省 token 檢討（`plan_ch11.md` §1–§5，6 幕）；基礎代理人：逐式校對（8 處筆誤）、`walk_rg`、定稿卡、combkit 1.21.0（`ex24_decimation_flow.py`）；W1101–W1106 由 2 個代理人平行製作、`Ch11Demo`（13:15）；講義第 11 章由代理人寫（全冊 129 頁）。
