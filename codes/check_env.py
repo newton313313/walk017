@@ -143,6 +143,10 @@ def main():
     ok = code == 0 and "walk_rg（第 11 章）" in out and "全部驗證通過" in out
     report("數學驗證 utils/walk_rg.py（第 11 章）", ok, "Koch／Cantor 質量－半徑＝盒子計數＝複本公式、⟨R_g²⟩ 公式＝4^N 列舉、Landau 三次方程＝二分法＝walk_crit、塌縮、完成平方＝數值積分、Gaussian 環的行列式＝抽格、Ising 環 暴力＝轉移矩陣＝連乘、x 遞迴＝K 遞迴、ξ(K')＝ξ/2、流 解析＝solve_ivp、(11.87) 殘差、指數公式＝Widom＝walk_crit 指數表、筆誤的更正、場景卡的數字全部一致"
            if ok else out[-300:])
+    code, out = run([sys.executable, str(HERE / "utils" / "walk_eps.py")])
+    ok = code == 0 and "walk_eps（第 12 章）" in out and "全部驗證通過" in out
+    report("數學驗證 utils/walk_eps.py（第 12 章）", ok, "兩變數玩具 閉式＝數值積分＝擬合、殼層 指數＝格點計數、配對列舉＝(12:S-4)(12:S-6)、連結叢集四種算法、O(n) 縮併 2n+4 與 4(n+8)、不動點 Fraction＝fsolve、線性化 閉式＝numpy＝差分＝流的時間、u(ℓ)／t(ℓ) 解析＝數值、ν 一階公式與 Flory 展開、(12.86)＝(12.39)、冪次數算、全書回顧、筆誤的更正、場景卡的數字全部一致"
+           if ok else out[-300:])
 
     notes = HERE.parent / "notes"
     code, out = run([sys.executable, str(notes / "ch1" / "make_figs.py")], cwd=notes)
