@@ -11,6 +11,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py Ch7Demo -w    第 7 章 6 幕連續播放（W701–W706），輸出到 renders/Ch7Demo.mp4
     manimgl main.py Ch8Demo -w    第 8 章 4 幕連續播放（W801–W804），輸出到 renders/Ch8Demo.mp4
     manimgl main.py Ch9Demo -w    第 9 章 6 幕連續播放（W901–W906），輸出到 renders/Ch9Demo.mp4
+    manimgl main.py Ch10Demo -w   第 10 章 5 幕連續播放（W1001–W1005），輸出到 renders/Ch10Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -93,6 +94,11 @@ from scenes import w903_scaling_laws as w903
 from scenes import w904_landau_wilson as w904
 from scenes import w905_walk_from_magnet as w905
 from scenes import w906_n_to_zero as w906
+from scenes import w1001_confined_polymer as w1001
+from scenes import w1002_mean_field as w1002
+from scenes import w1003_spin_waves as w1003
+from scenes import w1004_correlation_hole as w1004
+from scenes import w1005_redner_reynolds as w1005
 
 
 def play_sequence(scene, classes):
@@ -385,6 +391,26 @@ class W906NToZero(w906.W906NToZero):
     pass
 
 
+class W1001ConfinedPolymer(w1001.W1001ConfinedPolymer):
+    pass
+
+
+class W1002MeanField(w1002.W1002MeanField):
+    pass
+
+
+class W1003SpinWaves(w1003.W1003SpinWaves):
+    pass
+
+
+class W1004CorrelationHole(w1004.W1004CorrelationHole):
+    pass
+
+
+class W1005RednerReynolds(w1005.W1005RednerReynolds):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -478,3 +504,13 @@ class Ch9Demo(w901.W901CriticalExponent):
 
     def construct(self):
         play_sequence(self, CH9)
+
+
+CH10 = [w1001.W1001ConfinedPolymer, w1002.W1002MeanField, w1003.W1003SpinWaves, w1004.W1004CorrelationHole, w1005.W1005RednerReynolds]
+
+
+class Ch10Demo(w1001.W1001ConfinedPolymer):
+    """第 10 章 5 幕連續播放（W1001–W1005）。"""
+
+    def construct(self):
+        play_sequence(self, CH10)
