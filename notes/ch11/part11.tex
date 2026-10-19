@@ -1,0 +1,327 @@
+\input{ch11/figs}
+
+\section{標度、碎形與重整化（第 11 章）}
+
+\begin{keybox}[先看這裡]
+第 8、9 章說：臨界點附近的系統\textbf{沒有自己的尺度}（關聯長度 $\xi=\infty$），放大之後看起來還一樣——就像「跳蚤身上還有更小的跳蚤，一層又一層」。這一章把這句話變成計算工具：
+先用最簡單的\textbf{碎形}（Koch 曲線、Cantor 集）說明「放大 $\mathcal M$ 倍、份量變 $\mathcal R$ 倍」怎麼給出非整數的維度 $\ln\mathcal R/\ln\mathcal M$；
+再把系統放大、把一半的自由度\textbf{積掉}（抽格，decimation），看模型的參數怎麼變——參數的\textbf{遞迴關係}與\textbf{流}；
+流停下來的地方是\textbf{不動點}，在不動點附近把流線性化，特徵值 $\Lambda$ 決定一切：$\Lambda>0$ 的方向\textbf{相關}（會被放大，要調到臨界才不見），$\Lambda<0$ 的方向\textbf{無關}（細節被忘掉——普適性），而 $\nu=1/\Lambda_r$。
+
+\textbf{記號}：碎形維度 $p$（$=d_f$）；Landau 的約化溫度 $r$、外場 $h$、磁化 $m$（本系列照第 9 章寫 $\frac r2m^2+\frac u4m^4-hm$，$u=1$）；一維 Gaussian 鏈的耦合 $a$（$=1$）；
+Ising 的 $K=J/k_BT$、外場 $H=h/k_BT$；抽格 $b=2$、連續重整化 $b=e^\ell$；相關特徵值 $\Lambda_r,\Lambda_h$。
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{\qquad}lll@{}}
+\toprule
+節 & 內容 & 動畫 & 節 & 內容 & 動畫\\
+\midrule
+11.1.1 & 碎形、維度 & W1101 & 11.2 例題 & 一維 Ising 的抽格 & W1104\\
+11.1.2 & 被動的重整化 & W1102 & 11.2.1--11.2.2 & 動量殼、連續重整化 & W1105\\
+11.2 前半 & 一維 Gaussian 鏈 & W1103 & 11.3 & 不動點、臨界指數 & W1106\\
+\bottomrule
+\end{tabular}
+\end{center}
+數字一律由 \texttt{codes/utils/walk\_rg.py} 重算，逐式校對見 \texttt{ref/md/ch11\_formulas.md}，
+圖表由 \texttt{ch11/make\_figs.py} 產生並先做數字檢查。連續播放：\texttt{Ch11Demo}（W1101--W1106）。
+\end{keybox}
+
+% =====================================================================
+\subsection{碎形：放大之後還一樣}
+\leavevmode\bk{pp.~255--261}\ \anim{W1101}\par\nopagebreak
+
+\textbf{問}：什麼東西放大之後還長得一樣？
+
+\textbf{直觀}：點和直線放大後不變（平凡）；圓弧越放大越直——圓有自己的尺度（半徑），放大到比半徑小的範圍就看不出是圓。
+\textbf{Koch 曲線}（圖\ref{eleven-fig-fractal} 上）沒有這種尺度：每一代把每段的中間三分之一換成等邊三角形的兩邊，一段變 4 段、每段長 $\frac13$。
+第 $k$ 代 $4^k$ 段、總長 $(\frac43)^k\to\infty$（第 5 代已是 4.2140）。取第 5 代的前四分之一放大 3 倍，和整條疊在一起一模一樣（自相似）。
+\textbf{Cantor 集}（圖\ref{eleven-fig-fractal} 左下）反過來：每段挖掉中間三分之一，$2^k$ 段、總長 $(\frac23)^k\to0$。一個無限長、一個長度是 0——「長度」這把尺對它們不適用，要換一把。
+
+\textbf{質量－半徑}（Fig.~11.5，(11.1)--(11.5)）：以物體上一點為圓心、半徑 $R$ 的圓內有多少「份量」$n(R)$？直線上 $n=2R\propto R^1$，平面上 $n=\pi R^2\propto R^2$：一般寫 $n(R)=KR^p$，指數 $p$ 就是維度。
+Koch 曲線（總份量算 1）以左端為圓心：半徑 $L$ 的圓包住整條，$n(L)=1$；半徑 $L/3$ 的圓裡正好是前四分之一（圖 \ref{eleven-fig-fractal} 上右的綠色），而前四分之一放大 3 倍就是整條，所以每縮 3 倍都一樣：
+\[n(R/3)=\tfrac14\,n(R)\ \Rightarrow\ K\big(\tfrac R3\big)^p=\tfrac14KR^p\ \Rightarrow\ 3^{-p}=\tfrac14\ \Rightarrow\ p=\frac{\ln4}{\ln3}=1.2619 .\tag{11.1--11.5}\]
+\textbf{算到底}（圖 \ref{eleven-fig-fractal} 右下的表）：$R=3^{-k}$ 時 $n=4^{-k}$（0.2500、0.0625……），斜率正好 1.2619；Cantor 集 $n=2^{-k}$，斜率 $\frac{\ln2}{\ln3}=0.6309$（練習 11.2）。
+〔注〕$n(L/3)=\frac14n(L)$ 是精確的：整條 Koch 曲線落在以左端為頂點、張角 $30^\circ$ 的錐裡，第 2 段（轉 $60^\circ$）以後的點離左端都 $\ge L/3$。
+改取 $R=2^{-j}$（$j=0..8$）斜率是 1.2571：$n(R)$ 是 $R^p$ 乘上以 $\ln3$ 為週期的小抖動。
+\textbf{第二種量法：盒子計數}。用邊長 $\varepsilon$ 的方格蓋住曲線，數有曲線的格子 $N(\varepsilon)\propto\varepsilon^{-p}$：$\varepsilon=\frac19,\frac1{27},\frac1{81},\frac1{243}$ 得 22、83、325、1291 個（每縮 3 倍約乘 4），
+斜率 1.2362；Cantor 集 0.6254。有限的代數讓它略偏低，但都指向 $\frac{\ln4}{\ln3}$、$\frac{\ln2}{\ln3}$。
+
+\textbf{複本公式}（(11.6)）：若物體由 $\mathcal R$ 個小複本組成、每個放大 $\mathcal M$ 倍就變回原物，則 $\mathcal M^p=\mathcal R$：
+\[p=\frac{\ln\mathcal R}{\ln\mathcal M}.\tag{11.6}\]
+線段（3 份、放大 3 倍）1.0000；正方形（9 份、3 倍）2.0000（練習 11.1）；Koch $(4,3)$ 1.2619；Cantor $(2,3)$ 0.6309（練習 11.3）；Sierpinski 三角形 $(3,2)$ 1.5850（本系列加的）。Koch 曲線介於線和面之間。
+
+\textbf{漫步也是碎形}（p.~261）：普通漫步 $N$ 步走 $R\sim N^{1/2}$，把步數當份量就是 $N\propto R^2$：\textbf{任何維度裡普通漫步的碎形維度都是 2}。
+\textbf{核對}（本系列）：迴轉半徑 $\langle R_g^2\rangle=\frac{N(N+2)}{6(N+1)}$（每步長 1、任何維度；$N\le5$ 與 $4^N$ 條全部列舉相同）。400 條二維漫步（種子 1101）在 $N=64,256,1024,4096$ 得
+11.23、44.65、163.53、696.53（公式 10.83、42.83、170.83、682.83），$\ln N$ 對 $\ln R_g$ 的斜率 2.0258（公式 2.0069）$\to2$。
+\textbf{自迴避漫步} $R\sim N^\nu$，所以 $d_f=1/\nu$：二維 $\frac43$（第 7 章精確列舉的有效值 $N=10,12,14$：1.3848、1.3788、1.3740 $\to\frac43$）、三維 $1/0.588=1.70$（引用）、四維以上 2——不能走回頭路，漫步比較「稀」。
+
+\begin{figure}[htbp]
+\centering
+\ElevenFigKoch\\[6pt]
+\begin{minipage}[c]{0.5\linewidth}\centering\ElevenFigCantor\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\ElevenTabFractal\end{minipage}
+\caption{碎形。上：Koch 曲線第 0--4 代；半徑 $L/3$（綠虛線）的圓裡正好是前四分之一（綠）。左下：Cantor 集。右下：段數、總長與 $n(R)$（最後一列是斜率）}\label{eleven-fig-fractal}
+\end{figure}
+
+\textbf{揭曉}：碎形維度＝「放大 $\mathcal M$ 倍、份量變 $\mathcal R$ 倍」的對數比；重整化群就是把「放大之後還一樣」這個想法用在漲落的系統上。
+
+% =====================================================================
+\subsection{被動的重整化：平均場與 Gaussian 模型}
+\leavevmode\bk{pp.~261--264}\ \anim{W1102}\par\nopagebreak
+
+\textbf{問}：把整個磁鐵放大 $b$ 倍，自由能的每一項會怎樣？
+
+\textbf{Landau}（(11.7)--(11.10)）：平均場裡磁化到處一樣，自由能
+\[\mathcal H(r,h,m)=V\big[rm^2+um^4-hm\big].\tag{11.9}\]
+〔注〕書上沒有第 9 章的 $\frac12,\frac14$；常數不改變標度（本系列 $m(r,0)=\sqrt{-r/u}$，書上 $\sqrt{-r/2u}$）。\textbf{放大}：改用 $b$ 倍大的單位量長度，體積的數值變成 $Vb^{-d}$。要 $\mathcal H$ 不變、$u$ 也不變，每一項都得自己補回 $b^d$：
+$um^4V=u\,m'^4\,Vb^{-d}$ 給 $m'=mb^{d/4}$；$rm^2V=r'm'^2Vb^{-d}$ 給 $r'=rb^{d/2}$；$hmV=h'm'Vb^{-d}$ 給 $h'=hb^{3d/4}$。所以
+\[m(r,h)=b^{-d/4}\,m\big(rb^{d/2},hb^{3d/4}\big)\quad\text{對任何 }b\text{ 成立}.\tag{11.11}\]
+$b$ 是隨便選的——選 $rb^{d/2}=1$（$b^{-d/4}=r^{1/2}$）就得到\textbf{標度形式}
+\[m(r,h)=r^{1/2}f\Big(\frac h{r^{3/2}}\Big),\qquad m(r,0)=\kappa|r|^{1/2},\qquad m(0,h)=\kappa'h^{1/3}.\tag{11.12--11.16}\]
+〔注〕(11.13) 是 $r<0$ 的有序相，應寫 $|r|^{1/2}$：$\beta=\frac12$；$r=0$ 時 $\delta=3$。
+\textbf{算到底}（$u=1$；方程 $rm+m^3=h$）：$m(-0.25,0)=\sqrt{0.25}=0.5000$；$m(0,0.008)=0.008^{1/3}=0.2000$、$m(0,0.125)=0.5000$。
+方程除以 $r^{3/2}$：$y=m/r^{1/2}$、$x=h/r^{3/2}$ 滿足 $y+y^3=x$——$r$ 不見了，這就是 $f$：$f(1)=0.6823$、$f(2)=1$（$1+1=2$）、$f(10)=2$（$2+8=10$）。
+\textbf{資料塌縮}（圖 \ref{eleven-fig-collapse}）：$(r,h)=(0.25,0.25)$、$(0.5,0.7071)$、$(1,2)$ 的 $x$ 都是 2（如 $0.25/0.25^{3/2}=2$），所以 $y=1$、$m=r^{1/2}=0.5000,\ 0.7071,\ 1.0000$：三條曲線換軸之後疊成一條。
+\begin{errbox}[p.~263，(11.16) 後]
+書上說 $r\to0$ 時「$f(h/r^{3/2})\to h^{1/3}r$」。$x$ 大時 $y^3\approx x$，即 $f(x)\approx x^{1/3}$，所以 $f(h/r^{3/2})\to h^{1/3}r^{-1/2}$，乘上 $r^{1/2}$ 才得 $m\to h^{1/3}$。
+$r=10^{-4}$、$h=10^{-3}$（$x=1000$）：$f=9.9667$，更正式 10.0000，書上的只有 $10^{-5}$。
+\end{errbox}
+\textbf{磁化率}（(11.17)）：$\chi=\big(\frac{\partial m}{\partial h}\big)_r\big|_{h=0}=r^{1/2}\cdot r^{-3/2}f'(0)=r^{-1}f'(0)$，所以 $\gamma=1$——只靠「放大後參數怎麼變」就讀出指數。
+
+\textbf{Gaussian 模型}（(11.18)--(11.25)）：現在磁化可以隨位置變，
+\[\mathcal H=\int d^dx\Big[\frac r2S(\vec x)^2+\big|\vec\nabla S(\vec x)\big|^2-hS(\vec x)\Big].\tag{11.18}\]
+〔注〕梯度項沒有 $\frac12$，和 (11.27) 的 $\frac a2$ 是不同的約定。把座標放大 $\vec x\to b\vec x$：$d^dx\to b^dd^dx$、$\vec\nabla\to b^{-1}\vec\nabla$。要梯度項的樣子不變，$b^{d-2}S^2=S'^2$，即
+$S(b\vec x)=b^{(2-d)/2}S'(\vec x)$；代進另外兩項：$rb^dS^2=rb^2S'^2$、$hb^dS=hb^{(d+2)/2}S'$。所以 $r'=b^2r$、$h'=b^{(d+2)/2}h$，
+\[m=b^{(2-d)/2}\,m\big(rb^2,hb^{(d+2)/2}\big)\ \xrightarrow{\ b^2=1/r\ }\ m=r^{(d-2)/4}F\Big(\frac h{r^{(d+2)/4}}\Big),\tag{11.19--11.24}\]
+$\chi_T=r^{-1}F'$（(11.25)，$\gamma=1$）。〔注〕(11.24) 少了「$m=$」。\textbf{核對}：只有 $q=0$ 的模態感到外場，精確解 $m=h/r$（$F(x)=x$），(11.22)(11.24) 對任何 $b$ 都成立（誤差 $<10^{-12}$）。指數見練習 11.4（$d=4$ 正是平均場的 $\frac12,1,3$）；$d=4$ 時兩種組合完全相同：$\frac{d+2}4=\frac32$、$\frac{d-2}4=\frac12$（$d=3$ 是 $\frac54$、$\frac14$）——第 8 章說過的 $d=4$ 的特殊地位。
+
+\begin{figure}[htbp]
+\centering
+\ElevenFigCollapse
+\caption{Landau 的資料塌縮（$u=1$）。左：$m$ 對 $h$；右：$y=m/r^{1/2}$ 對 $x=h/r^{3/2}$，三條疊成 $y+y^3=x$}\label{eleven-fig-collapse}
+\end{figure}
+
+\textbf{揭曉}：只看放大後參數怎麼變就讀出 $\gamma=1$；但這是「被動」的——漲落沒有被積掉。
+
+% =====================================================================
+\subsection{實空間重整化：一維 Gaussian 鏈}
+\leavevmode\bk{pp.~264--269}\ \anim{W1103}\par\nopagebreak
+
+\textbf{問}：把一半的自旋積掉，剩下的系統還長得一樣嗎？
+
+\textbf{直觀}：\textbf{抽格}（decimation）＝固定偶數格點的自旋，把奇數格點的自旋所有可能的值都積分（加總）掉，只留下它們對偶數格點的「平均影響」。剩下 $N/2$ 個自旋、格距變 2 倍。
+如果新的 Hamiltonian 和舊的同一個形式、只是參數換了，就得到參數的\textbf{遞迴關係}：再抽一次、再抽一次……看參數往哪裡跑。\textbf{模型}（連續值的自旋 $S_i$）：
+\[\mathcal H[S_i]=\sum_i\Big[\frac r2S_i^2+\frac a2(S_i-S_{i+1})^2\Big].\tag{11.27}\]
+$S_3$ 只出現在 $(\frac r2+a)S_3^2-aS_3(S_2+S_4)+\frac a2(S_2^2+S_4^2)$。\textbf{完成平方}（(11.28)--(11.30)，練習 11.5）：用 $\int e^{-AS^2+BS}dS=\sqrt{\pi/A}\,e^{B^2/4A}$，$A=\frac{r+2a}2$、$B=a(S_2+S_4)$，再用 $(S_2+S_4)^2=2(S_2^2+S_4^2)-(S_2-S_4)^2$：
+\[\int dS_3\,e^{-(\frac r2+a)S_3^2+aS_3(S_2+S_4)-\frac a2(S_2^2+S_4^2)}=\sqrt{\frac{2\pi}{r+2a}}\exp\Big[-\frac{a^2(S_2-S_4)^2}{2(r+2a)}-\frac{ar(S_2^2+S_4^2)}{2(r+2a)}\Big].\tag{11.30}\]
+\textbf{算到底}：$r=0.5$、$a=1$、$S_2=0.3$、$S_4=-0.7$：數值積分 1.224819，閉式 1.224819。
+右邊又是「最近鄰耦合＋平方項」：每個偶數格點從左右兩個奇數鄰居各得 $-\frac{ar}{2(r+2a)}S^2$，所以 $\frac{r'}2=\frac r2+\frac{ar}{r+2a}$，
+\[r'=\frac{r(r+4a)}{r+2a},\qquad a'=\frac{a^2}{r+2a}\qquad(\text{上例 }r'=0.9,\ a'=0.4).\tag{11.32--11.33}\]
+\begin{errbox}[p.~265，(11.31)]
+前因子印成 $\big(\frac{2\pi}{r+2a}\big)^{N/2}$：$N/2$ 個奇數格點各給一個 $\sqrt{2\pi/(r+2a)}$，應為 $\big(\frac{2\pi}{r+2a}\big)^{N/4}$。
+8 個自旋的 Gaussian 環用行列式精確算 $\ln Z$：照書上多了 $\frac N4\ln\frac{2\pi}{r+2a}=1.8432$（$r=0.5$、$a=1$）。（Ising 的 (11.58) $A^{N/2}$ 是對的，因為 $A$ 不是平方根。）
+\end{errbox}
+
+\textbf{重新標度}（(11.34)--(11.38)）：耦合從 $a$ 變成 $a'$，模型「長得不一樣」了。把自旋放大 $S_{2i}\to S_{2i}\sqrt{(r+2a)/a}$（自旋因子），耦合變回 $a$：
+\[r''=\frac{r(r+4a)}a,\qquad a''=a,\qquad h''=h\,\frac{r+4a}{\sqrt{a(r+2a)}}\tag{11.36--11.38}\]
+（上例 $r''=0.9/0.4=2.25=0.5\times4.5$；外場見練習 11.6）。\textbf{蛛網圖}（Fig.~11.6--11.7，圖 \ref{eleven-fig-chain}）：從 $r_0$ 往上到曲線得 $r_1$，水平走到對角線 $r''=r$（把 $r_1$ 當成新的輸入），再往上……
+$r_0=0.05\to0.2025\to0.8510\to4.1282\to33.5553$：越跑越大。\textbf{不動點}是曲線和對角線的交點：$r(r+4a)/a=r$ 給 $r=0$ 與 $r=-3a$。
+$r=0$ 處斜率 4 $>1$：一點點偏離就被放大——\textbf{不穩定}的不動點，正是臨界點；〔注〕$r=-3a$ 時 $r+2a<0$，積分發散，不物理。
+\begin{errbox}[pp.~267--268，Fig.~11.6--11.7；p.~267 正文]
+圖的軸寫 $r/\sqrt a$、$r''/\sqrt a$。$r$ 和 $a$ 同單位，$r''/a=(r/a)(r/a+4)$ 只是 $r/a$ 的函數，軸應為 $r/a$、$r''/a$（書上的曲線就是 $a=1$：$r''=10$ 在 $r=-2+\sqrt{14}=1.7417$）。
+正文「the reduced temperature, $t''$, after decimation」的 $t''$ 應為 $r''$。
+\end{errbox}
+
+\textbf{小 $r$}（(11.39)--(11.45)，圖 \ref{eleven-fig-chain} 右）：$r\ll a$ 時 $r''\approx4r$、$h''\approx2^{3/2}h$（$h''/h\to2.8284$）、自旋因子 $\approx\sqrt2$，抽 $n$ 次得
+$r^{(n)}=4^nr$、$h^{(n)}=2^{3n/2}h$、自旋總因子 $2^{n/2}$。$r=h=10^{-4}$ 時 $k=5$ 次的比只差 1.0086（$h$ 的修正是 $O(r^2)$，比全是 1.0000）。
+\textbf{讀出指數}（(11.46)--(11.49)）：舊自旋 $=2^{n/2}\times$ 新自旋，所以 $m=2^{n/2}f(r2^{2n},h2^{3n/2})$ 對每個 $n$ 都成立；選 $2^{2n}=1/r$（$2^{n/2}=r^{-1/4}$）：
+\[m=r^{-1/4}F\Big(\frac h{r^{3/4}}\Big),\qquad\Big(\frac{\partial m}{\partial h}\Big)_r=r^{-1}F'\Big(\frac h{r^{3/4}}\Big)\ \Rightarrow\ \gamma=1,\tag{11.48--11.49}\]
+正是 (11.24) 取 $d=1$。另一個讀法：長度每次乘 2、$r$ 每次乘 4，所以 $\xi\propto r^{-1/2}$、$\nu=\frac12$。換成 11.6 節的語言：$\Lambda_r=\log_24=2.0000$、$\Lambda_h=\log_22^{3/2}=1.5000$、自旋 $\log_2\sqrt2=0.5000$
+（$=\frac{d+2}2$、$\frac{2-d}2$，$d=1$）。
+\begin{errbox}[p.~269，(11.46)(11.47)]
+書上寫 $m2^{n/2}=f(\cdots)$、$m=2^{-n/2}f(r2^{2n},h2^{3n/2})$。舊自旋是新自旋的 $\sqrt2$ 倍（每次），應為 $m=2^{+n/2}f$。
+用精確的 $m=h/r$ 核對（$r=0.01$、$h=0.001$、$n=1$）：照書上 0.0500，更正 0.1000 $=h/r$；(11.48) 的 $r^{-1/4}$ 本來也只和更正版一致。
+\end{errbox}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.56\linewidth}\centering\ElevenFigChain\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}\centering\footnotesize\setlength{\tabcolsep}{4pt}\ElevenTabSmallR\end{minipage}
+\caption{一維 Gaussian 鏈（$a=1$）。左：Fig.~11.6--11.7（更正的座標 $r/a$）與 $r_0=0.05$ 的蛛網，黑點是不動點 $r=0$（斜率 4）。右：$r=h=10^{-4}$ 抽 $k$ 次，三個比都 $\approx1$}\label{eleven-fig-chain}
+\end{figure}
+
+\textbf{揭曉}：積掉一半、重新標度，模型的樣子不變，只有 $r$ 變成 $4r$——由「每次乘 4」讀出 $\nu=\frac12$、$\gamma=1$。
+
+% =====================================================================
+\subsection{一維 Ising 的抽格}
+\leavevmode\bk{pp.~269--272}\ \anim{W1104}\par\nopagebreak
+
+\textbf{問}：Ising 鏈的奇數自旋加總掉，剩下的自旋之間是什麼耦合？
+
+\textbf{加總一個自旋}（(11.50)--(11.53)）：$Z=\sum_{\{S\}}e^{K\sum_iS_iS_{i+1}}$，$S_i=\pm1$。$S_3$ 只出現在 $e^{KS_3(S_2+S_4)}$：
+\[\sum_{S_3=\pm1}e^{K(S_2S_3+S_3S_4)}=2\cosh K(S_2+S_4)=\begin{cases}2\cosh2K,&S_2=S_4\\2,&S_2=-S_4\end{cases}=A\,e^{K'S_2S_4}.\tag{11.52--11.53}\]
+\textbf{算到底}（$K=1$）：同號 $2\cosh2=7.5244$、異號 2。要寫成 $Ae^{K'S_2S_4}$：$Ae^{K'}=2\cosh2K$、$Ae^{-K'}=2$，相乘相除（練習 11.7）得
+\[A=2\sqrt{\cosh2K},\qquad K'=\frac12\ln\cosh2K\tag{11.54--11.55}\]
+$=3.8793$、$0.6625$。新的鏈還是最近鄰 Ising，只是 $K\to K'$。
+\begin{errbox}[p.~270，(11.53)]
+左邊印成 $\cosh K(S_2+S_4)$，少了 2：$K=1$ 時 $\cosh2=3.7622$，但右邊的 $2\cosh2K=7.5244$。應為 $2\cosh K(S_2+S_4)$。
+\end{errbox}
+\textbf{遞迴}（(11.62)）：$K_{n+1}=\frac12\ln\cosh2K_n$，$K_1=1$：1.0000、0.6625、0.3501、0.1137、0.0128、0.0002 $\to0$（圖 \ref{eleven-fig-ising}）。
+每抽一次，耦合變弱，越看越像高溫：低溫時的長程秩序在更大的尺度上看不見。外場的版本見練習 11.8。
+\textbf{配分函數變成連乘}（(11.57)--(11.63)）：每次抽格 $Z_N(K)=A(K)^{N/2}Z_{N/2}(K')$，一直抽下去
+\[Z=A(K_1)^{N/2}A(K_2)^{N/4}\cdots A(K_j)^{N/2^j}\cdots .\tag{11.63}\]
+\textbf{算到底：4 個自旋的環}（$K=1$）。抽兩次剩 1 個自旋（自己和自己的鍵 $KS_1S_1$ 給 $2e^{K_3}$）：$Z=A(K_1)^2A(K_2)\cdot2e^{K_3}$，$A(1)^2=15.0488$、$A(K_2)=2e^{K_3}=2.8383$，
+$Z=15.0488\times2.8383^2=121.2329$。暴力加總 $2^4=16$ 項、轉移矩陣 $(2\cosh K)^4+(2\sinh K)^4=3.0862^4+2.3504^4=90.7140+30.5189$ 都是 121.2329（第 9 章 W902 的 4 自旋環同一個數）；8 個自旋 9160.4387。
+\begin{errbox}[p.~271，(11.63)]
+最後一個因子印成 $A(K_j)^{N/2^{j+1}}$；$K_1$ 配 $N/2$，應為 $A(K_j)^{N/2^j}$。照書上的指數，4 與 8 個自旋的環得 18.5498、143.2705（應為 121.2329、9160.4387）。
+\end{errbox}
+
+\textbf{不動點}（練習 11.9）：令 $x=e^{-2K}$，$e^{2K'}=\cosh2K=\frac{1+x^2}{2x}$ 給 $x'=\frac{2x}{1+x^2}$；$x_0=e^{-2}$ 的蛛網（圖 \ref{eleven-fig-ising} 左）：0.1353、0.2658、0.4965、0.7966、0.9747、0.9997 $\to1$。
+不動點 $x=0$（$T=0$，斜率 2，不穩定）與 $x=1$（$T=\infty$，斜率 0，穩定）：除了絕對零度，所有溫度都流向無限高溫。
+\textbf{關聯長度}：$x$ 小時 $x'\approx2x$，而抽一次長度單位變 2 倍、$\xi$ 的數值減半：$\xi(2x)=\xi(x)/2$ $\Rightarrow$ $\xi\propto1/x=e^{2J/k_BT}$。
+精確 $\xi=-1/\ln\tanh K$，而且 $\tanh K'=\tanh^2K$ 讓 $\xi$ 每次剛好減半；$K=1,2,3$：$\xi=3.6719,\ 27.2960,\ 201.7140$，$e^{2K}/2=3.6945,\ 27.2991,\ 201.7144$。
+\textbf{自由能}：$\ln Z/N=\sum_j2^{-j}\ln A(K_j)=\ln(2\cosh K)$；$\ln Z/(NK)=1.1269,\ 1.0091,\ 1.0000$（$K=1,2,5$）$\Rightarrow F=-k_BT\ln Z\to-NJ$（16 個自旋的環用連乘 1.1277）。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.44\linewidth}\centering\ElevenFigXmap\end{minipage}\hfill
+\begin{minipage}[c]{0.54\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3.5pt}\ElevenTabIsing\end{minipage}
+\caption{一維 Ising。左：$x=e^{-2K}$ 的蛛網（$K=1$ 起）流向 $x=1$。右：$K=1$ 的環，三種算法相同，紅字照書上 (11.63)}\label{eleven-fig-ising}
+\end{figure}
+
+\textbf{揭曉}：一維 Ising 的流只有兩個不動點，$T=0$ 不穩定、$T=\infty$ 穩定——所以一維沒有有限溫度的相變。
+
+% =====================================================================
+\subsection{動量殼與連續重整化}
+\leavevmode\bk{pp.~272--277}\ \anim{W1105}\par\nopagebreak
+
+\textbf{問}：在 Fourier 空間「積掉一半」長什麼樣？
+
+\textbf{直觀}（Fig.~11.8，圖 \ref{eleven-fig-shell} 左）：實空間格距 $c\to2c$ $\Leftrightarrow$ 布里淵區每邊 $Q\to Q/2$。Gaussian 模型在 Fourier 空間各模態互不耦合，所以「積掉外圈殼層」只給一個常數：
+拿掉的模態比例 $1-2^{-d}$（$d=2$：$\frac34$、$d=3$：$\frac78$）。
+\[S_i=\frac1{\sqrt N}\sum_{\vec q}S(\vec q)e^{i\vec q\cdot\vec R_i},\qquad\mathcal H=\sum_{\vec q}\Big[\frac r2+\alpha(\vec q)\Big]S(\vec q)S(-\vec q)-\sqrt N\,S(0)h.\tag{11.64--11.66}\]
+\textbf{算到底}（一維 (11.27)，$a=1$，$N=8$，圖 \ref{eleven-fig-shell} 右的表）：$\frac a2\sum(S_i-S_{i+1})^2=\sum_qa(1-\cos q)|S(q)|^2$，$q=\frac{2\pi k}8$：
+$\alpha=0,\ 0.2929,\ 1.0000,\ 1.7071,\ 2.0000$；小 $q$ 近似 $\frac12aq^2=0,\ 0.3084,\ 1.2337,\ 2.7758,\ 4.9348$ 只在 $q$ 小時像。
+\begin{errbox}[p.~273，(11.66)(11.67)]
+書上 $\alpha(q)=-2a(1-\cos qc)\sim ac^2q^2$。應為 $\alpha(q)=a(1-\cos qc)\sim\frac12ac^2q^2$（$=Jq^2$，$J=\frac12ac^2$）；負號會讓模型不穩定。
+隨機 8 個自旋：實空間能量 3.0394＝Fourier；照書上的 $\alpha$ 得 $-4.3508$（負的能量）。
+\end{errbox}
+
+\textbf{一次 $b=2$}（(11.68)--(11.73)）：積掉殼層後剩 $|\vec q|<Q/2$；把 $\vec q\to\vec q/2$ 讓布里淵區變回原來大小，$Jq^2\to Jq^2/4$；格點數 $N=2^dN'$；
+再令 $S\to2S$ 把 $J$ 變回來：$\frac r2S^2\to\frac r2\cdot4S^2$、$\sqrt NS(0)h=\sqrt{N'}2^{d/2}S(0)h\to\sqrt{N'}2^{(d+2)/2}S(0)h$，
+\[r\to2^2r,\qquad h\to2^{(d+2)/2}h,\qquad m(r,h)=b^{(2-d)/2}\,m\big(rb^2,hb^{(d+2)/2}\big)\tag{11.71--11.73}\]
+（$d=3$：$h\times5.6569$）——和 (11.22) 一樣，但這次真的積掉了漲落。
+
+\textbf{連續重整化}（(11.74)--(11.83)）：讓 $b=e^{\delta\ell}$ 只比 1 大一點：$\vec q\to\vec q(1-\delta\ell)$、$S\to(1+\delta\ell)S$、$N\to N(1+d\,\delta\ell)$，於是 $r\to r(1+2\delta\ell)$、$h\to h(1+\frac{d+2}2\delta\ell)$：
+\[\frac{dr}{d\ell}=2r,\qquad\frac{dh}{d\ell}=\frac{d+2}2h\qquad\Rightarrow\qquad r=r_0e^{2\ell},\quad h=h_0e^{(d+2)\ell/2}.\tag{11.82--11.83}\]
+$r_0=h_0=0.01$、$d=3$：$\ell=1$ 得 $(0.0739,\ 0.1218)$，$\ell=2$ 得 $(0.5460,\ 1.4841)$（數值積分相同）；$\ell=\ln2$ 就是一次 $b=2$。
+消去 $\ell$：$h=h_0(r/r_0)^{(d+2)/4}\propto|r|^{5/4}$，流線都離開原點（圖 \ref{eleven-fig-shell} 中）——原點是不穩定的不動點，$r$、$h$ 都是相關的方向。
+〔注〕(11.78) 的 $N$ 是縮小後的格子以原格子表示。
+
+\textbf{磁化的偏微分方程}（(11.84)--(11.87)）：$S_i=e^{\frac{2-d}2\ell}S_i^{(\ell)}$，所以 $m=e^{\frac{2-d}2\ell}f\big(r(\ell),h(\ell)\big)$ 與 $\ell$ 無關；對 $\ell$ 微分、取 $\ell=0$：
+\[0=\Big(-\frac{d-2}2+2r\frac{\partial}{\partial r}+\frac{d+2}2h\frac{\partial}{\partial h}\Big)m(r,h).\tag{11.87}\]
+\textbf{代入驗證}：$m=r^{(d-2)/4}F(x)$、$x=h\,r^{-(d+2)/4}$：$2r\partial_rm=\frac{d-2}2m-\frac{d+2}2r^{(d-2)/4}xF'$，$\frac{d+2}2h\partial_hm=\frac{d+2}2r^{(d-2)/4}xF'$，三項一一相消，任何 $F$ 都行
+（數值殘差 $<10^{-7}$，$d=1,3,4$）；Landau 的組合 $r^{1/2}f(h/r^{3/2})$ 放進 $d=3$ 就不成立。反過來，(11.87) 的\textbf{特徵線}正是上面的流線：沿著流線 $e^{\frac{2-d}2\ell}m$ 不變，解出來就是 (11.24)。
+〔注〕(11.84) 第一行的 $S_i$ 是 $q=0$ 模態對每個格點的貢獻。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.25\linewidth}\centering\ElevenFigShell\end{minipage}\hfill
+\begin{minipage}[c]{0.38\linewidth}\centering\ElevenFigFlow\end{minipage}\hfill
+\begin{minipage}[c]{0.35\linewidth}\centering\footnotesize\setlength{\tabcolsep}{2.5pt}\ElevenTabAlpha\end{minipage}
+\caption{動量殼。左：布里淵區每邊縮一半。中：$d=3$ 的流線（橙點是 $r_0=h_0=0.01$ 的 $\ell=1,2$）。右：$N=8$ 的 $\alpha(q)$ 與書上的值（紅）}\label{eleven-fig-shell}
+\end{figure}
+
+\textbf{揭曉}：讓尺度連續地變，重整化變成一組微分方程——參數的「流」。
+
+% =====================================================================
+\subsection{不動點與臨界指數}
+\leavevmode\bk{pp.~277--284}\ \anim{W1106}\par\nopagebreak
+
+\textbf{問}：參數一直流——會流到哪裡停下來？
+
+\textbf{一般的架構}（(11.88)--(11.92)，Fig.~11.9）：把 $s^d$ 個自旋合成一個\textbf{區塊自旋}，所有參數 $\kappa_i$（$r$、$h$、$u$……）一起變：$\kappa_i\to R_i(\kappa_1,\kappa_2,\ldots)$；連續版
+\[\frac{d\kappa_i}{d\ell}=W_i(\kappa),\qquad s=e^\ell,\qquad\frac{d\xi^{(\ell)}}{d\ell}=-\xi^{(\ell)}.\tag{11.89--11.92}\]
+長度用 $s$ 倍大的單位量，關聯長度的數值 $\xi^{(\ell)}=\xi e^{-\ell}$ 越來越小。\textbf{臨界超曲面}（$\xi=\infty$ 的參數）被映到自己：$\infty\cdot e^{-\ell}$ 還是 $\infty$。
+\textbf{不動點} $W_i(\kappa^*)=0$：流到這裡就停，系統沒有任何長度尺度——$\xi=0$ 或 $\infty$；臨界超曲面上的點都流向一個臨界不動點。
+
+\textbf{線性化}（(11.93)--(11.96)）：在不動點附近令 $\delta\kappa_i=\kappa_i-\kappa_i^*$，$A_{ij}=\partial W_i/\partial\kappa_j$：
+\[\frac{d\delta\kappa_i}{d\ell}=\sum_jA_{ij}\delta\kappa_j,\qquad\delta\kappa_i(\ell)=\sum_\alpha C_{i,\alpha}e^{\Lambda_\alpha\ell}.\tag{11.94--11.95}\]
+每個特徵方向各自指數地變：$\Lambda>0$ \textbf{相關}（relevant，越流越大，像 $r$ 和 $h$——實驗上要調到 0 才在臨界點）、$\Lambda<0$ \textbf{無關}（irrelevant，越流越小——這些細節被忘掉，不同的模型有相同的指數：\textbf{普適性}）、$\Lambda=0$ \textbf{邊際}（marginal）（註 6）。
+\textbf{算到底：示意矩陣}（本系列）$A=\begin{pmatrix}1&2\\2&-2\end{pmatrix}$：特徵多項式 $\lambda^2+\lambda-6=(\lambda-2)(\lambda+3)$。
+$A(2,1)^T=(4,2)^T=2(2,1)^T$（相關）、$A(1,-2)^T=(-3,6)^T=-3(1,-2)^T$（無關），所以 $\delta\kappa(\ell)=c_1e^{2\ell}(2,1)+c_2e^{-3\ell}(1,-2)$。
+$c_1=0$ 的點留在臨界線（無關方向）上流進不動點；$c_1\ne0$ 的點先靠近（無關的部分消失），再沿 $(2,1)$ 被推開（圖 \ref{eleven-fig-fp} 左）。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{0.5\linewidth}\centering\ElevenFigToy\end{minipage}\hfill
+\begin{minipage}[c]{0.48\linewidth}\centering\footnotesize\setlength{\tabcolsep}{3pt}\ElevenTabExp\end{minipage}
+\caption{不動點。左：示意矩陣的流（$\ell\in[0,1]$）。右：(11.105)--(11.108) 與 $\nu=1/\Lambda_r$；後三欄等於第 9 章的指數表}\label{eleven-fig-fp}
+\end{figure}
+
+\textbf{$\nu=1/\Lambda_r$}（(11.97)--(11.103)，Fig.~11.10）：溫度稍微偏離臨界，離臨界面的距離 $\propto r$，流 $\ell$ 之後變成 $Kre^{\Lambda_r\ell}$；
+流到離臨界面距離 $D$（一個「普通」的距離，那時 $\xi^{(\ell^*)}$ 約是 1 個格距）時停：
+\[Kre^{\Lambda_r\ell^*}=D,\quad\xi=e^{\ell^*}\ \Rightarrow\ \xi=\Big(\frac{Kr}D\Big)^{-1/\Lambda_r},\qquad\nu=\frac1{\Lambda_r}.\tag{11.99--11.103}\]
+\textbf{算到底}（$K=D=1$、$r=0.01$）：$\Lambda_r=2$：$\ell^*=\frac12\ln100=2.3026$、$\xi=10.0000$；$\Lambda_r=1$：4.6052、100.0000（$\xi=r^{-\nu}$）。
+〔注〕(11.98) 的 $C_{i,t}$ 即 $C_{i,r}$，正文的「$re^{y\ell}$」的 $y$ 就是 $\Lambda_r$。
+
+\textbf{四個指數公式}（(11.104)--(11.108)）：每單位體積的自由能，流 $\ell$ 之後體積的數值縮 $e^{\ell d}$：
+\[f(r,h)=e^{-\ell d}f\big(re^{\Lambda_r\ell},he^{\Lambda_h\ell}\big).\tag{11.104}\]
+選 $e^{\Lambda_r\ell}=1/r$：$f=r^{d/\Lambda_r}\Phi(h\,r^{-\Lambda_h/\Lambda_r})$。對 $r$ 微分兩次得比熱 $\propto r^{d/\Lambda_r-2}$；對 $h$ 微分一次、兩次得 $m\propto r^{(d-\Lambda_h)/\Lambda_r}$、$\chi\propto r^{(d-2\Lambda_h)/\Lambda_r}$；
+$r=0$ 時改選 $e^{\Lambda_h\ell}=1/h$：$m\propto h^{d/\Lambda_h-1}$。於是
+\[\beta=\frac{d-\Lambda_h}{\Lambda_r},\qquad-\gamma=\frac{d-2\Lambda_h}{\Lambda_r},\qquad2-\alpha=\frac d{\Lambda_r},\qquad\delta=\frac{\Lambda_h}{d-\Lambda_h}\tag{11.105--11.108}\]
+（自動滿足 $\alpha+2\beta+\gamma=2$；與第 9 章 Widom 形式的 $\Delta=\Lambda_h/\Lambda_r$ 相同）。
+\textbf{Gaussian}（(11.109)--(11.114)）：11.5 節的 $\frac{dr}{d\ell}=2r$、$\frac{dh}{d\ell}=\frac{d+2}2h$ 就是 $\Lambda_r=2$、$\Lambda_h=\frac{d+2}2$，代入得 $\beta=\frac{d-2}4$、$\gamma=1$、$\delta=\frac{d+2}{d-2}$、$\nu=\frac12$——和練習 11.4 相同。
+圖 \ref{eleven-fig-fp} 右再放二維 Ising 與二維自迴避（$\Lambda$ 由 $\nu,\beta$ 反推）：正是第 9 章 W903 的指數表；11.3 節的鏈（$\Lambda_r=2$、$\Lambda_h=\frac32$）就是 $d=1$ 的 Gaussian。
+
+\textbf{揭曉}：臨界指數只由不動點附近兩個相關特徵值 $\Lambda_r$、$\Lambda_h$ 決定——下一章把這套用到 O($n$) 模型與自迴避漫步。
+
+% =====================================================================
+\subsection{練習 11.1--11.9 解答}
+{\small
+\begin{enumerate}[label=\textbf{11.\arabic*},itemsep=0.05em]
+\item 平面的維度。\quad 答：以面內一點為圓心，$n(R)=\pi R^2$（在邊上 $\frac\pi2R^2$、角上 $\frac\pi4R^2$，前因子不同、指數一樣）$\Rightarrow n(R/3)=\frac19n(R)$ $\Rightarrow3^{-p}=\frac19$、$p=\ln9/\ln3=2$；
+複本公式：正方形是 9 個放大 3 倍的小正方形，同樣得 2。
+\item Cantor 集。\quad 答：以左端為圓心，$R=\frac13$ 的圓內正好是左邊那一份（右邊那份從 $\frac23$ 開始），而它放大 3 倍就是整個集合 $\Rightarrow n(R/3)=\frac12n(R)$ $\Rightarrow3^{-p}=\frac12$、$p=\ln2/\ln3=0.6309$
+（$R=3^{-k}$：1、0.5000、0.2500、0.1250、0.0625）。
+\item 複本公式。\quad 答：Koch $\mathcal R=4$、$\mathcal M=3$；Cantor $\mathcal R=2$、$\mathcal M=3$ $\Rightarrow$ (11.6) 給 1.2619、0.6309，和質量－半徑相同；盒子計數 1.2362、0.6254 是第三種估計（有限代數，略偏低）。
+\item Gaussian 模型的指數。\quad 答：由 (11.24)：$h=0$、$r<0$ 形式上 $m\propto|r|^{(d-2)/4}$ $\Rightarrow\beta=\frac{d-2}4$；$\chi=r^{-1}F'(0)$ $\Rightarrow\gamma=1$；
+$r=0$ 時 $m$ 不能依賴 $r$，要 $F(x)\propto x^{(d-2)/(d+2)}$ $\Rightarrow m\propto h^{(d-2)/(d+2)}$、$\delta=\frac{d+2}{d-2}$。$d=3$：$\frac14,1,5$；$d=4$：$\frac12,1,3$。
+〔注〕Gaussian 模型在 $r<0$ 不穩定，$\beta$ 只是標度形式的讀法。
+\item 推導 (11.29)--(11.33)。\quad 答：照 11.3 節，$\frac{B^2}{4A}=\frac{a^2(S_2+S_4)^2}{2(r+2a)}$；用 $(S_2+S_4)^2=2(S_2^2+S_4^2)-(S_2-S_4)^2$ 與 $-\frac a2+\frac{a^2}{r+2a}=-\frac{ar}{2(r+2a)}$ 得 (11.30)；
+兩邊各一份 $\Rightarrow r'$、$a'$；前因子 $(\frac{2\pi}{r+2a})^{N/4}$（書上 $N/2$）。
+\item 加外場。\quad 答：$B=a(S_2+S_4)+h$，$\frac{B^2}{2(r+2a)}$ 的一次項給每個偶數格點兩份 $\frac{ah}{r+2a}$ $\Rightarrow h'=h\frac{r+4a}{r+2a}$，乘自旋因子 $\sqrt{(r+2a)/a}$ 得 (11.38)；
+$S^2$ 的係數與 $h$ 無關，(11.36) 不變；常數 $\frac{h^2}{2(r+2a)}$ 只進自由能。核對：$h/r=$ 自旋因子 $\times\,h''/r''$（精確）。
+\item 推導 (11.54)(11.55)。\quad 答：$Ae^{K'}=2\cosh2K$、$Ae^{-K'}=2$；相乘 $A^2=4\cosh2K$、相除 $e^{2K'}=\cosh2K$。$K=1$：3.8793、0.6625。
+\item 加外場的 Ising。\quad 答：加總 $S_3$ 得 $2\cosh[K(S_2+S_4)+H]$，三種值 $2\cosh(2K\pm H)$、$2\cosh H$ 配 $Ae^{K_1'S_2S_4+K_2'(S_2+S_4)}$：
+$e^{4K_2'}=\frac{\cosh(2K+H)}{\cosh(2K-H)}$、$e^{4K_1'}=\frac{\cosh(2K+H)\cosh(2K-H)}{\cosh^2H}$、$A^4=16\cosh(2K+H)\cosh(2K-H)\cosh^2H$；
+新外場 $H'=H+2K_2'$（自己的 $H$ 加兩邊各 $K_2'$）。$K=1$、$H=0.1$：3.8897、0.6602、0.0482、0.1964；暴力核對 $Z_8(K,H)=A^4Z_4(K_1',H')$。
+〔注〕題目的 $K_1,K_2$ 指 $J/k_BT$、$h/k_BT$，和 (11.62) 的 $K_n$ 撞名。
+\item 一維 Ising 的流。\quad 答：(a) $x'=\frac{2x}{1+x^2}$，不動點 $x=0$（不穩定）、$x=1$（穩定）——$\frac12\ln\cosh2K=K$ 只在 $K=0,\infty$。
+(b) $x'\approx2x$、$\xi(x')=\xi(x)/2$ $\Rightarrow\xi\propto x^{-1}=e^{2J/k_BT}$。
+(c) $K$ 大時 $A(K)\approx\sqrt2e^K$、$K'\approx K-\frac12\ln2$ $\Rightarrow\ln Z/N=\sum_j2^{-j}\ln A(K_j)\to K$、$F\to-NJ$（數值見 11.4 節）。
+〔注〕題目 (a) 的「such that that」是重複字；(c) 的「$E=-NJ$」指自由能趨近基態能量 $-NJ$。
+\end{enumerate}}
+
+% =====================================================================
+\subsection{第 11 章的回顧與筆誤一覽}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lll@{}}
+\toprule
+主題（書上的式子） & 結果 & 動畫\\
+\midrule
+碎形 (11.1)--(11.6) & Koch $\frac{\ln4}{\ln3}=1.2619$、Cantor 0.6309；普通漫步 2、二維自迴避 $\frac43$ & W1101\\
+被動的重整化 (11.7)--(11.25) & $m=r^{1/2}f(h/r^{3/2})$；Gaussian $m=r^{(d-2)/4}F$；$d=4$ 兩者一致 & W1102\\
+一維 Gaussian 鏈 (11.26)--(11.49) & $r''=r(r+4a)/a\approx4r$、$h''\approx2^{3/2}h$；$\gamma=1$、$\nu=\frac12$ & W1103\\
+一維 Ising (11.50)--(11.63) & $K'=\frac12\ln\cosh2K\to0$、$x'=\frac{2x}{1+x^2}$、$\xi\propto e^{2K}$ & W1104\\
+動量殼 (11.64)--(11.87) & $\frac{dr}{d\ell}=2r$、$\frac{dh}{d\ell}=\frac{d+2}2h$；(11.24) 滿足 (11.87) & W1105\\
+不動點 (11.88)--(11.114) & $\nu=1/\Lambda_r$、$\beta=(d-\Lambda_h)/\Lambda_r$；Gaussian $\Lambda_r=2$、$\Lambda_h=\frac{d+2}2$ & W1106\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{筆誤一覽}（給 2004 年版；〔注〕見各節）：下表在文中都用紅框標出，每一條都用程式核對過。
+\begin{center}
+\footnotesize\renewcommand{\arraystretch}{0.9}
+\ElevenTabErrata
+\end{center}
