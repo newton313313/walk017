@@ -1,10 +1,10 @@
 """
 render_all.py —— 一次把場景輸出成影片（存到 renders/）。在 codes/ 裡執行；一次只跑一個 manimgl。
 
-    python render_all.py                全部章節的單幕（第 1 章 W101–W112、第 2 章 W201–W212、第 3 章 W301–W308、第 4 章 W401–W408、第 5 章 W501–W507、第 6 章 W601–W607、第 7 章 W701–W706、第 8 章 W801–W804、第 9 章 W901–W906、第 10 章 W1001–W1005），1080p
-    python render_all.py --ch1          只做第 1 章；--ch2 … --ch10 同理（以後的章節是 --ch11 …）
+    python render_all.py                全部章節的單幕（第 1 章 W101–W112、第 2 章 W201–W212、第 3 章 W301–W308、第 4 章 W401–W408、第 5 章 W501–W507、第 6 章 W601–W607、第 7 章 W701–W706、第 8 章 W801–W804、第 9 章 W901–W906、第 10 章 W1001–W1005、第 11 章 W1101–W1106），1080p
+    python render_all.py --ch1          只做第 1 章；--ch2 … --ch11 同理（以後的章節是 --ch12 …）
     python render_all.py W105 210       只輸出指定的幕（代號；"210" 也可以，等於 W210）
-    python render_all.py --ch2-demo     另外輸出連續播放 Ch2Demo（W201–W212；第 1 章是 --ch1-demo、第 3 章是 --ch3-demo、第 4 章是 --ch4-demo、第 5 章是 --ch5-demo、第 6 章是 --ch6-demo、第 7 章是 --ch7-demo、第 8 章是 --ch8-demo、第 9 章是 --ch9-demo、第 10 章是 --ch10-demo）；只要連續播放就再加 --demos-only
+    python render_all.py --ch2-demo     另外輸出連續播放 Ch2Demo（W201–W212；第 1 章是 --ch1-demo、第 3 章是 --ch3-demo、第 4 章是 --ch4-demo、第 5 章是 --ch5-demo、第 6 章是 --ch6-demo、第 7 章是 --ch7-demo、第 8 章是 --ch8-demo、第 9 章是 --ch9-demo、第 10 章是 --ch10-demo、第 11 章是 --ch11-demo）；只要連續播放就再加 --demos-only
     python render_all.py -l             改用 480p（最快，用來預覽）；另有 -m（720p）、--uhd（4K）
     python render_all.py --force        影片已經存在也重新輸出（預設跳過：已完成的影片不覆寫）
 """
@@ -110,7 +110,15 @@ CH10 = [
     ("W1004", "scenes/w1004_correlation_hole.py", "W1004CorrelationHole"),
     ("W1005", "scenes/w1005_redner_reynolds.py", "W1005RednerReynolds"),
 ]
-CHAPTERS = {"--ch1": CH1, "--ch2": CH2, "--ch3": CH3, "--ch4": CH4, "--ch5": CH5, "--ch6": CH6, "--ch7": CH7, "--ch8": CH8, "--ch9": CH9, "--ch10": CH10}
+CH11 = [
+    ("W1101", "scenes/w1101_fractals.py", "W1101Fractals"),
+    ("W1102", "scenes/w1102_passive_rg.py", "W1102PassiveRG"),
+    ("W1103", "scenes/w1103_gaussian_decimation.py", "W1103GaussianDecimation"),
+    ("W1104", "scenes/w1104_ising_decimation.py", "W1104IsingDecimation"),
+    ("W1105", "scenes/w1105_momentum_shell.py", "W1105MomentumShell"),
+    ("W1106", "scenes/w1106_fixed_points.py", "W1106FixedPoints"),
+]
+CHAPTERS = {"--ch1": CH1, "--ch2": CH2, "--ch3": CH3, "--ch4": CH4, "--ch5": CH5, "--ch6": CH6, "--ch7": CH7, "--ch8": CH8, "--ch9": CH9, "--ch10": CH10, "--ch11": CH11}
 DEMOS = {"--ch1-demo": ("main.py", "Ch1Demo"), "--ch2-demo": ("main.py", "Ch2Demo"), "--ch3-demo": ("main.py", "Ch3Demo"),
          "--ch4-demo": ("main.py", "Ch4Demo"),
          "--ch5-demo": ("main.py", "Ch5Demo"),
@@ -118,7 +126,8 @@ DEMOS = {"--ch1-demo": ("main.py", "Ch1Demo"), "--ch2-demo": ("main.py", "Ch2Dem
          "--ch7-demo": ("main.py", "Ch7Demo"),
          "--ch8-demo": ("main.py", "Ch8Demo"),
          "--ch9-demo": ("main.py", "Ch9Demo"),
-         "--ch10-demo": ("main.py", "Ch10Demo")}
+         "--ch10-demo": ("main.py", "Ch10Demo"),
+         "--ch11-demo": ("main.py", "Ch11Demo")}
 QUALITY_FLAGS = {"-l", "-m", "--hd", "--uhd"}
 
 
