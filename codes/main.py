@@ -13,6 +13,7 @@ main.py —— walk017 全部場景的入口與連續播放（在 codes/ 裡執�
     manimgl main.py Ch9Demo -w    第 9 章 6 幕連續播放（W901–W906），輸出到 renders/Ch9Demo.mp4
     manimgl main.py Ch10Demo -w   第 10 章 5 幕連續播放（W1001–W1005），輸出到 renders/Ch10Demo.mp4
     manimgl main.py Ch11Demo -w   第 11 章 6 幕連續播放（W1101–W1106），輸出到 renders/Ch11Demo.mp4
+    manimgl main.py Ch12Demo -w   第 12 章 6 幕連續播放（W1201–W1206），輸出到 renders/Ch12Demo.mp4
 
 ManimGL 只列出「定義在這個檔案裡」的場景，所以每個場景在這裡都有一個同名子類別。
 連續播放是拿 Ch1Demo 這個物件依序去跑各場景的 construct，所以場景的輔助函式都寫在模組層級。
@@ -106,6 +107,12 @@ from scenes import w1103_gaussian_decimation as w1103
 from scenes import w1104_ising_decimation as w1104
 from scenes import w1105_momentum_shell as w1105
 from scenes import w1106_fixed_points as w1106
+from scenes import w1201_quartic_shell as w1201
+from scenes import w1202_linked_clusters as w1202
+from scenes import w1203_one_loop_flow as w1203
+from scenes import w1204_epsilon_nu as w1204
+from scenes import w1205_on_saw as w1205
+from scenes import w1206_diagrammatic_recap as w1206
 
 
 def play_sequence(scene, classes):
@@ -442,6 +449,30 @@ class W1106FixedPoints(w1106.W1106FixedPoints):
     pass
 
 
+class W1201QuarticShell(w1201.W1201QuarticShell):
+    pass
+
+
+class W1202LinkedClusters(w1202.W1202LinkedClusters):
+    pass
+
+
+class W1203OneLoopFlow(w1203.W1203OneLoopFlow):
+    pass
+
+
+class W1204EpsilonNu(w1204.W1204EpsilonNu):
+    pass
+
+
+class W1205OnSaw(w1205.W1205OnSaw):
+    pass
+
+
+class W1206DiagrammaticRecap(w1206.W1206DiagrammaticRecap):
+    pass
+
+
 CH1 = [w101.W101CoinWalk, w102.W102CountingWalks, w103.W103MeanPosition, w104.W104SqrtNLaw,
        w105.W105MomentGenerating, w106.W106Stirling, w107.W107BinomialToGauss, w108.W108PascalRecursion,
        w109.W109DiffusionEquation, w110.W110FourierCount, w111.W111GeneratingFunction, w112.W112SteepestDescent]
@@ -555,3 +586,13 @@ class Ch11Demo(w1101.W1101Fractals):
 
     def construct(self):
         play_sequence(self, CH11)
+
+
+CH12 = [w1201.W1201QuarticShell, w1202.W1202LinkedClusters, w1203.W1203OneLoopFlow, w1204.W1204EpsilonNu, w1205.W1205OnSaw, w1206.W1206DiagrammaticRecap]
+
+
+class Ch12Demo(w1201.W1201QuarticShell):
+    """第 12 章 6 幕連續播放（W1201–W1206）。"""
+
+    def construct(self):
+        play_sequence(self, CH12)

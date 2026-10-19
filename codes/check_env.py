@@ -158,7 +158,7 @@ def main():
     code, out = run([sys.executable, str(notes / "ch3" / "make_figs.py")], cwd=notes)
     ok = code == 0 and "數字檢查通過" in out
     report("講義第 3 章的數字檢查 notes/ch3/make_figs.py", ok, "並重新產生 ch3/figs.tex" if ok else out[-300:])
-    for ch in (4, 5, 6, 7, 8, 9, 10, 11):
+    for ch in (4, 5, 6, 7, 8, 9, 10, 11, 12):
         code, out = run([sys.executable, str(notes / f"ch{ch}" / "make_figs.py")], cwd=notes)
         ok = code == 0 and "數字檢查通過" in out
         report(f"講義第 {ch} 章的數字檢查 notes/ch{ch}/make_figs.py", ok, f"並重新產生 ch{ch}/figs.tex" if ok else out[-300:])
