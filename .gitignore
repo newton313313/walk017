@@ -6,8 +6,9 @@ codes/latex_cache/
 # Python
 __pycache__/
 *.pyc
-# Page images made by ref/page_png.py (regenerable)
-ref/png/
+# Reference book PDF, its md conversion and page images (ref/): personal study
+# only, not for distribution; kept out of git because the repo is public on GitHub
+ref/
 # LaTeX build by-products (the PDFs are kept)
 *.aux
 *.log
