@@ -249,7 +249,7 @@ def tab_collapse():
 def tab_xi():
     rows = [rf"{x} & {_s(WS.xi_88c(x), 4)} & {_s(WS.xi_lattice(x), 4)} & {_s(WS.G_ratio(x, 8), 4)}\\" for x in WS.XI_CASES]
     return "\n".join([r"\begin{tabular}{@{}cccc@{}}", r"\toprule",
-                      r"$z/z_c$ & $\xi$（(8.8c)） & $\xi$（格子） & $G_{\rm 格子}/G_{\rm Yukawa}$（$r=8$）\\", r"\midrule",
+                      r"$z/z_c$ & $\xi$（(8.8c)） & $\xi$（格子） & $G_{\text{格子}}/G_{\rm Yukawa}$（$r=8$）\\", r"\midrule",
                       *rows, r"\bottomrule", r"\end{tabular}"])
 
 

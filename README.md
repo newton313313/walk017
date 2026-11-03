@@ -4,7 +4,7 @@
 
 把 J. Rudnick & G. Gaspari, *Elements of the Random Walk*（Cambridge University Press 2004）逐章做成
 繁體中文的 ManimGL 動畫（W101–W1206，每章另有連續播放的 `Ch1Demo`–`Ch12Demo`）與
-導讀講義 `notes/walk_導讀.pdf`（140 頁，全書第 1–12 章）。
+導讀講義 `notes/walk_導讀.pdf`（146 頁，全書第 1–12 章，附錄 A 是全書筆誤總表）。
 
 | 位置 | 內容 |
 |---|---|

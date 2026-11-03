@@ -1,0 +1,267 @@
+% 由 appendix/make_errata.py 產生，不要手改；來源是 ref/md/chNN_formulas.md 的筆誤表。
+\clearpage
+\appendix
+\section{全書筆誤總表}\label{app-errata}
+把第 1--12 章章末的筆誤表合在一起，共 139 條，全部針對 2004 年版。頁碼與式號都是書上的；標「〔注〕」的條目，在該章本文另有說明。只是記號或寫法上的小問題（各章校對稿裡的「其他〔注〕」）不收在這裡。
+\begin{center}
+\small\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}rrl@{\qquad}rrl@{}}
+\toprule
+章 & 條數 & 章末總表 & 章 & 條數 & 章末總表\\
+\midrule
+1 & 13 & 1.7 節 & 7 & 13 & 7.4 節\\
+2 & 16 & 2.5 節 & 8 & 7 & 8.6 節\\
+3 & 12 & 3.9 節 & 9 & 10 & 9.8 節\\
+4 & 16 & 4.5 節 & 10 & 11 & 10.7 節\\
+5 & 10 & 5.5 節 & 11 & 8 & 11.8 節\\
+6 & 12 & 6.4 節 & 12 & 11 & 12.8 節\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\needspace{7\baselineskip}
+\subsection{第 1 章（13 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 6，(1.13) 前 & 每步位移平方 call $l$ & $l^2$\\
+p. 8，(1.20) 前 & $x=N-2m$ & $x=l(2m-N)$（奇數次動差為 0，不影響）\\
+p. 8–9，(1.22)(1.23) & 右邊沒有 $e^{Ny/2}$ & 乘上 $e^{Ny/2}$（$y=0$ 時為 1）\\
+p. 11，(1.34)(1.36) & $\exp[N(\ln N-N)]$ & $\exp[N\ln N-N]$\\
+p. 12，(1.37) & $+\frac12\ln(2\pi n)$、$+\frac12\ln(2\pi(N-n))$ & 兩項都是 $-$\\
+p. 12，(1.38) & $+\frac12(2m/N)^2$ & $-\frac12(2m/N)^2$\\
+p. 12，(1.39)(1.40) & $n$；$-\frac12\ln2\pi N$；$2^N/\sqrt{2\pi N}$ & $2m=d/l$；$-\frac12\ln(\pi N/2)$；$2\cdot2^N/\sqrt{2\pi N}$（奇偶性）\\
+p. 14，(1.48) & $\exp\big((x-y)^2/2l^2N\big)$ & $\exp\big(-(x-y)^2/2l^2N\big)$\\
+p. 16，(1.54) 後 & 上下限換成 $\pm\infty$ 誤差可忽略 & 離散計數要加上 $q=\pm\pi/l$ 的鞍點（因子 2 或 0）\\
+p. 17，(1.58) 後 & $N!\,d^N/dz^N$ & $\frac1{N!}d^N/dz^N$\\
+p. 20，Ex. 1.7 & $d^4=3(d_N^2)^2$ & $3N^2-2N$，大 $N$ 時 $\approx3(\overline{d^2})^2$\\
+p. 21，(1:S-9) & $\exp(N|p''|\cdots)$ & $\exp(-\frac N2|p''|\cdots)$\\
+p. 23，(1:S-15) & $\frac1{2\pi}$ & $\frac1{\sqrt{2\pi}}$\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 2 章（16 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 26，(2.1) 後 & 把右邊對 $y$ 展開到五次 & 把左邊對 $z$ 展開\\
+p. 29，(2.6) & $\chi(k)=2\cos q$ & $\chi(q)=2\cos q$\\
+p. 34，(2.20) 前 & 布里淵區中心以外沒有可觀的貢獻 & 角落 $(\pi,\pi,\pi)/a$ 一樣大：同奇偶的格點乘 2、其餘為 0\\
+p. 35，(2.22) & $e^{-3r^2/2aN}$ & $e^{-3r^2/2a^2N}$\\
+p. 36，(2.24) & $\int e^{i\vec q\cdot\vec r}p\,d\vec q$ & $\int e^{i\vec q\cdot\vec r}p\,d^3r$\\
+p. 37，Ex. 2.7 & $\sqrt{2/\pi}\,r_0^{-3}e^{-r^2/2r_0^2}$（$\int d^3r=4\pi$） & $(2\pi)^{-3/2}r_0^{-3}e^{-r^2/2r_0^2}$\\
+p. 39，(2.37) 後 & (2.20) 的左邊 & (2.20) 的右邊（最後一行）\\
+p. 40，(2.38) & $za^2\nabla^2G-(2dz-1)G=\delta$ & $za^2\nabla^2G+(2dz-1)G=-\delta$\\
+p. 41，(2:S1-4) & $-\frac{b^2}{2a}$ & $-\frac{b^2}{4a}$\\
+p. 42，(2:S1-5) & $-a(x-b/2a)+b^2/4a$ & $-a(x-b/2a)^2+b^2/4a$\\
+p. 43 & $l_2,l_2,l_3$ & $l_1,l_2,l_3$\\
+p. 44 & 布里淵區體積寫成 $\Omega$ & $\Omega_{BZ}=(2\pi)^3/a^3$\\
+p. 45，(2:S2-23) & 右邊的 $f(\vec R)$ & $F(\vec R)$\\
+p. 47，(2:S2-34) 後 & $m_i$ 不等於 $N_i$ & $m_i$ 不是 $N_i$ 的倍數\\
+p. 50，(2:S3-11) & $+\ln(z_c)$ & $-\ln(z_c)$\\
+p. 50，(2:S3-13) & $y_c$；$N^{y-1}$ & $z_c$；$N^{-y-1}$\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 3 章（12 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 52–53，(3.3)(3.5) & $\prod_{i=1}^{N}$ & $\prod_{i=0}^{N}$（起點也算腳印；〔注〕）\\
+p. 56，(3.18) 第二行 & $\int_0^{2\pi}\frac{dq}{1-z(e^{iq}+e^{-iq})}$ & 前面乘 $\frac1{2\pi}$\\
+p. 56，(3.19) 第二行 & $\alpha^2-\alpha/2+1/z$ & $\alpha^2-\alpha/z+1$\\
+p. 57，(3.20) 後 & $z<1$ & $0<z<\frac12$\\
+p. 57，(3.23) & $z_c^{-N}N^{-1/2}/\Gamma(\frac12)$ & $z_c^{-N-1/2}N^{-1/2}/\Gamma(\frac12)$\\
+p. 57，(3.24) & $N^{-1/2}/\Gamma(\frac12)=1/\sqrt{\pi N}$ & $\sqrt2N^{-1/2}/\Gamma(\frac12)=\sqrt{2/\pi N}$\\
+p. 59，(3.27) 後 & sc 的 $c_2=1/2$ & $c_2=1$\\
+p. 60 & $f''(z_c)=1/\delta^2$ & $f''(z_c-\delta)\approx1/\delta^2$（〔注〕）\\
+p. 61，(3.32) 與前一句 & $q=Qa(z_c-z)^{1/2}/c_2^{1/2}$、$(a^2/c_2)^{d/2}$ & $a\to c_1$\\
+p. 66，(3.53) 後 & $(z_c-z)^{1/2}$ 的係數 & $(z_c-z)^{-1/2}$ 的係數\\
+p. 66，(3.56) & $\sum_{n'=2}^{\infty}$ & $\sum_{n'=2}^{n}$\\
+p. 67，(3.57) & 積分下限 1 & 2（〔注〕）\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 4 章（16 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 75，(4.12)(4.13) & $\sqrt{2/L}\,\sin qx_1$ & $\sqrt{2/L}\,\sin qx_2$\\
+p. 75，(4.15) & $\sum_{n=0}^{\infty}$ & $\sum_{n=1}^{\infty}$（$n=0$ 項為 0；〔注〕）\\
+p. 75 末行 & $0\le z\le L$ & $0\le x\le L$\\
+p. 77，(4.22) & $\frac14\sum_{k=0}^\infty\frac1{k^2}$、$\frac34\sum_{n=0}^\infty\frac1{n^2}$ & 和從 1 起（$k=0$ 項發散）\\
+p. 77，(4.24) & $e^{-\pi^2\Delta^2N/L^2}$ & $e^{-\pi^2\Delta^2N/2L^2}$\\
+p. 80，(4.31) & $\frac{8\pi}{R}\cdots\frac2R\frac{j_0j_0}{1-2z+z\Delta^2k^2}$ & $\frac{8\pi}{R}\cdots k_{n_0}^2\frac{j_0j_0}{1-6z+z\Delta^2k^2}$\\
+p. 81，(4.35) & $e^{-\Delta^2\pi^2N/R^2}$ & $e^{-\Delta^2\pi^2n^2N/6R^2}$\\
+p. 81，(4.37) & $(6e^{-\Delta^2\pi^2/R^2})^N$ & $(6e^{-\Delta^2\pi^2/6R^2})^N$\\
+p. 83，(4.40) & $\frac{a^2}{3}\nabla^2w$ & $\frac{a^2}{6}\nabla^2w$\\
+p. 83，(4.41) & $\frac{3}{a^2}S$ & $\frac{6}{a^2}S$\\
+p. 87，(4.58) 前 & wall in the $x,z$ plane & $y,z$ 平面（$x=0$）\\
+p. 91，(4.64) 前 & $\rho=-4\pi\nabla^2\phi$ & $\nabla^2\phi=-4\pi\rho$\\
+p. 92 & $na\ll r_0$ & $na^2\ll r_0^2$（$a\ll r_0/\sqrt n$）\\
+p. 93 & $a\ll r/\sqrt n$ & $a\ll r_0/\sqrt n$\\
+p. 93，(4:S-1) 後 & starting at $y$ and ending at $y$ & starting at $x$ and ending at $y$\\
+p. 93，(4:S-2) & $G(z;0,y)=zG(z;x,\Delta)+\delta_{x,\Delta}$ & $G(z;x,0)=zG(z;x,\Delta)+\delta_{x,0}$\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 5 章（10 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 96，(5.3) & $l(2p-1)\frac{\partial}{\partial y}P$ & $l(1-2p)\frac{\partial}{\partial y}P$\\
+p. 103，(5.37) & $\lambda^2-2Q\cos ql\,\lambda+(1-2Q)=0$ & $\lambda^2-2Q\cos ql\,\lambda-(1-2Q)=0$\\
+p. 107，(5.57) 前 & when $x<t$ & $x<vt$\\
+p. 107，(5.60)(5.61) & $\frac12\big(2\gamma+\frac{\partial}{\partial t}\big)$ & $\frac{1}{2v}\big(2\gamma+\frac{\partial}{\partial t}\big)$\\
+p. 112，(5.83) 後、(5.84) & $b\to i\gamma$；$2\gamma\sqrt{\pi/2}\,e^{-\gamma t}\cosh(\gamma\sqrt{v^2t^2-r^2})$ & $b\to i\gamma/v$；$2\gamma\,e^{-\gamma t}\cosh(\gamma\sqrt{v^2t^2-r^2}/v)$\\
+p. 113，(5.88) & $\frac{2\pi}{x}\delta(x-y)$ & $\frac1x\delta(x-y)$\\
+p. 113，(5.89) & $2\pi\frac{e^{-\gamma t}}r\delta(r-vt)-2\pi\frac{\gamma}{v\sqrt{\cdots}}\cdots$ & 兩個 $2\pi$ 都去掉\\
+p. 115，(5.96) 前 & $\frac1{vq}\big(\frac\pi2-i\ln((1+x)(1-x))\big)$ & $\frac1{vq}\big(\frac\pi2-\frac i2\ln\frac{1+x}{1-x}\big)$\\
+p. 117，(5.106) & $e^{-\gamma ut\cot u}$ & $e^{+\gamma ut\cot u}$\\
+p. 124，(5.133) 後 & width proportional to $t$ & 變異數 $\propto t$（寬度 $\propto\sqrt t$）\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 6 章（12 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 135，(6.16) & $(d-1)\sum_{k=1}^{N}R_k^2$ & $(d-1)\big(\sum_{k=1}^{d}R_k^2\big)^2$\\
+p. 138，Ex. 6.3(b)(c) & (b) $j<n$／$j\ge n$ 配 (c) $\sum_{j=1}^{N+1}$ & 點編號 $j=0..N$：$\sum_{j=0}^{N}$\\
+p. 139，(6.22) & $\alpha<\beta$；$\alpha>\beta$ & $\alpha\le\beta$；$\alpha>\beta$（含對角線）\\
+p. 139，(6.23) & $a_{x_1,x_2}=x_<(N+1-x_>)$ & $a_{x_1,x_2}=\frac{x_<(N+1-x_>)}{(N+1)^2}$\\
+p. 141，(6.33a) & $\sum_{\alpha,\gamma}a_{\alpha,\alpha}a_{\delta,\delta}$ & $\sum_{\alpha,\delta}a_{\alpha,\alpha}a_{\delta,\delta}$\\
+p. 141，(6.35a) & $\frac{1}{d^2}\frac{(N+1)^2}{\pi^4d^2}\Big[\Big(\sum_n\frac1{n^2}\Big)+\cdots\Big]$ & $\frac{1}{d^2}\frac{(N+1)^2}{\pi^4}\Big[\Big(\sum_n\frac1{n^2}\Big)^2+\cdots\Big]$\\
+p. 141，(6.35b) & $\frac{\pi^4}{36}+\frac{\pi^4}{90}$ & $\frac{\pi^4}{36}+\frac{2\pi^4}{90}$\\
+p. 146，(6.52) & $\sum_i\delta(\lambda-\lambda_i)$ & $\pi\sum_i\delta(\lambda-\lambda_i)$\\
+p. 146，(6.54) & $\langle R_1^2\rangle:\langle R_2^2\rangle:\langle R_3^2\rangle=13.76:3.03:1$ & $\approx11.9:2.7:1$（13.76 : 3.03 接近 $\langle R_1^2/R_3^2\rangle:\langle R_2^2/R_3^2\rangle$）\\
+p. 153，(6.76) & $K(R)=\prod\big(1-\frac{2is\alpha_n}{d}\big)^{-d/2}$ & $K(s)=\prod\big(1+\frac{2is\alpha_n}{d}\big)^{-d/2}$\\
+p. 159，(6:S2-1) & $\cdots\Big/\Big(\frac{\langle T_{11}^2\rangle}{\langle T_{11}T_{22}\rangle}+d-1\Big)$ & 分母再乘 $\frac{\langle T_{11}T_{22}\rangle}{\langle T_{12}^2\rangle}$\\
+p. 164，(6:S2-25) 前 & Adding (6:S2-16), (6:S2-21), and (6:S2-23) & (6:S2-24)\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 7 章（13 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 169–173，(7.6)(7.11)、Ex. 7.1 & $(2\pi Ma^2)^{-3/2}$ & $(2\pi Ma^2/3)^{-3/2}$（否則每次摺積多出 $3^{-3/2}=0.1925$）\\
+p. 173，(7.11) & $e^{-3\lvert\vec x-\vec r_1\rvert^2/3M_1a^2}$、$e^{-3\lvert\vec r_k-\vec y\rvert^2/3M_ka^2}$ & 分母 $2M_1a^2$、$2M_ka^2$（同 (7.6)）\\
+p. 176，(7.21) 第二、三行 & $Z^{N-M_1}$、$Z^{K_2}$ & $z^{N-M_1}$、$z^{K_2}$\\
+p. 178，(7.27) 前 & Figure 7.3(a) & Figure 7.3(b)（並排；(a) 是巢狀）\\
+p. 183，(7.33) & $g_0[\Sigma_1+\Sigma_2]^2g_0$ & $g_0[\Sigma_1+\Sigma_2]g_0[\Sigma_1+\Sigma_2]g_0$\\
+p. 183，(7.35) & $\frac{g_0}{1+(\Sigma_1+\Sigma_2)g_0}$ & $\frac{g_0}{1-(\Sigma_1+\Sigma_2)g_0}$\\
+p. 188，(7.47) & $za^2\nabla^2G-(z/z_c-1)G=a^d\delta$ & $(1-z/z_c)G-za^2\nabla^2G=a^d\delta$\\
+p. 188，(7.48) & $\psi_i(\vec r)=e^{-\vec q\cdot\vec r}$ & $\psi_i(\vec r)=e^{i\vec q\cdot\vec r}/\sqrt V$\\
+p. 188，(7.50) 後 & (7.43dd) & (7.43d)\\
+p. 189，(7.55) 前 & rewrite $1/(z_0-z)$ as $\int_0^\infty dt\,e^{-t(z_0-z)/z_c}$ & 此積分 $=z_c/(z_0-z)$\\
+p. 190，(7.58) 與前一句 & $e^{-\mathcal Nz\lambda/z_c}$；$z^m\cdots\lambda^n$ & $e^{+\mathcal Nz\lambda/z_c}$；$(z/z_c)^m\cdots\lambda^m$\\
+p. 190，(7.59) & $e^{-\mathcal N(f\lambda^2+\mathcal N\lambda)+m\ln\lambda}$ & $e^{-\mathcal N(f\lambda^2+\lambda)+m\ln\lambda}$\\
+p. 191，(7.61) 左邊 & $C_{MF}(N;\vec x,\vec y)$ & $C_{MF}(m;\vec x,\vec y)$\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 8 章（7 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 195，(8.6)→(8.7) & replace $k$ by $w=k/r$ & $w=kr$（$k=w/r$；照書上 $r$ 提不出來）\\
+p. 196，第一段 & $z_c$ is the coordination number & $z_c=1/(\text{配位數})=1/2d$\\
+p. 198，(8.18) & $\nu\lvert\vec r\rvert(z_c-z)^{\nu-1}A'-(N+1)/z=0$ & $-\nu\lvert\vec r\rvert(z_c-z)^{\nu-1}A'-(N+1)/z=0$\\
+p. 198，(8.20) 第一行 & $\exp\big(-B\lvert\vec r\rvert\delta^\nu-(N+1)/z_c\big)$ & $z_c^{-(N+1)}\exp\big(-B\lvert\vec r\rvert\delta^\nu+(N+1)\delta/z_c\big)$\\
+p. 198，(8.20) 第二行 & $\exp[-((\nu z_c)^\nu B)^{1/(1-\nu)}\cdots]$ & $\exp[-(1-\nu)((\nu z_c)^\nu B)^{1/(1-\nu)}\cdots]$（否則一維得 $e^{-x^2/N}$）\\
+p. 200，(8.22) 前 & $\vec r\,'(s')=l_1\vec r(l_2s)$ & $\vec r\,'(s')=l_1\vec r(s'/l_2)$\\
+p. 200，Ex. 8.6 & rescaled by a factor $l_1^d/l_2$ & $l_1^d/l_2^2$\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 9 章（10 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 210，Table 9.1 三維欄 & $\alpha=\alpha'=0.12$ & $\approx0.19$（同欄 $\beta,\gamma,\nu$ 代 (9.16)(9.18) 都得 0.194；照書上 $\alpha+2\beta+\gamma=1.926$）\\
+p. 210，Table 9.1 第二個 Correlation length（$T<T_c$） & $\xi=\int C\rho^2d^d\rho/\int C\,d^d\rho$ & $\xi^2=\cdots$（比值是長度的平方）\\
+p. 218，(9.37) 之後 & correlation length $\propto K_1/(z_c-z)^\nu$ & $\xi^2\approx K_1/(z_c-z)^{2\nu}$（否則 (9.38)(9.39)(9.41) 是 $K_1^2$）\\
+p. 218，(9.38)→(9.39) & $z_c^{-(N+s)}N^{\delta-1}/\Gamma(s)$ & $z_c^{-(N+s)}N^{s-1}/\Gamma(s)$\\
+p. 219，(9.40)→(9.41) & must be equal to $V\Gamma_N/z_0$ & $V\Gamma_N/z_0^N$\\
+p. 219，(9.41) & $\frac{K_1}{z_c^{\gamma}}\frac{\Gamma(\gamma)}{\Gamma(\gamma+2\nu)}N^{2\nu}$ & $\frac{K_1}{z_c^{2\nu}}\frac{\Gamma(\gamma)}{\Gamma(\gamma+2\nu)}N^{2\nu}$\\
+p. 225，(9.70) & $\langle\vec R_M\rvert e^{\nabla^2\epsilon}\lvert\vec R_{M'}\rangle=(2\pi)^{-d/2}e^{-\frac d2\lvert\Delta\vec R\rvert^2/\epsilon}$ & $\langle\vec R_M\rvert e^{\frac12\nabla^2\epsilon}\lvert\vec R_{M'}\rangle=(2\pi\epsilon)^{-d/2}e^{-\lvert\Delta\vec R\rvert^2/2\epsilon}$（書上的核積分 $(\epsilon/d)^{d/2}\ne1$）\\
+p. 226，(9.72) & $\int_0^\infty$ & $\int_{-\infty}^{\infty}$（從 0 積得 $0.3894-0.2395i$，不是 $e^{-1/4}=0.7788$）\\
+p. 226，(9.75) & $\exp\big(-\int\frac d2\lvert\frac{d\vec R}{ds}\rvert^2ds\ \frac u4\iint\delta\cdots\big)$ & $\exp\big(-\int\frac d2\lvert\frac{d\vec R}{ds}\rvert^2ds-\frac u4\iint\delta\cdots\big)$\\
+p. 230，(9:S-19) 第二、三行 & $\frac{\partial^3}{\partial x_r\partial x_s\partial x_t}$；括號裡的 $\langle x_rx_s\rangle$ & $\frac{\partial^3}{\partial h_r\partial h_s\partial h_t}$；$\langle x_tx_u\rangle$（照書上 $\langle x_1^2x_2^2\rangle$ 得 0.44，應為 0.32）\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 10 章（11 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 235，(10.1) & $\sum_NC(N;\vec x,\vec y)z^n$ & $\sum_NC(N;\vec x,\vec y)z^N$（$z^n$ 與 $N$ 無關：4×4 環面永遠 90677、$\langle N\rangle=0$）\\
+p. 238，(10.14)→(10.15) & 「對 $S$ 的積分是 $i\pi$」；$\Gamma_{MF}=\frac{N_0}4\int_0^\infty f\,d\lambda$ & $2\pi i\,\theta(\lambda)$（註 2 的 $i\epsilon$）；$\frac{N_0}2\int_0^\infty f\,d\lambda$（$u=0$ 得 $1/r$；$n\to0$ 的數值 1.8682，書上 0.9341）\\
+p. 238，註 3 & $\lambda\to4\lambda$、$4u\to f$、$2r\to1-z/z_c$ & （隨上一列）$\lambda\to2\lambda$、$u\to f$、$r\to1-z/z_c$（與 (10.4) 的 $e^{-r}=z/z_c$ 一致）\\
+p. 242，(10.32) & $\exp\big[-\frac14\vec h\cdots X^{-1}\cdots\vec h\big]$ & $\exp\big[+\frac14\vec h\cdots X^{-1}\cdots\vec h\big]$（$n=2$：3.9891，負號得 3.2988）\\
+p. 242，(10.33) & $\sqrt{\lambda_2/\lambda_1}=\sqrt{\frac{r+q^2+u\lvert\vec M\rvert^2}{r+q^2+3u\lvert\vec M\rvert^2}}$ & $\sqrt{\lambda_1/\lambda_2}=\cdots$（右邊對；$1/\sqrt3=0.5774$，不是 1.7321）\\
+p. 245，(10.45) & $e^{-N_0(r\lambda+u\lambda^2)}$ & $e^{-N_0(\frac r2\lambda+\frac u4\lambda^2)}$（(10.15) 的 $f$；極大才在 $\lvert r\rvert/u$）\\
+p. 245，正文 & $D$ \emph{increases} with increasing separation & $-D$（$1-D$）隨距離增加；$D$ 遞減（0.1083 → 0.0065，$\Delta=0\to8$）\\
+p. 245，(10.46) & $\sum\frac{\psi\psi'}{q^2(2\lvert r\rvert+q^2)}$ & $\sum_{\vec q\ne0}\frac{2\lvert r\rvert\psi\psi'}{q^2(2\lvert r\rvert+q^2)}$（照書上 $D(0)=0.0541$，應為 0.1083）\\
+p. 247，(10.53)；p. 248，(10.55) & $e^{-\frac V{a^d}\frac{r^2}{4u}}$；$\ln V-\frac V{a^d}\frac{r^2}{4u}$ & $e^{+\frac V{a^d}\frac{r^2}{4u}}$；$\ln V+\frac V{a^d}\frac{r^2}{4u}$（照書上 $\rho=-0.2500<0$；$\ln V$ 的係數 $\frac32$ 只是〔注〕）\\
+p. 251，(10.75) & $2-\alpha'=d_c\nu'$（hold in general） & $2-\alpha'=d\,\nu'$（$d=2$：$\frac32$ vs $d_c\nu'=3$）\\
+p. 253，(10.83) & $\mathrm{erfc}\big(\frac{z_cR^2}{2(N+1)}\big)$ & $\mathrm{erfc}\big(\sqrt{\frac{z_cR^2}{4(N+1)}}\big)$（sc 格子 $R=8$：精確 0.0103、更正 0.0100、書上 $4.3\times10^{-4}$）\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 11 章（8 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 263，(11.16) 後 & $f(h/r^{3/2})\to h^{1/3}r$（$r\to0$） & $f(h/r^{3/2})\to h^{1/3}r^{-1/2}$，即 $f(x)\approx x^{1/3}$（$r=10^{-4}$、$h=10^{-3}$：$f=9.9667$ vs 10.0000；書上 $10^{-5}$）\\
+p. 265，(11.31) & $\big(\frac{2\pi}{r+2a}\big)^{N/2}$ & $\big(\frac{2\pi}{r+2a}\big)^{N/4}$（$N/2$ 個 $\sqrt{\cdot}$；環的行列式：書上多 $\frac N4\ln\frac{2\pi}{r+2a}$，$N=8$ 多 1.8432）\\
+p. 267–268，Fig. 11.6–11.7 & 軸 $r/\sqrt a$、$r''/\sqrt a$ & $r/a$、$r''/a$（$r''/a=(r/a)(r/a+4)$；曲線在 $r/a=1.7417$ 到 10）\\
+p. 267，正文 & the reduced temperature, $t''$, after decimation & $r''$\\
+p. 269，(11.46)(11.47) & $m2^{n/2}=f(\cdots)$、$m=2^{-n/2}f(r2^{2n},h2^{3n/2})$ & $m=2^{+n/2}f(r2^{2n},h2^{3n/2})$（舊自旋 $=\sqrt2$×新自旋；$m=h/r$：書上 0.0500、應為 0.1000）\\
+p. 270，(11.53) & $\cosh K(S_2+S_4)=\{2\cosh2K;\,2\}$ & $2\cosh K(S_2+S_4)=\{2\cosh2K;\,2\}$（$K=1$：3.7622 vs 7.5244）\\
+p. 271，(11.63) & $\cdots A(K_j)^{N/2^{j+1}}\cdots$ & $\cdots A(K_j)^{N/2^j}\cdots$（4 自旋環 $K=1$：121.2329，照書上 18.5498）\\
+p. 273，(11.66)(11.67) & $\alpha(q)=-2a(1-\cos qc)$；$\alpha\sim ac^2q^2$ & $\alpha(q)=a(1-\cos qc)$；$\alpha\sim\frac12ac^2q^2$（$N=8$ 隨機自旋：3.0394，照書上 $-4.3508$）\\
+\end{longtable}}
+
+\needspace{7\baselineskip}
+\subsection{第 12 章（11 條）}
+{\footnotesize\renewcommand{\arraystretch}{1.1}\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.41\linewidth}@{}}
+\toprule 位置 & 書上 & 應為\\ \midrule\endfirsthead
+\toprule 位置 & 書上 & 應為\\ \midrule\endhead
+\bottomrule\endfoot
+p. 293，(12.17) 前 & Figure 12.16(b) contributes to a change in the fourth order term & Figure 12.11(b)\\
+p. 295，(12.32) & $N\to N'e^{d\delta\ell}\approx N'(1+\delta\ell)$ & $\approx N'(1+d\,\delta\ell)$（$d=3$、$\delta\ell=0.01$：$e^{0.03}=1.0305$，書上 1.0100）\\
+p. 295，(12.33) & $\vec q\to\vec q\,'e^{-d\delta\ell}\approx\vec q\,'(1-d\,\delta\ell)$ & $\vec q\,'e^{-\delta\ell}\approx\vec q\,'(1-\delta\ell)$（照書上 $q^2$ 項乘 $e^{-2(d-1)\delta\ell}$：$d=3$、$\delta\ell=0.1$ 是 0.6703，不是 1）\\
+p. 296–297，(12.36)(12.38)(12.39) & $-36u^2/(1+r)^2$、$(4-d)u-36u^2$ & $-36d\,u^2/(1+r)^2$、$(4-d)u-36d\,u^2$（與 (12.28)(12.40)(12.41)、$u^*\to\epsilon/36d$ 一致）\\
+p. 298，(12.47) & $\int_0^\ell u\,d\ell'=12d\int u'\frac{d\ell'}{du'}du'$ & $12d\int_0^\ell u\,d\ell'=12d\int u'\frac{d\ell'}{du'}du'$\\
+p. 298，(12.48) & $12d\int_{u_0}^u\frac{du'}{\epsilon u'-36du'^2}$ & $12d\int_{u_0}^u\frac{u'\,du'}{\epsilon u'-36du'^2}$（$u_0=0.001\to0.005$、$\epsilon=1$、$d=3$：0.2207 ＝ (12.49)；照書上 81.7804）\\
+p. 299，Ex. 12.4 & Show that (12.53) follows from (12.51) & (12.52)（(12.53) 在練習之後才定義）\\
+p. 299，(12.60) 後 & three-dimensional Ising model, $\nu\sim0.61$ & 約 0.630（文獻值，只引用）\\
+p. 315，(12.89) 後 & $u^2r^{2d-3}=r^{-1}\times(ur^{-(4-d)/2})^2$ & $u^2r^{d-3}=r\times(ur^{-(4-d)/2})^2$（$d=2$ 數值冪次 $-1.0000$；照書上 $+1$）\\
+p. 320 & $5!/(2!\,1!)$（第二次寫） & $5!/(3!\,2!)=10$（同一頁前面寫對；照書上 60）\\
+p. 322，(12:S-7) & $\mathcal T_1^{n_1}\mathcal T_3^{n_3}\mathcal T_3^{n_3}$，$n_1$ 從 1 起 & $\mathcal T_1^{n_1}\mathcal T_2^{n_2}\mathcal T_3^{n_3}$，$n_1$ 從 0 起\\
+\end{longtable}}
